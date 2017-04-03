@@ -11,7 +11,7 @@ function preload(){
 }
 function create(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.stage.backgroundColor = "#333";
+    game.stage.backgroundColor = "#444";
     var titleImage = game.add.sprite(600,90,'title')
     titleImage.anchor.setTo(.5);
     eye_white = game.add.sprite(600,200,'eye_white')
@@ -30,7 +30,7 @@ function update(){
         eye_iris.y = mouseY;
     }else{
         if(dx*dx+dy*dy>6){ 
-            var angle=Math.atan2(dy,dx);
+            var angle=Math.atan2(dy,dx);    //Get the angle
             eye_iris.x = eye_white.x + 15 * Math.cos(angle);
             eye_iris.y = eye_white.y + 15 * Math.sin(angle);
         }
