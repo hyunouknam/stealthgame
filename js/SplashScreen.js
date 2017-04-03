@@ -22,22 +22,17 @@ function create(){
 function update(){
     var mouseX = game.input.mousePointer.x;
     var mouseY = game.input.mousePointer.y;
-    if(mouseX > eye_white.x + 10){
-        mouseX = eye_white.x + 10;
-    }else if(mouseX < eye_white.x-10){
-        mouseX = eye_white.x - 10;
-    }
-    if(mouseY > eye_white.y+10){
-        mouseY = eye_white.y + 10;
-    }else if(mouseY < eye_white.y-10){
-        mouseY = eye_white.y - 10;
-    }
-    var dx = Math.abs(mouseX-eye_white.x);
-    dx *= dx;
-    var dy = Math.abs(mouseY-eye_white.y);
-    dy *= dy;
-    if(dx + dy <= 784){
+    var dx = mouseX-eye_white.x;
+    var dy = mouseY-eye_white.y;
+
+    if(dx*dx+dy*dy <= 225){             // 225 is area using 15 below
         eye_iris.x = mouseX;
         eye_iris.y = mouseY;
+    }else{
+        if(dx*dx+dy*dy>6){ 
+            var angle=Math.atan2(dy,dx);
+            eye_iris.x = eye_white.x + 15 * Math.cos(angle);
+            eye_iris.y = eye_white.y + 15 * Math.sin(angle);
+        }
     }
 }
