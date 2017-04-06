@@ -1,5 +1,5 @@
 
-var game,eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,
+var eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,
     levelSelectionButton,controlsButton,helpButton,mainMenuButton
     fade = false;
 var currentState = "Splash Screen";
@@ -7,79 +7,81 @@ var currentState = "Splash Screen";
 // may require variable to show level is unlocked
 
 var eye_scale = 4;
-function init(){
-    game = new Phaser.Game(1200,700,Phaser.AUTO,'',{preload: preload, create: create, update: update});
-}
-function preload(){
-    game.load.image('title','../assets/Id_Title.png');
-    game.load.image('eye_white', '../assets/Eye_White.png');
-    game.load.image('eye_iris', '../assets/Eye_Iris.png');
-    game.load.image('start', '../assets/Click_To_Start.png');
 
-    game.load.image('level_selection', '../assets/Level_Selection_Button.png');
-    game.load.image('controls','../assets/Controls_Button.png');
-    game.load.image('help','../assets/Help_Button.png');
-    game.load.image('main_menu','../assets/Main_Menu_Button.png');
+var menuState = {
+    preload: function(){
+        game.load.image('title','../assets/Id_Title.png');
+        game.load.image('eye_white', '../assets/Eye_White.png');
+        game.load.image('eye_iris', '../assets/Eye_Iris.png');
+        game.load.image('start', '../assets/Click_To_Start.png');
 
-    game.load.image('logo','../assets/logo.png');
-    game.load.image('help_screen','../assets/Help.png');
-    game.load.image('controls_screen','../assets/Controls_Screen.png');
-}
-function create(){
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.stage.backgroundColor = "#444";
-    titleImage = game.add.sprite(600,90,'title');
-    titleImage.anchor.setTo(.5);
-    start = game.add.sprite(600,600,'start');
-    start.anchor.setTo(.5);
-    start.fade = true;
-    eye_white = game.add.sprite(600,350,'eye_white')
-    eye_white.anchor.setTo(.5);
-    eye_white.scale.setTo(5);
-    eye_iris = game.add.sprite(600,350,'eye_iris');
-    eye_iris.anchor.setTo(.5);
-    eye_iris.scale.setTo(5);
+        game.load.image('level_selection', '../assets/Level_Selection_Button.png');
+        game.load.image('controls','../assets/Controls_Button.png');
+        game.load.image('help','../assets/Help_Button.png');
+        game.load.image('main_menu','../assets/Main_Menu_Button.png');
 
-    game.input.mouse.capture = true;
-    
-    game.stage.smoothed = false;
-    eye_iris.scale.setTo(eye_scale);
-    eye_white.scale.setTo(eye_scale);
-}
-function update(){
-    if(currentState == "Splash Screen"){
-        eyeMovement();
-    }
-    if(start.fade && currentState == "Splash Screen"){
-        fadeOut(start,.005);
-        if(start.alpha <= 0){
-            start.fade = !start.fade;
+        game.load.image('logo','../assets/logo.png');
+        game.load.image('help_screen','../assets/Help.png');
+        game.load.image('controls_screen','../assets/Controls_Screen.png');
+    },
+    create: function(){
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.stage.backgroundColor = "#444";
+        titleImage = game.add.sprite(600,90,'title');
+        titleImage.anchor.setTo(.5);
+        start = game.add.sprite(600,600,'start');
+        start.anchor.setTo(.5);
+        start.fade = true;
+        eye_white = game.add.sprite(600,350,'eye_white')
+        eye_white.anchor.setTo(.5);
+        eye_white.scale.setTo(5);
+        eye_iris = game.add.sprite(600,350,'eye_iris');
+        eye_iris.anchor.setTo(.5);
+        eye_iris.scale.setTo(5);
+
+        game.input.mouse.capture = true;
+        
+        game.stage.smoothed = false;
+        eye_iris.scale.setTo(eye_scale);
+        eye_white.scale.setTo(eye_scale);
+    },
+    update: function(){
+        if(currentState == "Splash Screen"){
+            eyeMovement();
         }
-    }else if(!start.fade && currentState == "Splash Screen"){
-        fadeIn(start,.005);
-        if(start.alpha >= 1){
-            start.fade = !start.fade;
+        if(start.fade && currentState == "Splash Screen"){
+            fadeOut(start,.005);
+            if(start.alpha <= 0){
+                start.fade = !start.fade;
+            }
+        }else if(!start.fade && currentState == "Splash Screen"){
+            fadeIn(start,.005);
+            if(start.alpha >= 1){
+                start.fade = !start.fade;
+            }
         }
+        if(game.input.activePointer.leftButton.isDown && currentState == "Splash Screen"){ //Start Transition to title screen
+            currentState = "Title Screen Transition";
+        }
+        if(currentState == "Title Screen Transition"){
+            titleScreenTransition();
+        }else if(currentState == "Help Screen Transition"){
+            helpScreenTransition();
+        }else if(currentState == "Remove Help Screen"){
+            removeHelpScreen();
+        }else if(currentState == "Controls Screen Transition"){
+            controlsScreenTransition();
+        }else if(currentState == "Remove Controls Screen"){
+            removeControlsScreen();
+        }/*else if(currentState == "Level Selection Screen"){
+            levelScreenTransition();                          // 
+        }else if(currentState == "Remove Level Screen"){
+            removeLevelTransition();                          // 
+        }*/
     }
-    if(game.input.activePointer.leftButton.isDown && currentState == "Splash Screen"){ //Start Transition to title screen
-        currentState = "Title Screen Transition";
-    }
-    if(currentState == "Title Screen Transition"){
-        titleScreenTransition();
-    }else if(currentState == "Help Screen Transition"){
-        helpScreenTransition();
-    }else if(currentState == "Remove Help Screen"){
-        removeHelpScreen();
-    }else if(currentState == "Controls Screen Transition"){
-        controlsScreenTransition();
-    }else if(currentState == "Remove Controls Screen"){
-        removeControlsScreen();
-    }/*else if(currentState == "Level Selection Screen"){
-        levelScreenTransition();                          // 
-    }else if(currentState == "Remove Level Screen"){
-        removeLevelTransition();                          // 
-    }*/
 }
+
+// Helper functions
 function eyeMovement(){
     var mouseX = game.input.mousePointer.x;
     var mouseY = game.input.mousePointer.y;
@@ -115,7 +117,7 @@ function titleScreenTransition(){
 
         logo = game.add.sprite(0,0,'logo');
         logo.alpha = 0;
-        levelSelectionButton = game.add.button(600,290,'level_selection',helpScreenTransition); //function(){currentState = "Level Screen Transition";fade = false;}
+        levelSelectionButton = game.add.button(600,290,'level_selection',function(){game.state.start('play');}); //function(){currentState = "Level Screen Transition";fade = false;}
         levelSelectionButton.anchor.setTo(.5);
         levelSelectionButton.alpha = 0;
         controlsButton = game.add.button(600,410,'controls',function(){currentState = "Controls Screen Transition";fade = false;});
@@ -140,8 +142,8 @@ function titleScreenTransition(){
             fade = false;
         }
     }
-}/*
-function levelScreenTransition(){
+}
+/*function levelScreenTransition(){
     if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
             fadeOut(levelSelectionButton,.02);
             fadeOut(controlsButton,.02);
