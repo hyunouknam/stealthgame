@@ -1,7 +1,7 @@
 /**
 *   Use:
 *   var loader = AssetLoader( game );
-*   load.onComplete = some callback // Or use boolean: loader.finished 
+*   loader.onComplete = some callback // Or use boolean: loader.finished 
 *   loader.load();
 *
 *   Details:
