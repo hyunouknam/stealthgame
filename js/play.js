@@ -4,7 +4,8 @@ var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton;
 var escKey, shiftKey, spaceKey;
-var player, cursors, platforms;
+var player, cursors;// platforms;
+var level;
 
 var playState = {
     preload: function(){
@@ -18,23 +19,32 @@ var playState = {
         game.load.image('sky', '../assets/sky.png');
         game.load.image('platform', '../assets/platform.png');
         game.load.spritesheet('player', '../assets/player.png', 64, 96);
+        
+        level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
     create: function(){
+        level.create();
+        
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.add.sprite(0, 0, 'sky');
-        platforms = game.add.group();
-        platforms.enableBody = true;
-        var ground = platforms.create(0, game.world.height - 182, 'platform');
-        ground.scale.setTo(3, 1);
-        ground.body.immovable = true;
+        //game.add.sprite(0, 0, 'sky');
+        //platforms = game.add.group();
+        //platforms.enableBody = true;
+        //var ground = platforms.create(0, game.world.height - 182, 'platform');
+        //ground.scale.setTo(3, 1);
+        //ground.body.immovable = true;
 
-        game.add.sprite(0,550,'hud');
+        var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
         sanityBar = game.add.sprite(576,612,'sanity_bar');
+        
+        hud.fixedToCamera = true;
+        healthBar.fixedToCamera = true;
+        staminaBar.fixedToCamera = true;
+        sanityBar.fixedToCamera = true;
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -56,15 +66,19 @@ var playState = {
         }
 
         //  Collide the player with platform
-        game.physics.arcade.collide(player, platforms);
+        //game.physics.arcade.collide(player, platforms);
+        game.physics.arcade.collide(player, level.solidGroup);
+        game.physics.arcade.collide(player, level.platformGroup);
+        
 
+        game.camera.follow( player );
         playerMove();
-
+        
     }
     
 }
 function playerCreate(){
-    player = game.add.sprite(32, game.world.height - 300, 'player');
+    player = game.add.sprite(level.playerSpawnPoint.x , level.playerSpawnPoint.y, 'player');
     game.physics.arcade.enable(player);
 
     // player physics
