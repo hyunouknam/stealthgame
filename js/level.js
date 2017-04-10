@@ -87,6 +87,14 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                         level.playerSpawnPoint.x = objectarray[0].x;
                         level.playerSpawnPoint.y = objectarray[0].y;
                         break;
+                    case 'mob spawn' :                                  //temporary
+                        for(var j = 0; j < objectarray.length; j++){
+                            var mob = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'enemy1' );
+                            level.game.physics.enable(mob);
+                            mob.body.gravity.y = 300;
+                            level.spawnGroup.add( mob );
+                        }
+                        break;
                     default : break;
                 }
             }
@@ -111,6 +119,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     };
     
     level.renderSort = function( midgroup, topgroup ){
+        level.game.world.bringToTop(level.spawnGroup);
         if( midgroup !== null)
             level.game.world.bringToTop( midgroup );
         level.mask.bringToTop();
