@@ -4,7 +4,7 @@ var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
 var escKey, shiftKey, spaceKey;
-var player, cursors;// platforms;
+var player, cursors, mask;
 var level;
 var collideDown = true;
 var hudGroup;
@@ -21,6 +21,7 @@ var playState = {
         game.load.image('resume_button','../assets/buttons/Resume_Button.png');
         game.load.image('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png');
 
+        game.load.image('mask','../assets/mask.png');
         game.load.spritesheet('player', '../assets/player.png', 48, 72);
         
         game.load.image('enemy1', '../assets/enemy1.png')
@@ -41,8 +42,13 @@ var playState = {
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
         sanityBar.fixedToCamera = true;
+
+        // create a mask over player
+        mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
+        mask.anchor.setTo(.5);
         
         hudGroup = game.add.group();
+        hudGroup.add(mask);
         hudGroup.add(hud);
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
@@ -54,7 +60,9 @@ var playState = {
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         playerCreate();
+
         level.renderSort ( player , hudGroup);
+
     },
     update: function(){
         pause();
@@ -69,6 +77,7 @@ var playState = {
 
         if(!isPaused){
             game.camera.follow( player );
+            maskFollowPlayer();
             playerMove();
         }
         
@@ -76,7 +85,7 @@ var playState = {
     
 }
 function playerCreate(){
-    player = game.add.sprite(level.playerSpawnPoint.x , level.playerSpawnPoint.y, 'player');
+    player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
     game.physics.arcade.enable(player);
 
     // player physics
@@ -165,6 +174,11 @@ function playerMove(){
         game.time.events.add(Phaser.Timer.SECOND*.3,function(){collideDown = true;});
     }
 
+}
+
+function maskFollowPlayer(){
+    mask.position.x = player.position.x + 24;
+    mask.position.y = player.position.y + 36;
 }
 
 function playerHoldItem(){
