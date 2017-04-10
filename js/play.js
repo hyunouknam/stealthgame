@@ -20,7 +20,7 @@ var playState = {
         game.load.image('controls_button','../assets/Controls_Button_Ingame.png');
         game.load.image('main_menu_button','../assets/Main_Menu_Button_Ingame.png');
 
-        game.load.spritesheet('player', '../assets/player.png', 64, 96);
+        game.load.spritesheet('player', '../assets/player.png', 48, 72);
         
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
