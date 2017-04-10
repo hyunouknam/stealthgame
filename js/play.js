@@ -16,26 +16,17 @@ var playState = {
         game.load.image('sanity_bar','../assets/Sanity_Bar.png');
         game.load.image('paused_image','../assets/Paused_Menu.png');
         game.load.image('resume_button','../assets/Resume_Button.png');
+        game.load.image('controls_button','../assets/Controls_Button_Ingame.png');
+        game.load.image('main_menu_button','../assets/Main_Menu_Button_Ingame.png');
 
-        game.load.image('sky', '../assets/sky.png');
-        game.load.image('platform', '../assets/platform.png');
         game.load.spritesheet('player', '../assets/player.png', 64, 96);
         
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
     create: function(){
         level.create();
-        
-        escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-
+        game.camera.height = 550;
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        //game.add.sprite(0, 0, 'sky');
-        //platforms = game.add.group();
-        //platforms.enableBody = true;
-        //var ground = platforms.create(0, game.world.height - 182, 'platform');
-        //ground.scale.setTo(3, 1);
-        //ground.body.immovable = true;
 
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
@@ -50,32 +41,24 @@ var playState = {
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
         spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         playerCreate();
     },
     update: function(){
-        if(!isPaused){
-            if(escKey.isDown && !locked){
-                locked = true;
-                isPaused = true;
-                pausedMenu = game.add.sprite(0,0,'paused_image');
-                resumeButton = game.add.button(425,130,'resume_button',function(){resumeButton.isPressed=true;resume()});
-                game.time.events.add(Phaser.Timer.SECOND,function(){locked = false;});
-            }
-        }else if(escKey.isDown && !locked){
-               resume();
-        }
+        pause();
+        resume();
 
-        //  Collide the player with platform
-        //game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(player, level.solidGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
         }
 
-        game.camera.follow( player );
-        playerMove();
+        if(!isPaused){
+            game.camera.follow( player );
+            playerMove();
+        }
         
     }
     
@@ -177,8 +160,42 @@ function playerHoldItem(){
 }
 
 function resume(){
-    if((escKey.isDown && !locked) || (resumeButton.isPressed)){
-        resumeButton.isPressed = false;
-        game.time.events.add(Phaser.Timer.SECOND*.2,function(){pausedMenu.destroy();resumeButton.destroy();isPaused = false;}); 
+    if(isPaused){
+        if((escKey.isDown && !locked) || (resumeButton.isPressed)){
+            resumeButton.isPressed = false;
+            game.time.events.add(Phaser.Timer.SECOND*.2,function(){
+                pausedMenu.destroy();
+                resumeButton.destroy();
+                controlsButton.destroy();
+                mainMenuButton.destroy();
+                isPaused = false;
+            }); 
+        }
+    }
+}
+function pause(){
+    if(!isPaused){
+        if(escKey.isDown && !locked){
+            locked = true;
+            isPaused = true;
+            pausedMenu = game.add.sprite(0,0,'paused_image');
+            pausedMenu.fixedToCamera = true;
+            resumeButton = game.add.button(425,130,'resume_button',function(){
+                resumeButton.isPressed=true;
+                resume()
+            });
+            resumeButton.fixedToCamera = true;
+            controlsButton = game.add.button(425, 300,'controls_button',function(){
+
+            });
+            controlsButton.fixedToCamera = true;
+            mainMenuButton = game.add.button(425, 470,'main_menu_button',function(){
+
+            });
+            mainMenuButton.fixedToCamera = true;
+            game.time.events.add(Phaser.Timer.SECOND,function(){
+                locked = false;
+            });
+        }
     }
 }
