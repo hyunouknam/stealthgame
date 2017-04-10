@@ -6,6 +6,7 @@ var healthBar,staminaBar,sanityBar,isPaused=false,
 var escKey, shiftKey, spaceKey;
 var player, cursors;// platforms;
 var level;
+var collideDown = true;
 
 var playState = {
     preload: function(){
@@ -68,8 +69,10 @@ var playState = {
         //  Collide the player with platform
         //game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(player, level.solidGroup);
-        game.physics.arcade.collide(player, level.platformGroup);
-        
+
+        if(collideDown){
+            game.physics.arcade.collide(player, level.platformGroup);
+        }
 
         game.camera.follow( player );
         playerMove();
@@ -109,7 +112,6 @@ function playerCreate(){
 
 function playerMove(){
     player.body.velocity.x = 0;
-
     if (spaceKey.isDown && player.body.touching.down && cursors.right.isDown) {
         player.body.velocity.y = -300;
         player.animations.play("jump right");
@@ -140,6 +142,9 @@ function playerMove(){
                 player.animations.play('default');
             }
         }
+    }else if(cursors.down.isDown && collideDown){
+        collideDown = false;
+        game.time.events.add(Phaser.Timer.SECOND*.2,function(){collideDown = true;});
     }else{
         if(!player.body.touching.down){
             if (cursors.left.isDown){
