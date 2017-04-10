@@ -3,7 +3,7 @@ var stamina = 194;
 var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton;
-var escKey, shiftKey;
+var escKey, shiftKey, spaceKey;
 var player, cursors, platforms;
 
 var playState = {
@@ -38,6 +38,7 @@ var playState = {
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+        spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
         playerCreate();
     },
@@ -71,17 +72,19 @@ function playerCreate(){
     player.body.collideWorldBounds = true;
 
     // player animations
+    player.animations.add('default', [0], 10, true);
+
     player.animations.add('walk left', [0, 1, 2, 3], 10, true);
     player.animations.add('walk right', [4, 5, 6, 7], 10, true);
     player.animations.add('walk left hold item', [8, 9, 10, 11], 10, true);
     player.animations.add('walk right hold item', [12, 13, 14, 15], 10, true);
     player.animations.add('jump right', [16], 10, true);
-    player.animations.add('jump leftt', [20], 10, true);
+    player.animations.add('jump left', [20], 10, true);
     player.animations.add('jump left hold item', [24], 10, true);
     player.animations.add('jump right hold item', [28], 10, true);
-    player.animations.add('throw left', [32, 33, 34, 35], 10, true);
-    player.animations.add('throw right', [36, 37, 38, 39], 10, true);
-    player.animations.add('death', [40, 41, 42, 43], 10, true);
+    player.animations.add('throw left', [32, 33, 34, 35], 10, false);
+    player.animations.add('throw right', [36, 37, 38, 39], 10, false);
+    player.animations.add('death', [40, 41, 42, 43], 10, false);
 
     player.animations.add('run left', [0, 1, 2, 3], 15, true);
     player.animations.add('run right', [4, 5, 6, 7], 15, true);
@@ -93,28 +96,54 @@ function playerCreate(){
 function playerMove(){
     player.body.velocity.x = 0;
 
-    if(shiftKey.isDown){
-        if (cursors.left.isDown){
-            player.body.velocity.x = -300;
-            player.animations.play('run left');
-        }else if (cursors.right.isDown){
-            player.body.velocity.x = 300;
-            player.animations.play('run right');
+    if (spaceKey.isDown && player.body.touching.down && cursors.right.isDown) {
+        player.body.velocity.y = -450;
+        player.animations.play("jump right");
+    }
+    else if (spaceKey.isDown && player.body.touching.down && cursors.left.isDown) {
+        player.body.velocity.y = -450;
+        player.animations.play("jump left");
+    }else if(shiftKey.isDown){
+        if(!player.body.touching.down){
+            if (cursors.left.isDown){
+                player.body.velocity.x = -300;
+            }else if (cursors.right.isDown){
+                player.body.velocity.x = 300;
+            }else{
+                player.animations.play('default');
+            }
         }else{
-            player.animations.stop();
-            player.frame = 0;
+            if (cursors.left.isDown){
+                player.body.velocity.x = -300;
+                player.animations.play('run left');
+            }else if (cursors.right.isDown){
+                player.body.velocity.x = 300;
+                player.animations.play('run right');
+            }else{
+                player.animations.play('default');
+            }
         }
     }else{
-        if (cursors.left.isDown){
-            player.body.velocity.x = -150;
-            player.animations.play('walk left');
-        }else if (cursors.right.isDown)
-        {
-            player.body.velocity.x = 150;
-            player.animations.play('walk right');
+        if(!player.body.touching.down){
+            if (cursors.left.isDown){
+                player.body.velocity.x = -150;
+            }else if (cursors.right.isDown)
+            {
+                player.body.velocity.x = 150;
+            }else{
+                player.animations.play('default');
+            }
         }else{
-            player.animations.stop();
-            player.frame = 0;
+            if (cursors.left.isDown){
+                player.body.velocity.x = -150;
+                player.animations.play('walk left');
+            }else if (cursors.right.isDown)
+            {
+                player.body.velocity.x = 150;
+                player.animations.play('walk right');
+            }else{
+                player.animations.play('default');
+            }
         }
     }
 
