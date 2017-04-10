@@ -111,12 +111,15 @@ function playerMove(){
     player.body.velocity.x = 0;
 
     if (spaceKey.isDown && player.body.touching.down && cursors.right.isDown) {
-        player.body.velocity.y = -450;
+        player.body.velocity.y = -300;
         player.animations.play("jump right");
     }
     else if (spaceKey.isDown && player.body.touching.down && cursors.left.isDown) {
-        player.body.velocity.y = -450;
+        player.body.velocity.y = -300;
         player.animations.play("jump left");
+    }else if (spaceKey.isDown && player.body.touching.down){
+        player.body.velocity.y = -300;
+        player.animations.play("default");
     }else if(shiftKey.isDown){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
