@@ -2,7 +2,7 @@ var health = 194;
 var stamina = 194;
 var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
-    pausedMenu, locked, resumeButton;
+    pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
 var escKey, shiftKey, spaceKey;
 var player, cursors;// platforms;
 var level;
@@ -10,14 +10,15 @@ var collideDown = true;
 
 var playState = {
     preload: function(){
-        game.load.image('hud','../assets/HUD.png');
-        game.load.image('health_bar','../assets/Health_Bar.png');
-        game.load.image('stamina_bar','../assets/Stamina_Bar.png');
-        game.load.image('sanity_bar','../assets/Sanity_Bar.png');
-        game.load.image('paused_image','../assets/Paused_Menu.png');
-        game.load.image('resume_button','../assets/Resume_Button.png');
-        game.load.image('controls_button','../assets/Controls_Button_Ingame.png');
-        game.load.image('main_menu_button','../assets/Main_Menu_Button_Ingame.png');
+        game.load.image('hud','../assets/hud/HUD.png');
+        game.load.image('health_bar','../assets/hud/Health_Bar.png');
+        game.load.image('stamina_bar','../assets/hud/Stamina_Bar.png');
+        game.load.image('sanity_bar','../assets/hud/Sanity_Bar.png');
+        game.load.image('paused_image','../assets/menus/Paused_Menu.png');
+        game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
+
+        game.load.image('resume_button','../assets/buttons/Resume_Button.png');
+        game.load.image('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png');
 
         game.load.spritesheet('player', '../assets/player.png', 64, 96);
         
@@ -166,8 +167,8 @@ function resume(){
             game.time.events.add(Phaser.Timer.SECOND*.2,function(){
                 pausedMenu.destroy();
                 resumeButton.destroy();
-                controlsButton.destroy();
-                mainMenuButton.destroy();
+                mainMenuButtonIngame.destroy();
+                controlsMenu.destroy();
                 isPaused = false;
             }); 
         }
@@ -185,14 +186,15 @@ function pause(){
                 resume()
             });
             resumeButton.fixedToCamera = true;
-            controlsButton = game.add.button(425, 300,'controls_button',function(){
-
+            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+                game.world.removeAll();
+                isPaused = false;
+                locked = false;
+                game.state.start('menu');
             });
-            controlsButton.fixedToCamera = true;
-            mainMenuButton = game.add.button(425, 470,'main_menu_button',function(){
-
-            });
-            mainMenuButton.fixedToCamera = true;
+            mainMenuButtonIngame.fixedToCamera = true;
+            controlsMenu = game.add.sprite(100,100,'controls_screen');
+            controlsMenu.fixedToCamera = true;
             game.time.events.add(Phaser.Timer.SECOND,function(){
                 locked = false;
             });

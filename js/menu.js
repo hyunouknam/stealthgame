@@ -10,22 +10,24 @@ var eye_scale = 4;
 
 var menuState = {
     preload: function(){
-        game.load.image('title','../assets/Id_Title.png');
-        game.load.image('eye_white', '../assets/Eye_White.png');
-        game.load.image('eye_iris', '../assets/Eye_Iris.png');
-        game.load.image('start', '../assets/Click_To_Start.png');
+        game.load.image('title','../assets/menus/Id_Title.png');
+        game.load.image('eye_white', '../assets/menus/Eye_White.png');
+        game.load.image('eye_iris', '../assets/menus/Eye_Iris.png');
+        game.load.image('start', '../assets/menus/Click_To_Start.png');
+        game.load.image('logo','../assets/menus/logo.png');
+        game.load.image('help_screen','../assets/menus/Help.png');
+        game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
 
-        game.load.image('level_selection', '../assets/Level_Selection_Button.png');
-        game.load.image('controls','../assets/Controls_Button.png');
-        game.load.image('help','../assets/Help_Button.png');
-        game.load.image('main_menu','../assets/Main_Menu_Button.png');
+        game.load.image('level_selection', '../assets/buttons/Level_Selection_Button.png');
+        game.load.image('controls','../assets/buttons/Controls_Button.png');
+        game.load.image('help','../assets/buttons/Help_Button.png');
+        game.load.image('main_menu','../assets/buttons/Main_Menu_Button.png');
+        game.load.image('level1','../assets/buttons/level1.png');
 
-        game.load.image('logo','../assets/logo.png');
-        game.load.image('help_screen','../assets/Help.png');
-        game.load.image('controls_screen','../assets/Controls_Screen.png');
+
     },
     create: function(){
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        //game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = "#444";
         titleImage = game.add.sprite(600,90,'title');
         titleImage.anchor.setTo(.5);
@@ -46,6 +48,7 @@ var menuState = {
         eye_white.scale.setTo(eye_scale);
     },
     update: function(){
+        console.debug("test");
         if(currentState == "Splash Screen"){
             eyeMovement();
         }
@@ -73,11 +76,11 @@ var menuState = {
             controlsScreenTransition();
         }else if(currentState == "Remove Controls Screen"){
             removeControlsScreen();
-        }/*else if(currentState == "Level Selection Screen"){
+        }else if(currentState == "Level Screen Transition"){
             levelScreenTransition();                          // 
         }else if(currentState == "Remove Level Screen"){
-            removeLevelTransition();                          // 
-        }*/
+            removeLevelScreen();                          // 
+        }
     }
 }
 
@@ -117,7 +120,7 @@ function titleScreenTransition(){
 
         logo = game.add.sprite(0,0,'logo');
         logo.alpha = 0;
-        levelSelectionButton = game.add.button(600,290,'level_selection',function(){game.state.start('play');}); //function(){currentState = "Level Screen Transition";fade = false;}
+        levelSelectionButton = game.add.button(600,290,'level_selection',function(){currentState = "Level Screen Transition";fade = false;});
         levelSelectionButton.anchor.setTo(.5);
         levelSelectionButton.alpha = 0;
         controlsButton = game.add.button(600,410,'controls',function(){currentState = "Controls Screen Transition";fade = false;});
@@ -139,11 +142,14 @@ function titleScreenTransition(){
             }
         }else{
             currentState = "Title Screen";
+            if(eye_white.alpha > 0){
+                currentState = "Title Screen Transition";
+            }
             fade = false;
         }
     }
 }
-/*function levelScreenTransition(){
+function levelScreenTransition(){
     if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
             fadeOut(levelSelectionButton,.02);
             fadeOut(controlsButton,.02);
@@ -154,11 +160,11 @@ function titleScreenTransition(){
         levelSelectionButton.destroy();
         controlsButton.destroy();
         helpButton.destroy();
+        logo.destroy();
 
-        levelScreen = game.add.sprite(600,350,'level_screen');
-        levelScreen.anchor.setTo(.5);
-        levelScreen.alpha = 0;
-        levelScreen.scale.setTo(1.35);
+        level1 = game.add.button(600,350,'level1',function(){game.world.removeAll();currentState="Splash Screen";game.state.start('play');});
+        level1.anchor.setTo(.5);
+        level1.alpha = 0;
 
         mainMenuButton = game.add.button(10,10,'main_menu',function(){currentState = "Remove Level Screen";fade=false;});
         mainMenuButton.alpha = 0;
@@ -166,8 +172,8 @@ function titleScreenTransition(){
         fade = true;
     }
     if(fade){
-        if(levelScreen.alpha < 1){
-            fadeIn(levelScreen,.02);
+        if(level1.alpha < 1){
+            fadeIn(level1,.02);
             fadeIn(mainMenuButton,.02);
         }else{
             currentState = "Level Screen";
@@ -177,14 +183,14 @@ function titleScreenTransition(){
 }
 function removeLevelScreen(){
     if(mainMenuButton.alpha > 0){
-        fadeOut(levelScreen,.02);
+        fadeOut(level1,.02);
         fadeOut(mainMenuButton,.02);
     }else{
-        levelScreen.destroy();
+        level1.destroy();
         mainMenuButton.destroy();
         currentState = "Title Screen Transition";
     }
-}*/
+}
 function helpScreenTransition(){
     if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
             fadeOut(levelSelectionButton,.02);
