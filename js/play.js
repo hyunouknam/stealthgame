@@ -159,7 +159,7 @@ function playerMove(){
     }
     if(cursors.down.isDown && collideDown){
         collideDown = false;
-        game.time.events.add(Phaser.Timer.SECOND*.2,function(){collideDown = true;});
+        game.time.events.add(Phaser.Timer.SECOND*.3,function(){collideDown = true;});
     }
 
 }
