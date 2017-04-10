@@ -15,6 +15,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.game = game;
     level.tiledmapKey = tiledmapKey;
     level.tilesetList = [];
+    level.layers = {};
     level.mapJSON = game.cache.getJSON(jsonFileKey);
     level.background = game.add.group();
     level.solidGroup = game.add.group();
@@ -48,8 +49,11 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         //create layers
         var layerlist = level.mapJSON.layers;
         for(var i = 0; i < layerlist.length; i++){
-            if( layerlist[i].type === 'tilelayer' )
-                tilemap.createLayer( layerlist[i].name ).resizeWorld();
+            if( layerlist[i].type === 'tilelayer' ){
+                var layer = tilemap.createLayer( layerlist[i].name )
+                layer.resizeWorld();
+                level.layers[layerlist[i].name] = layer;
+            }
         }
 
         //create objects 
@@ -92,8 +96,42 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         var bg = level.game.add.sprite(0,0,'level_background');         ///temporary
         bg.fixedToCamera = true;
         bg.scale.setTo(0.7, 0.7);
-        game.world.sendToBack( bg );
+        level.game.world.sendToBack( bg );
+        
+        level.background.add( bg );
+        
+        
+        //test
+        var bitmap = level.game.add.bitmapData( level.game.width, level.game.height );
+        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        bitmap.context.fillRect( 0, 0, level.game.width, level.game.height );
+        var mask =level.game.add.sprite( 0, 0, bitmap );
+        mask.fixedToCamera = true;
+        level.mask = mask;
     };
+    
+    level.renderSort = function( midgroup, topgroup ){
+        if( midgroup !== null)
+            level.game.world.bringToTop( midgroup );
+        level.mask.bringToTop();
+        
+        for( var i in level.layers) {
+            if(i === 'foreground decoration' || i === 'specials'){
+                level.game.world.bringToTop(level.layers[i]);
+            }
+            
+            ///test
+            if(i === 'specials'){
+                level.layers[i].alpha = 0.5;
+            }
+            
+            
+        }
+        if( topgroup !== null)
+            level.game.world.bringToTop( topgroup );
+        
+    };
+    
     
     return level;
 };
