@@ -142,9 +142,6 @@ function playerMove(){
                 player.animations.play('default');
             }
         }
-    }else if(cursors.down.isDown && collideDown){
-        collideDown = false;
-        game.time.events.add(Phaser.Timer.SECOND*.2,function(){collideDown = true;});
     }else{
         if(!player.body.touching.down){
             if (cursors.left.isDown){
@@ -167,6 +164,10 @@ function playerMove(){
                 player.animations.play('default');
             }
         }
+    }
+    if(cursors.down.isDown && collideDown){
+        collideDown = false;
+        game.time.events.add(Phaser.Timer.SECOND*.2,function(){collideDown = true;});
     }
 
 }
