@@ -7,6 +7,7 @@ var escKey, shiftKey, spaceKey;
 var player, cursors;// platforms;
 var level;
 var collideDown = true;
+var hudGroup;
 
 var playState = {
     preload: function(){
@@ -37,6 +38,12 @@ var playState = {
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
         sanityBar.fixedToCamera = true;
+        
+        hudGroup = game.add.group();
+        hudGroup.add(hud);
+        hudGroup.add(healthBar);
+        hudGroup.add(staminaBar);
+        hudGroup.add(sanityBar);
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -44,6 +51,7 @@ var playState = {
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         playerCreate();
+        level.renderSort ( player , hudGroup);
     },
     update: function(){
         pause();

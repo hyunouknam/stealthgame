@@ -6,6 +6,7 @@ var bootState = {
         //load json
         game.load.json('forest_level_json', '../assets/tiled/maps/forestlevel.json');
         game.load.tilemap('forest_level_tilemap', '../assets/tiled/maps/forestlevel.json', null, Phaser.Tilemap.TILED_JSON);
+        game.stage.smoothed = false;
     },
     
     create : function () {
