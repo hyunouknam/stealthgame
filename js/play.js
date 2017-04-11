@@ -100,15 +100,12 @@ var playState = {
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
-<<<<<<< HEAD
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup);
-=======
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
->>>>>>> 267de89eb89dc5e58cf9ebdae9e5549dfa767eed
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -166,17 +163,12 @@ function playerMove(){
         player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
-<<<<<<< HEAD
         if(faceLeft){
             player.animations.play('default left');
         }else{
             player.animations.play('default right');
         }
-    }else if(shiftKey.isDown){
-=======
-        player.animations.play("default");
     }else if(shiftKey.isDown && stamina>0){
->>>>>>> 267de89eb89dc5e58cf9ebdae9e5549dfa767eed
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 loseStamina();
