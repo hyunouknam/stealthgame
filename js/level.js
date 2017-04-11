@@ -22,6 +22,8 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.platformGroup = game.add.group();
     level.spawnGroup = game.add.group();
     level.playerSpawnPoint = { x : 64, y : 64 };    //temporary
+    level.keyGroup = game.add.group();
+    level.doorGroup = game.add.group();
     
     
     game.load.image('level_background', 'assets/forestlevelbackground.png');    //temporary, to be changed so it loads from JSON
@@ -98,6 +100,25 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             mob.alpha = 0.5;
                         }
                         break;
+                    case 'key object' : 
+                        for(var j = 0; j < objectarray.length; j++){
+                            var key = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'key' );
+                            level.game.physics.enable(key);
+                            key.body.gravity.y = 300;
+                            key.linkhash = objectarray[j].properties.linkhash;
+                            level.keyGroup.add( key );
+                        }
+                        break;
+                    case 'door object' :
+                        for(var j = 0; j < objectarray.length; j++){
+                            var door = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'door' );
+                            level.game.physics.enable(door);
+                            door.body.immovable = true;
+                            door.linkhash = objectarray[j].properties.linkhash;
+                            level.doorGroup.add( door );
+                            
+                        }
+                        break;
                     default : break;
                 }
             }
@@ -125,6 +146,9 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         level.game.world.bringToTop(level.spawnGroup);
         if( midgroup !== null)
             level.game.world.bringToTop( midgroup );
+            level.game.world.bringToTop( level.doorGroup );
+            level.game.world.bringToTop( level.keyGroup );
+        
         level.mask.bringToTop();
         
         for( var i in level.layers) {
@@ -143,6 +167,15 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             level.game.world.bringToTop( topgroup );
         
     };
+    
+    level.getDoor = function ( keySprite ){
+        for( var i = 0; i < level.doorGroup.children.length; i++){
+            if(level.doorGroup.children[i].linkhash == keySprite.linkhash){
+                return level.doorGroup.children[i];
+            }
+        }
+        return undefined;
+    }
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
         //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud

@@ -2657,7 +2657,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":0,
          "x":0,
          "y":0
@@ -3734,7 +3734,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":0,
          "x":0,
          "y":0
@@ -3761,7 +3761,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -3953,7 +3953,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -3965,12 +3965,66 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
+         "visible":false,
+         "width":100,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":100,
+         "name":"door object",
+         "objects":[
+                {
+                 "height":160,
+                 "id":321,
+                 "name":"",
+                 "properties":
+                    {
+                     "linkhash":"1000"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":352,
+                 "y":1536
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":100,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":100,
+         "name":"key object",
+         "objects":[
+                {
+                 "height":32,
+                 "id":319,
+                 "name":"",
+                 "properties":
+                    {
+                     "linkhash":"1000"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":1632
+                }],
+         "opacity":1,
+         "type":"objectgroup",
          "visible":true,
          "width":100,
          "x":0,
          "y":0
         }],
- "nextobjectid":319,
+ "nextobjectid":323,
  "orientation":"orthogonal",
  "properties":
     {
