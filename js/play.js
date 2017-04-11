@@ -1,14 +1,16 @@
 var health = 194;
 var stamina = 194;
 var sanity = 194;
-var healthBar,staminaBar,sanityBar,selectedTool, isPaused=false,
+var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
-var escKey, shiftKey, cKey, lockItem;
+var escKey, shiftKey, cKey,vKey, lockItem;
 var maxHealth = 194;
 var maxStamina = 194;
 var rested = true;
 
-var escKey, shiftKey, cKey;
+var playerDead = false;
+
+var escKey, shiftKey, cKey, vKey;
 var player, cursors, mask, largeMask;
 var level;
 var collideDown = true;
@@ -62,13 +64,13 @@ var playState = {
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
         sanityBar = game.add.sprite(576,612,'sanity_bar');
-        selectedTool = game.add.sprite(855,609,'selected_tool');
+        selected = game.add.sprite(855,609,'selected_tool');
         
         hud.fixedToCamera = true;
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
         sanityBar.fixedToCamera = true;
-        selectedTool.fixedToCamera = true;
+        selected.fixedToCamera = true;
 
         // create a mask over player
         mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
@@ -84,7 +86,7 @@ var playState = {
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
         hudGroup.add(sanityBar);
-        hudGroup.add(selectedTool);
+        hudGroup.add(selected);
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -115,26 +117,36 @@ var playState = {
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
-        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
-        game.physics.arcade.collide(lantern, level.solidGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
         }
 
         if(!isPaused){
-            console.log(vKey.isDown);
+            playerDeath();
+            if(!playerDead){
+                playerMove();
+            }
             game.camera.follow( player );
             maskFollowPlayer();
-            playerMove();
             playerHoldItem();
-            if(vKey.isDown){
-                selectedTool.position.x = 1000;
-            }
+            if(vKey.isDown && !selected.locked){
+                if(currentItemIndex==4){
+                    currentItemIndex=0;
+                    selected.cameraOffset.x = 855;
+                    selected.locked = true;
+                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                }else{
+                    currentItemIndex++;
+                    selected.cameraOffset.x += 55;
+                    selected.locked = true;
+                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                }
             }
         }
-        
     }
+    
+}
 function playerCreate(){
     player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
     game.physics.arcade.enable(player);
@@ -157,7 +169,7 @@ function playerCreate(){
     player.animations.add('jump right hold item', [28], 10, true);
     player.animations.add('throw left', [32, 33, 34, 35], 10, false);
     player.animations.add('throw right', [36, 37, 38, 39], 10, false);
-    player.animations.add('death', [40, 41, 42, 43], 10, false);
+    player.animations.add('death', [40, 41, 42, 43], 7, false);
 
     player.animations.add('run left', [0, 1, 2, 3], 15, true);
     player.animations.add('run right', [4, 5, 6, 7], 15, true);
@@ -185,6 +197,7 @@ function playerMove(){
     }else if(shiftKey.isDown && stamina>0){
         rested = false;
         player.animations.play("default");
+    }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 loseStamina();
@@ -346,6 +359,19 @@ function playerHoldItem(){
                 playerLantern.kill();
             }
         }
+    }else{
+        mask.alpha = 1;
+            if(playerLantern != null){
+                playerLantern.kill();
+                playerLantern = null;
+            }
+    }
+}
+
+function playerDeath(){
+    if(health <= 0){
+        player.animations.play('death');
+        playerDead = true;
     }
 }
 
