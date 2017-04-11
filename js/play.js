@@ -197,7 +197,6 @@ function playerMove(){
     }else if(shiftKey.isDown && stamina>0){
         rested = false;
         player.animations.play("default");
-    }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 loseStamina();
