@@ -182,12 +182,8 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
-<<<<<<< HEAD
-=======
     }else if(shiftKey.isDown){
         player.animations.play("default");
->>>>>>> e47189c79661f5d0d61e38166686ad5db1914c6f
-    }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 loseStamina();
@@ -405,7 +401,6 @@ function generateStamina(){
 }
 
 function openDoor( player, keySprite){
-    console.log("HELLO "+keySprite.linkhash);
     level.getDoor( keySprite ).kill();
     keySprite.kill();
 }
