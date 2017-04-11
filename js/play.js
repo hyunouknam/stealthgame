@@ -3,6 +3,9 @@ var stamina = 194;
 var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
+var maxHealth = 194;
+var maxStamina = 194;
+
 var escKey, shiftKey, cKey;
 var player, cursors, mask, largeMask;
 var level;
@@ -97,9 +100,15 @@ var playState = {
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
+<<<<<<< HEAD
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup);
+=======
+        game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
+        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
+        game.physics.arcade.collide(lantern, level.solidGroup);
+>>>>>>> 267de89eb89dc5e58cf9ebdae9e5549dfa767eed
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -157,16 +166,23 @@ function playerMove(){
         player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
+<<<<<<< HEAD
         if(faceLeft){
             player.animations.play('default left');
         }else{
             player.animations.play('default right');
         }
     }else if(shiftKey.isDown){
+=======
+        player.animations.play("default");
+    }else if(shiftKey.isDown && stamina>0){
+>>>>>>> 267de89eb89dc5e58cf9ebdae9e5549dfa767eed
         if(!player.body.touching.down){
             if (cursors.left.isDown){
+                loseStamina();
                 player.body.velocity.x = -300;
             }else if (cursors.right.isDown){
+                loseStamina();
                 player.body.velocity.x = 300;
             }else{
                 if(faceLeft){
@@ -177,10 +193,12 @@ function playerMove(){
             }
         }else{
             if (cursors.left.isDown){
+                loseStamina();
                 player.body.velocity.x = -300;
                 player.animations.play('run left hold item');
                 faceLeft = true;
             }else if (cursors.right.isDown){
+                loseStamina();
                 player.body.velocity.x = 300;
                 player.animations.play('run right hold item');
                 faceLeft = false;
@@ -193,6 +211,7 @@ function playerMove(){
             }
         }
     }else{
+        generateStamina();
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
@@ -357,4 +376,19 @@ function pause(){
             });
         }
     }
+}
+
+function playerDamaged( player, mob ){
+    health -= health <= 0 ? 0: 1;
+    healthBar.width -= health <= 1 ? 0: 1;
+}
+
+function loseStamina(){
+    stamina -= stamina <= 1 ? stamina: 1;
+    staminaBar.width -= stamina <= 1 ? stamina: 1;
+}
+
+function generateStamina(){
+    stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
+    staminaBar.width = stamina+1 >= maxStamina ? maxStamina: stamina+1;
 }
