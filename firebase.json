@@ -1,5 +1,17 @@
 {
   "hosting": {
-    "public": "public"
+    "public": "public",
+    "redirects": [
+        {
+          "source": "/assets",
+          "destination": "/benchmark2/assets",
+          "type": 301
+        },
+        {
+          "source": "/js",
+          "destination": "/benchmark2/js",
+          "type": 301
+        }
+    ]
   }
 }
