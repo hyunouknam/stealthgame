@@ -1,6 +1,6 @@
 
 var eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,
-    levelSelectionButton,controlsButton,helpButton,mainMenuButton
+    levelSelectionButton,controlsButton,helpButton,mainMenuButton,level1,level2,level3,lvl2Locked,lvl3Locked,
     fade = false;
 var currentState = "Splash Screen";
 
@@ -23,6 +23,10 @@ var menuState = {
         game.load.image('help','../assets/buttons/Help_Button.png');
         game.load.image('main_menu','../assets/buttons/Main_Menu_Button.png');
         game.load.image('level1','../assets/buttons/level1.png');
+        game.load.image('level2','../assets/buttons/level2.png');
+        game.load.image('level3','../assets/buttons/level3.png');
+        game.load.image('locked', '../assets/menus/Locked_Level.png');
+        
 
 
     },
@@ -162,9 +166,25 @@ function levelScreenTransition(){
         helpButton.destroy();
         logo.destroy();
 
-        level1 = game.add.button(600,350,'level1',function(){game.world.removeAll();currentState="Splash Screen";game.state.start('play');});
+        level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();currentState="Splash Screen";game.state.start('play');});
         level1.anchor.setTo(.5);
         level1.alpha = 0;
+
+        level2 = game.add.button(600,350,'level2',function(){if(!level2.locked){game.world.removeAll();currentState="Splash Screen";game.state.start('play');}});
+        level2.anchor.setTo(.5);
+        level2.alpha = 0;
+        level2.locked = true;
+        lvl2Locked = game.add.sprite(600,350,'locked');
+        lvl2Locked.anchor.setTo(.5);
+        lvl2Locked.alpha = 0;
+        
+        level3 = game.add.button(975,350,'level3',function(){if(!level3.locked){game.world.removeAll();currentState="Splash Screen";game.state.start('play');}});
+        level3.anchor.setTo(.5);
+        level3.alpha = 0;
+        level3.locked = true;
+        lvl3Locked = game.add.sprite(975,350,'locked');
+        lvl3Locked.anchor.setTo(.5);
+        lvl3Locked.alpha = 0;
 
         mainMenuButton = game.add.button(10,10,'main_menu',function(){currentState = "Remove Level Screen";fade=false;});
         mainMenuButton.alpha = 0;
@@ -174,6 +194,10 @@ function levelScreenTransition(){
     if(fade){
         if(level1.alpha < 1){
             fadeIn(level1,.02);
+            fadeIn(level2,.02);
+            fadeIn(level3,.02);
+            fadeIn(lvl2Locked,.02);
+            fadeIn(lvl3Locked,.02);
             fadeIn(mainMenuButton,.02);
         }else{
             currentState = "Level Screen";
@@ -184,9 +208,17 @@ function levelScreenTransition(){
 function removeLevelScreen(){
     if(mainMenuButton.alpha > 0){
         fadeOut(level1,.02);
+        fadeOut(level2,.02);
+        fadeOut(level3,.02);
+        fadeOut(lvl2Locked,.02);
+        fadeOut(lvl3Locked,.02);
         fadeOut(mainMenuButton,.02);
     }else{
         level1.destroy();
+        level2.destroy();
+        level3.destroy();
+        lvl2Locked.destroy();
+        lvl3Locked.destroy();
         mainMenuButton.destroy();
         currentState = "Title Screen Transition";
     }
