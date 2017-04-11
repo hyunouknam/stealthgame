@@ -4,13 +4,20 @@ var sanity = 194;
 var healthBar,staminaBar,sanityBar,selectedTool, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
 var escKey, shiftKey, cKey, lockItem;
+var maxHealth = 194;
+var maxStamina = 194;
+
+var escKey, shiftKey, cKey;
 var player, cursors, mask, largeMask;
 var level;
 var collideDown = true;
 var hudGroup;
 
-var staticLantern;
+var faceLeft = false;
 
+var staticLantern, playerLantern;
+
+var currentItem;
 var currentItemIndex = 0;
 var items = [null, null, null, null, null];
 var isHolding = false;
@@ -102,6 +109,9 @@ var playState = {
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup);
+        game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
+        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
+        game.physics.arcade.collide(lantern, level.solidGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -129,7 +139,8 @@ function playerCreate(){
     player.body.collideWorldBounds = true;
 
     // player animations
-    player.animations.add('default', [0], 10, true);
+    player.animations.add('default right', [12], 10, true);
+    player.animations.add('default left', [8], 10, true);
 
     player.animations.add('walk left', [0, 1, 2, 3], 10, true);
     player.animations.add('walk right', [4, 5, 6, 7], 10, true);
@@ -154,35 +165,56 @@ function playerMove(){
     player.body.velocity.x = 0;
     if (cKey.isDown && player.body.touching.down && cursors.right.isDown) {
         player.body.velocity.y = -300;
-        player.animations.play("jump right");
+        player.animations.play("jump right hold item");
     }
     else if (cKey.isDown && player.body.touching.down && cursors.left.isDown) {
         player.body.velocity.y = -300;
-        player.animations.play("jump left");
+        player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
-        player.animations.play("default");
+        if(faceLeft){
+            player.animations.play('default left');
+        }else{
+            player.animations.play('default right');
+        }
     }else if(shiftKey.isDown){
+        player.animations.play("default");
+    }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
+                loseStamina();
                 player.body.velocity.x = -300;
             }else if (cursors.right.isDown){
+                loseStamina();
                 player.body.velocity.x = 300;
             }else{
-                player.animations.play('default');
+                if(faceLeft){
+                    player.animations.play('default left');
+                }else{
+                    player.animations.play('default right');
+                }
             }
         }else{
             if (cursors.left.isDown){
+                loseStamina();
                 player.body.velocity.x = -300;
-                player.animations.play('run left');
+                player.animations.play('run left hold item');
+                faceLeft = true;
             }else if (cursors.right.isDown){
+                loseStamina();
                 player.body.velocity.x = 300;
-                player.animations.play('run right');
+                player.animations.play('run right hold item');
+                faceLeft = false;
             }else{
-                player.animations.play('default');
+                if(faceLeft){
+                    player.animations.play('default left');
+                }else{
+                    player.animations.play('default right');
+                }
             }
         }
     }else{
+        generateStamina();
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
@@ -190,18 +222,28 @@ function playerMove(){
             {
                 player.body.velocity.x = 150;
             }else{
-                player.animations.play('default');
+                if(faceLeft){
+                    player.animations.play('default left');
+                }else{
+                    player.animations.play('default right');
+                }
             }
         }else{
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
-                player.animations.play('walk left');
+                player.animations.play('walk left hold item');
+                faceLeft = true;
             }else if (cursors.right.isDown)
             {
                 player.body.velocity.x = 150;
-                player.animations.play('walk right');
+                player.animations.play('walk right hold item');
+                faceLeft = false;
             }else{
-                player.animations.play('default');
+                if(faceLeft){
+                    player.animations.play('default left');
+                }else{
+                    player.animations.play('default right');
+                }
             }
         }
     }
@@ -268,12 +310,31 @@ function playerHoldItem(){
     if(items[currentItemIndex] != null){
         if(items[currentItemIndex].key == 'lantern'){
             mask.alpha = 0;
+            if(playerLantern == null){
+                if(faceLeft){
+                    playerLantern = game.add.sprite(player.position.x + 1, player.position.y + 26, 'lantern');
+                    playerLantern.scale.setTo(.75, .75);
+                }else{
+                    playerLantern = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
+                    playerLantern.scale.setTo(.75, .75);
+                }
+            }else{
+                if(faceLeft){
+                    playerLantern.position.x = player.position.x + 1;
+                    playerLantern.position.y = player.position.y + 26;
+                }else{
+                    playerLantern.position.x = player.position.x + 25;
+                    playerLantern.position.y = player.position.y + 26;
+                }
+            }
 
         }
 
         if(items[currentItemIndex].key != 'lantern'){
             mask.alpha = 1;
-
+            if(playerLantern != null){
+                playerLantern.kill();
+            }
         }
     }
 }
@@ -318,4 +379,19 @@ function pause(){
             });
         }
     }
+}
+
+function playerDamaged( player, mob ){
+    health -= health <= 0 ? 0: 1;
+    healthBar.width -= health <= 1 ? 0: 1;
+}
+
+function loseStamina(){
+    stamina -= stamina <= 1 ? stamina: 1;
+    staminaBar.width -= stamina <= 1 ? stamina: 1;
+}
+
+function generateStamina(){
+    stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
+    staminaBar.width = stamina+1 >= maxStamina ? maxStamina: stamina+1;
 }
