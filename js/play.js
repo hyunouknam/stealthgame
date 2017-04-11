@@ -3,7 +3,7 @@ var stamina = 194;
 var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
-var escKey, shiftKey, spaceKey;
+var escKey, shiftKey, cKey;
 var player, cursors, mask;
 var level;
 var collideDown = true;
@@ -56,7 +56,7 @@ var playState = {
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
-        spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         playerCreate();
@@ -116,14 +116,14 @@ function playerCreate(){
 
 function playerMove(){
     player.body.velocity.x = 0;
-    if (spaceKey.isDown && player.body.touching.down && cursors.right.isDown) {
+    if (cKey.isDown && player.body.touching.down && cursors.right.isDown) {
         player.body.velocity.y = -300;
         player.animations.play("jump right");
     }
-    else if (spaceKey.isDown && player.body.touching.down && cursors.left.isDown) {
+    else if (cKey.isDown && player.body.touching.down && cursors.left.isDown) {
         player.body.velocity.y = -300;
         player.animations.play("jump left");
-    }else if (spaceKey.isDown && player.body.touching.down){
+    }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
         player.animations.play("default");
     }else if(shiftKey.isDown){
