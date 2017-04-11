@@ -1,9 +1,9 @@
 var health = 194;
 var stamina = 194;
 var sanity = 194;
-var healthBar,staminaBar,sanityBar,selectedTool, isPaused=false,
+var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
-var escKey, shiftKey, cKey, lockItem;
+var escKey, shiftKey, cKey,vKey, lockItem;
 var maxHealth = 194;
 var maxStamina = 194;
 
@@ -63,13 +63,13 @@ var playState = {
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
         sanityBar = game.add.sprite(576,612,'sanity_bar');
-        selectedTool = game.add.sprite(855,609,'selected_tool');
+        selected = game.add.sprite(855,609,'selected_tool');
         
         hud.fixedToCamera = true;
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
         sanityBar.fixedToCamera = true;
-        selectedTool.fixedToCamera = true;
+        selected.fixedToCamera = true;
 
         // create a mask over player
         mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
@@ -85,7 +85,7 @@ var playState = {
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
         hudGroup.add(sanityBar);
-        hudGroup.add(selectedTool);
+        hudGroup.add(selected);
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -129,13 +129,23 @@ var playState = {
             game.camera.follow( player );
             maskFollowPlayer();
             playerHoldItem();
-            if(vKey.isDown){
-                selectedTool.position.x = 1000;
-            }
+            if(vKey.isDown && !selected.locked){
+                if(currentItemIndex==4){
+                    currentItemIndex=0;
+                    selected.cameraOffset.x = 855;
+                    selected.locked = true;
+                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                }else{
+                    currentItemIndex++;
+                    selected.cameraOffset.x += 55;
+                    selected.locked = true;
+                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                }
             }
         }
-        
     }
+    
+}
 function playerCreate(){
     player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
     game.physics.arcade.enable(player);
@@ -183,6 +193,8 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
+    }else if(shiftKey.isDown){
+        player.animations.play("default");
     }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
@@ -340,6 +352,12 @@ function playerHoldItem(){
                 playerLantern.kill();
             }
         }
+    }else{
+        mask.alpha = 1;
+            if(playerLantern != null){
+                playerLantern.kill();
+                playerLantern = null;
+            }
     }
 }
 
