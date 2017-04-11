@@ -3765,8 +3765,185 @@
          "width":100,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":100,
+         "name":"mob spawn",
+         "objects":[
+                {
+                 "height":32,
+                 "id":304,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1280,
+                 "y":1184
+                }, 
+                {
+                 "height":32,
+                 "id":305,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1344,
+                 "y":3072
+                }, 
+                {
+                 "height":32,
+                 "id":306,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":832,
+                 "y":768
+                }, 
+                {
+                 "height":32,
+                 "id":307,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":768,
+                 "y":544
+                }, 
+                {
+                 "height":32,
+                 "id":308,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1472,
+                 "y":960
+                }, 
+                {
+                 "height":32,
+                 "id":309,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2240,
+                 "y":1216
+                }, 
+                {
+                 "height":32,
+                 "id":310,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2560,
+                 "y":3040
+                }, 
+                {
+                 "height":32,
+                 "id":311,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1760,
+                 "y":3072
+                }, 
+                {
+                 "height":32,
+                 "id":312,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1760,
+                 "y":2656
+                }, 
+                {
+                 "height":32,
+                 "id":313,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":704,
+                 "y":3040
+                }, 
+                {
+                 "height":32,
+                 "id":314,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1472,
+                 "y":1536
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":100,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":304,
+ "nextobjectid":316,
  "orientation":"orthogonal",
  "properties":
     {

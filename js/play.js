@@ -23,6 +23,8 @@ var playState = {
 
         game.load.spritesheet('player', '../assets/player.png', 48, 72);
         
+        game.load.image('enemy1', '../assets/enemy1.png')
+        
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
     create: function(){
@@ -59,6 +61,7 @@ var playState = {
         resume();
 
         game.physics.arcade.collide(player, level.solidGroup);
+        game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
