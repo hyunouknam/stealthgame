@@ -3,6 +3,9 @@ var stamina = 194;
 var sanity = 194;
 var healthBar,staminaBar,sanityBar,isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
+var maxHealth = 194;
+var maxStamina = 194;
+
 var escKey, shiftKey, cKey;
 var player, cursors, mask;
 var level;
@@ -81,7 +84,7 @@ var playState = {
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
-        game.physics.arcade.collide(player, level.spawnGroup);
+        game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -140,18 +143,22 @@ function playerMove(){
         player.animations.play("default");
     }else if(shiftKey.isDown){
         if(!player.body.touching.down){
-            if (cursors.left.isDown){
+            if (cursors.left.isDown && stamina>0){
+                loseStamina();
                 player.body.velocity.x = -300;
-            }else if (cursors.right.isDown){
+            }else if (cursors.right.isDown && stamina>0){
+                loseStamina();
                 player.body.velocity.x = 300;
             }else{
                 player.animations.play('default');
             }
         }else{
-            if (cursors.left.isDown){
+            if (cursors.left.isDown && stamina>0){
+                loseStamina();
                 player.body.velocity.x = -300;
                 player.animations.play('run left');
-            }else if (cursors.right.isDown){
+            }else if (cursors.right.isDown && stamina>0){
+                loseStamina();
                 player.body.velocity.x = 300;
                 player.animations.play('run right');
             }else{
@@ -239,4 +246,18 @@ function pause(){
             });
         }
     }
+}
+
+function playerDamaged( player, mob ){
+    health -= 10;
+    healthBar.width -= 10;
+}
+
+function loseStamina(){
+    stamina -= 10;
+    staminaBar.width -= 10;
+}
+
+function generateStamina(){
+    stamina += 10;
 }
