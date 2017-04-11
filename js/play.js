@@ -7,15 +7,17 @@ var maxHealth = 194;
 var maxStamina = 194;
 
 var escKey, shiftKey, cKey;
-var player, cursors, mask;
+var player, cursors, mask, largeMask;
 var level;
 var collideDown = true;
 var hudGroup;
 
-var currentItemIndex;
-var items = [];
+var staticLantern;
+
+var currentItemIndex = 0;
+var items = [null, null, null, null, null];
 var isHolding = false;
-var lantern, flashlight, rock, bomb, oil;
+var lantern; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
     preload: function(){
@@ -30,6 +32,7 @@ var playState = {
         game.load.image('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png');
 
         game.load.image('mask','../assets/mask.png');
+        game.load.image('mask large','../assets/mask large.png');
         game.load.spritesheet('player', '../assets/player.png', 48, 72);
 
         game.load.image('lantern', '../assets/lantern.png');
@@ -60,9 +63,13 @@ var playState = {
         // create a mask over player
         mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
         mask.anchor.setTo(.5);
+
+        largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
+        largeMask.anchor.setTo(.5);
         
         hudGroup = game.add.group();
         hudGroup.add(mask);
+        hudGroup.add(largeMask);
         hudGroup.add(hud);
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
@@ -77,6 +84,12 @@ var playState = {
 
         level.renderSort ( player , hudGroup);
 
+        // spawn test item
+
+        lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
+        game.physics.arcade.enable(lantern);
+        lantern.body.gravity.y = 300;
+
     },
     update: function(){
         pause();
@@ -85,6 +98,8 @@ var playState = {
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
+        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
+        game.physics.arcade.collide(lantern, level.solidGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -94,6 +109,7 @@ var playState = {
             game.camera.follow( player );
             maskFollowPlayer();
             playerMove();
+            playerHoldItem();
         }
         
     }
@@ -141,23 +157,23 @@ function playerMove(){
     }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
         player.animations.play("default");
-    }else if(shiftKey.isDown){
+    }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
-            if (cursors.left.isDown && stamina>0){
+            if (cursors.left.isDown){
                 loseStamina();
                 player.body.velocity.x = -300;
-            }else if (cursors.right.isDown && stamina>0){
+            }else if (cursors.right.isDown){
                 loseStamina();
                 player.body.velocity.x = 300;
             }else{
                 player.animations.play('default');
             }
         }else{
-            if (cursors.left.isDown && stamina>0){
+            if (cursors.left.isDown){
                 loseStamina();
                 player.body.velocity.x = -300;
                 player.animations.play('run left');
-            }else if (cursors.right.isDown && stamina>0){
+            }else if (cursors.right.isDown){
                 loseStamina();
                 player.body.velocity.x = 300;
                 player.animations.play('run right');
@@ -166,6 +182,7 @@ function playerMove(){
             }
         }
     }else{
+        generateStamina();
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
@@ -198,11 +215,66 @@ function playerMove(){
 function maskFollowPlayer(){
     mask.position.x = player.position.x + 24;
     mask.position.y = player.position.y + 36;
+    largeMask.position.x = player.position.x + 24;
+    largeMask.position.y = player.position.y + 36;
+}
+
+function collectItem(player, item){
+    amtOfItems = 0;
+    items.forEach(function(e){
+        if(e!=null){
+            amtOfItems++;
+        }
+    });
+    if(amtOfItems<5){
+        item.kill();
+
+        if(item.key == 'lantern'){
+            for(var i = 0; i < items.length; i++){
+                if(items[i] == null){
+                    staticLantern = game.add.sprite(853 + (i * 55), 612, 'lantern');
+                    items[i] = staticLantern;
+
+                    staticLantern.fixedToCamera = true;
+                    break;
+                }
+            }
+
+        }
+
+    }
+    
 }
 
 function playerHoldItem(){
+    //if(items[currentItemIndex] != null){
+        /*switch(expression) {
+            case "lantern":
+
+            break;
+            case "flashlight":
+
+            break;
+            case "flashlight":
+
+            break;
+            case "flashlight":
+
+            break;
+            default:
+
+}*/
+    //}
     if(items[currentItemIndex] != null){
-        
+        if(items[currentItemIndex].key == 'lantern'){
+            mask.alpha = 0;
+
+        }
+
+        if(items[currentItemIndex].key != 'lantern'){
+            mask.alpha = 1;
+
+        }
     }
 }
 
@@ -249,15 +321,16 @@ function pause(){
 }
 
 function playerDamaged( player, mob ){
-    health -= 10;
-    healthBar.width -= 10;
+    health -= health <= 0 ? 0: 1;
+    healthBar.width -= health <= 1 ? 0: 1;
 }
 
 function loseStamina(){
-    stamina -= 10;
-    staminaBar.width -= 10;
+    stamina -= stamina <= 1 ? stamina: 1;
+    staminaBar.width -= stamina <= 1 ? stamina: 1;
 }
 
 function generateStamina(){
-    stamina += 10;
+    stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
+    staminaBar.width = stamina+1 >= maxStamina ? maxStamina: stamina+1;
 }
