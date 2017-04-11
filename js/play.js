@@ -12,7 +12,7 @@ var hudGroup;
 var currentItemIndex;
 var items = [];
 var isHolding = false;
-var lantern, flashlight, rock, bomb, oil;
+var lantern; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
     preload: function(){
@@ -73,6 +73,10 @@ var playState = {
         playerCreate();
 
         level.renderSort ( player , hudGroup);
+
+        // spawn test item
+
+        lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
 
     },
     update: function(){
@@ -194,7 +198,22 @@ function maskFollowPlayer(){
 
 function playerHoldItem(){
     if(items[currentItemIndex] != null){
-        
+        /*switch(expression) {
+            case "lantern":
+
+            break;
+            case "flashlight":
+
+            break;
+            case "flashlight":
+
+            break;
+            case "flashlight":
+
+            break;
+            default:
+
+}*/
     }
 }
 
