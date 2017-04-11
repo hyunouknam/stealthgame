@@ -6,6 +6,7 @@ var healthBar,staminaBar,sanityBar,selected, isPaused=false,
 var escKey, shiftKey, cKey,vKey, lockItem;
 var maxHealth = 194;
 var maxStamina = 194;
+var rested = true;
 
 var playerDead = false;
 
@@ -193,6 +194,13 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
+    /*}else if(shiftKey.isDown && stamina>0){
+        rested = false;
+        if(faceLeft){
+            player.animations.play('default left');
+        }else{
+            player.animations.play('default right');
+        }*/
     }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
@@ -228,7 +236,8 @@ function playerMove(){
             }
         }
     }else{
-        generateStamina();
+        if(rested)
+            generateStamina();
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
@@ -248,7 +257,7 @@ function playerMove(){
                 player.animations.play('walk left hold item');
                 faceLeft = true;
             }else if (cursors.right.isDown)
-            {
+            {   
                 player.body.velocity.x = 150;
                 player.animations.play('walk right hold item');
                 faceLeft = false;
@@ -265,7 +274,11 @@ function playerMove(){
         collideDown = false;
         game.time.events.add(Phaser.Timer.SECOND*.3,function(){collideDown = true;});
     }
-
+    
+    if(cursors.left.isUp && cursors.right.isUp){
+        rested = true;
+    }
+    console.log(stamina);
 }
 
 function maskFollowPlayer(){
@@ -415,12 +428,12 @@ function playerDamaged( player, mob ){
 
 function loseStamina(){
     stamina -= stamina <= 1 ? stamina: 1;
-    staminaBar.width -= stamina <= 1 ? stamina: 1;
+    staminaBar.width = stamina;
 }
 
 function generateStamina(){
     stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
-    staminaBar.width = stamina+1 >= maxStamina ? maxStamina: stamina+1;
+    staminaBar.width = stamina;
 }
 
 function openDoor( player, keySprite){
