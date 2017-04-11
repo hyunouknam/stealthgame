@@ -7,6 +7,8 @@ var escKey, shiftKey, cKey, lockItem;
 var maxHealth = 194;
 var maxStamina = 194;
 
+var playerDead = false;
+
 var escKey, shiftKey, cKey, vKey;
 var player, cursors, mask, largeMask;
 var level;
@@ -113,7 +115,6 @@ var playState = {
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
-        game.physics.arcade.collide(player, level.spawnGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
 
         if(collideDown){
@@ -121,10 +122,12 @@ var playState = {
         }
 
         if(!isPaused){
-            console.log(vKey.isDown);
+            playerDeath();
+            if(!playerDead){
+                playerMove();
+            }
             game.camera.follow( player );
             maskFollowPlayer();
-            playerMove();
             playerHoldItem();
             if(vKey.isDown){
                 selectedTool.position.x = 1000;
@@ -155,7 +158,7 @@ function playerCreate(){
     player.animations.add('jump right hold item', [28], 10, true);
     player.animations.add('throw left', [32, 33, 34, 35], 10, false);
     player.animations.add('throw right', [36, 37, 38, 39], 10, false);
-    player.animations.add('death', [40, 41, 42, 43], 10, false);
+    player.animations.add('death', [40, 41, 42, 43], 7, false);
 
     player.animations.add('run left', [0, 1, 2, 3], 15, true);
     player.animations.add('run right', [4, 5, 6, 7], 15, true);
@@ -337,6 +340,13 @@ function playerHoldItem(){
                 playerLantern.kill();
             }
         }
+    }
+}
+
+function playerDeath(){
+    if(health <= 0){
+        player.animations.play('death');
+        playerDead = true;
     }
 }
 
