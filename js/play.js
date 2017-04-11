@@ -47,6 +47,8 @@ var playState = {
         game.load.image('oil', '../assets/oil.png');
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
+        game.load.image('key', '../assets/key.png');
+        game.load.image('door', '../assets/door.png');
         
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
@@ -105,6 +107,9 @@ var playState = {
         resume();
 
         game.physics.arcade.collide(player, level.solidGroup);
+        game.physics.arcade.collide(player, level.doorGroup);
+        game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
+        game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
@@ -390,4 +395,9 @@ function loseStamina(){
 function generateStamina(){
     stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
     staminaBar.width = stamina+1 >= maxStamina ? maxStamina: stamina+1;
+}
+
+function openDoor( player, keySprite){
+    level.getDoor( keySprite ).kill();
+    keySprite.kill();
 }
