@@ -83,16 +83,19 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             level.solidGroup.add(collisionObject);
                         }
                         break;
-                    case 'player spawn' :                               //temporary
+                    case 'player spawn' :                               //temporary, til we have json for spawning
                         level.playerSpawnPoint.x = objectarray[0].x;
                         level.playerSpawnPoint.y = objectarray[0].y;
                         break;
-                    case 'mob spawn' :                                  //temporary
+                    case 'mob spawn' :                                  //temporary, til we have json for spawning
                         for(var j = 0; j < objectarray.length; j++){
                             var mob = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'enemy1' );
                             level.game.physics.enable(mob);
                             mob.body.gravity.y = 300;
                             level.spawnGroup.add( mob );
+                            mob.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
+                            mob.animations.play('idle');
+                            mob.alpha = 0.5;
                         }
                         break;
                     default : break;
@@ -101,7 +104,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         }
 
         //create background
-        var bg = level.game.add.sprite(0,0,'level_background');         ///temporary
+        var bg = level.game.add.sprite(0,0,'level_background');         ///temporary, til we json for level background image
         bg.fixedToCamera = true;
         bg.scale.setTo(0.7, 0.7);
         level.game.world.sendToBack( bg );
@@ -140,6 +143,10 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             level.game.world.bringToTop( topgroup );
         
     };
+    
+    level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
+        //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud
+    }
     
     
     return level;

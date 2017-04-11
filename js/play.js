@@ -38,7 +38,7 @@ var playState = {
         game.load.image('bomb', '../assets/bomb.png');
         game.load.image('oil', '../assets/oil.png');
         
-        game.load.image('enemy1', '../assets/enemy1.png')
+        game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
@@ -94,8 +94,12 @@ var playState = {
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
+<<<<<<< HEAD
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
+=======
+        game.physics.arcade.collide(player, level.spawnGroup);
+>>>>>>> f9383324be53ef0ebb3b50c4f3d79a0f91e7e5f0
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
