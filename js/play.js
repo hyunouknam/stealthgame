@@ -193,8 +193,6 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
-    }else if(shiftKey.isDown){
-        player.animations.play("default");
     }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
