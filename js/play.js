@@ -7,7 +7,7 @@ var escKey, shiftKey, cKey, lockItem;
 var maxHealth = 194;
 var maxStamina = 194;
 
-var escKey, shiftKey, cKey;
+var escKey, shiftKey, cKey, vKey;
 var player, cursors, mask, largeMask;
 var level;
 var collideDown = true;
@@ -110,8 +110,6 @@ var playState = {
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
-        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
-        game.physics.arcade.collide(lantern, level.solidGroup);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
@@ -177,11 +175,6 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
-<<<<<<< HEAD
-=======
-    }else if(shiftKey.isDown){
-        player.animations.play("default");
->>>>>>> e47189c79661f5d0d61e38166686ad5db1914c6f
     }else if(shiftKey.isDown && stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
