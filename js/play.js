@@ -1,9 +1,9 @@
 var health = 194;
 var stamina = 194;
 var sanity = 194;
-var healthBar,staminaBar,sanityBar,isPaused=false,
+var healthBar,staminaBar,sanityBar,selectedTool, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
-var escKey, shiftKey, cKey;
+var escKey, shiftKey, cKey, lockItem;
 var player, cursors, mask, largeMask;
 var level;
 var collideDown = true;
@@ -24,6 +24,7 @@ var playState = {
         game.load.image('sanity_bar','../assets/hud/Sanity_Bar.png');
         game.load.image('paused_image','../assets/menus/Paused_Menu.png');
         game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
+        game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
 
         game.load.image('resume_button','../assets/buttons/Resume_Button.png');
         game.load.image('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png');
@@ -51,11 +52,13 @@ var playState = {
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
         sanityBar = game.add.sprite(576,612,'sanity_bar');
+        selectedTool = game.add.sprite(855,609,'selected_tool');
         
         hud.fixedToCamera = true;
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
         sanityBar.fixedToCamera = true;
+        selectedTool.fixedToCamera = true;
 
         // create a mask over player
         mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
@@ -71,11 +74,13 @@ var playState = {
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
         hudGroup.add(sanityBar);
+        hudGroup.add(selectedTool);
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
         cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
 
         playerCreate();
 
@@ -94,27 +99,27 @@ var playState = {
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
-<<<<<<< HEAD
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
-=======
         game.physics.arcade.collide(player, level.spawnGroup);
->>>>>>> f9383324be53ef0ebb3b50c4f3d79a0f91e7e5f0
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
         }
 
         if(!isPaused){
+            console.log(vKey.isDown);
             game.camera.follow( player );
             maskFollowPlayer();
             playerMove();
             playerHoldItem();
+            if(vKey.isDown){
+                selectedTool.position.x = 1000;
+            }
+            }
         }
         
     }
-    
-}
 function playerCreate(){
     player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
     game.physics.arcade.enable(player);
