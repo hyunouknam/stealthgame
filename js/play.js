@@ -349,6 +349,12 @@ function playerHoldItem(){
                 playerLantern.kill();
             }
         }
+    }else{
+        mask.alpha = 1;
+            if(playerLantern != null){
+                playerLantern.kill();
+                playerLantern = null;
+            }
     }
 }
 
