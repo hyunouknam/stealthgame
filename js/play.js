@@ -9,6 +9,11 @@ var level;
 var collideDown = true;
 var hudGroup;
 
+var currentItemIndex;
+var items = [];
+var isHolding = false;
+var lantern, flashlight, rock, bomb, oil;
+
 var playState = {
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
@@ -23,6 +28,12 @@ var playState = {
 
         game.load.image('mask','../assets/mask.png');
         game.load.spritesheet('player', '../assets/player.png', 48, 72);
+
+        game.load.image('lantern', '../assets/lantern.png');
+        game.load.image('flashlight', '../assets/flashlight.png');
+        game.load.image('rock', '../assets/rock.png');
+        game.load.image('bomb', '../assets/bomb.png');
+        game.load.image('oil', '../assets/oil.png');
         
         game.load.image('enemy1', '../assets/enemy1.png')
         
@@ -182,7 +193,9 @@ function maskFollowPlayer(){
 }
 
 function playerHoldItem(){
-    
+    if(items[currentItemIndex] != null){
+        
+    }
 }
 
 function resume(){
