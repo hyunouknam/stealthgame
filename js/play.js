@@ -31,7 +31,7 @@ var playState = {
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
         game.load.image('stamina_bar','../assets/hud/Stamina_Bar.png');
-        game.load.image('sanity_bar','../assets/hud/Sanity_Bar.png');
+        //game.load.image('sanity_bar','../assets/hud/Sanity_Bar.png');
         game.load.image('paused_image','../assets/menus/Paused_Menu.png');
         game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
         game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
@@ -63,13 +63,13 @@ var playState = {
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
-        sanityBar = game.add.sprite(576,612,'sanity_bar');
+        //sanityBar = game.add.sprite(576,612,'sanity_bar');
         selected = game.add.sprite(855,609,'selected_tool');
         
         hud.fixedToCamera = true;
         healthBar.fixedToCamera = true;
         staminaBar.fixedToCamera = true;
-        sanityBar.fixedToCamera = true;
+        //sanityBar.fixedToCamera = true;
         selected.fixedToCamera = true;
 
         // create a mask over player
@@ -85,7 +85,7 @@ var playState = {
         hudGroup.add(hud);
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
-        hudGroup.add(sanityBar);
+        //hudGroup.add(sanityBar);
         hudGroup.add(selected);
 
         cursors = game.input.keyboard.createCursorKeys();
