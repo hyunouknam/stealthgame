@@ -12,11 +12,13 @@ var playerDead = false;
 
 var escKey, shiftKey, cKey, vKey;
 var player, cursors, mask, largeMask;
-var level;
 var collideDown = true;
 var hudGroup;
 
 var faceLeft = false;
+
+var level;
+var spawner;
 
 var staticLantern, playerLantern;
 
@@ -53,10 +55,11 @@ var playState = {
         game.load.image('key', '../assets/key.png');
         game.load.image('door', '../assets/door.png');
         
+        spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
     },
     create: function(){
-        level.create();
+        level.create( spawner );
         game.camera.height = 550;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -102,10 +105,11 @@ var playState = {
 
         lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
         game.physics.arcade.enable(lantern);
-        lantern.body.gravity.y = 300;
+        lantern.body.gravity.y = 700;
 
     },
     update: function(){
+        AI.update();
         pause();
         resume();
 
@@ -114,6 +118,7 @@ var playState = {
         game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
+        game.physics.arcade.collide(level.doorGroup, level.spawnGroup);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
@@ -152,7 +157,7 @@ function playerCreate(){
     game.physics.arcade.enable(player);
 
     // player physics
-    player.body.gravity.y = 300;
+    player.body.gravity.y = 700;
     player.body.collideWorldBounds = true;
 
     // player animations
@@ -181,14 +186,14 @@ function playerCreate(){
 function playerMove(){
     player.body.velocity.x = 0;
     if (cKey.isDown && player.body.touching.down && cursors.right.isDown) {
-        player.body.velocity.y = -300;
+        player.body.velocity.y = -380;
         player.animations.play("jump right hold item");
     }
     else if (cKey.isDown && player.body.touching.down && cursors.left.isDown) {
-        player.body.velocity.y = -300;
+        player.body.velocity.y = -380;
         player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
-        player.body.velocity.y = -300;
+        player.body.velocity.y = -380;
         if(faceLeft){
             player.animations.play('default left');
         }else{
@@ -196,6 +201,7 @@ function playerMove(){
         }
     /*}else if(shiftKey.isDown && stamina>0){
         rested = false;
+<<<<<<< HEAD
         if(faceLeft){
             player.animations.play('default left');
         }else{
@@ -278,7 +284,6 @@ function playerMove(){
     if(cursors.left.isUp && cursors.right.isUp){
         rested = true;
     }
-    console.log(stamina);
 }
 
 function maskFollowPlayer(){
