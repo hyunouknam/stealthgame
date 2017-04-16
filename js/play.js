@@ -1,6 +1,7 @@
 var health = 194;
 var stamina = 194;
 var sanity = 194;
+var godMode = {enabled:false,locked:false};
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
 var escKey, shiftKey, cKey,vKey, lockItem;
@@ -96,6 +97,7 @@ var playState = {
         cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
+        gKey = game.input.keyboard.addKey(Phaser.Keyboard.G);
 
         playerCreate();
 
@@ -126,7 +128,18 @@ var playState = {
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
         }
-
+        if(gKey.isDown && !godMode.locked){
+            godMode.locked = true;
+            godMode.enabled = !godMode.enabled;
+            if(godMode.enabled){
+                mask.alpha = 0;
+                largeMask.alpha = 0;
+            }else{
+                mask.alpha = 1;
+                largeMask.alpha = 1;
+            }
+            game.time.events.add(200,function(){godMode.locked = false;});
+        }
         if(!isPaused){
             playerDeath();
             if(!playerDead){
@@ -140,12 +153,12 @@ var playState = {
                     currentItemIndex=0;
                     selected.cameraOffset.x = 855;
                     selected.locked = true;
-                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                    game.time.events.add(200,function(){selected.locked=false;});
                 }else{
                     currentItemIndex++;
                     selected.cameraOffset.x += 55;
                     selected.locked = true;
-                    game.time.events.add(Phaser.Timer.SECOND*.2,function(){selected.locked=false;});
+                    game.time.events.add(200,function(){selected.locked=false;});
                 }
             }
         }
@@ -321,10 +334,27 @@ function collectItem(player, item){
 }
 
 function playerHoldItem(){
-    //if(items[currentItemIndex] != null){
-        /*switch(expression) {
+    if(items[currentItemIndex] != null){
+        switch(items[currentItemIndex].key) {
             case "lantern":
-
+                mask.alpha = 0;
+                if(playerLantern == null){
+                    if(faceLeft){
+                        playerLantern = game.add.sprite(player.position.x + 1,player.position.y + 26,'lantern');
+                        playerLantern.scale.setTo(.75,.75);
+                    }else{
+                        playerLantern = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
+                        playerLantern.scale.setTo(.75, .75);
+                    }
+                }else{
+                    if(faceLeft){
+                        playerLantern.position.x = player.position.x + 1;
+                        playerLantern.position.y = player.position.y + 26;
+                    }else{
+                        playerLantern.position.x = player.position.x + 25;
+                        playerLantern.position.y = player.position.y + 26;
+                    }
+                }
             break;
             case "flashlight":
 
@@ -337,43 +367,15 @@ function playerHoldItem(){
             break;
             default:
 
-}*/
-    //}
-    if(items[currentItemIndex] != null){
-        if(items[currentItemIndex].key == 'lantern'){
-            mask.alpha = 0;
-            if(playerLantern == null){
-                if(faceLeft){
-                    playerLantern = game.add.sprite(player.position.x + 1, player.position.y + 26, 'lantern');
-                    playerLantern.scale.setTo(.75, .75);
-                }else{
-                    playerLantern = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
-                    playerLantern.scale.setTo(.75, .75);
-                }
-            }else{
-                if(faceLeft){
-                    playerLantern.position.x = player.position.x + 1;
-                    playerLantern.position.y = player.position.y + 26;
-                }else{
-                    playerLantern.position.x = player.position.x + 25;
-                    playerLantern.position.y = player.position.y + 26;
-                }
-            }
-
-        }
-
-        if(items[currentItemIndex].key != 'lantern'){
-            mask.alpha = 1;
-            if(playerLantern != null){
-                playerLantern.kill();
-            }
         }
     }else{
-        mask.alpha = 1;
-            if(playerLantern != null){
-                playerLantern.kill();
-                playerLantern = null;
-            }
+        if(!godMode.enabled){
+            mask.alpha = 1;
+        }
+        if(playerLantern != null){
+            playerLantern.kill();
+            playerLantern = null;
+        }
     }
 }
 
@@ -399,7 +401,7 @@ function resume(){
     }
 }
 function pause(){
-    if(!isPaused){
+    if(!isPaused && !playerDead){
         if(escKey.isDown && !locked){
             locked = true;
             isPaused = true;
@@ -427,13 +429,17 @@ function pause(){
 }
 
 function playerDamaged( player, mob ){
-    health -= health <= 0 ? 0: 1;
-    healthBar.width -= health <= 1 ? 0: 1;
+    if(!godMode.enabled){
+        health -= health <= 0 ? 0: 1;
+        healthBar.width -= health <= 1 ? 0: 1;
+    }
 }
 
 function loseStamina(){
-    stamina -= stamina <= 1 ? stamina: 1;
-    staminaBar.width = stamina;
+    if(!godMode.enabled){
+        stamina -= stamina <= 1 ? stamina: 1;
+        staminaBar.width = stamina;
+    }
 }
 
 function generateStamina(){
