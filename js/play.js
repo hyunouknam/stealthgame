@@ -393,7 +393,7 @@ function resume(){
     }
 }
 function pause(){
-    if(!isPaused){
+    if(!isPaused && !playerDead){
         if(escKey.isDown && !locked){
             locked = true;
             isPaused = true;
