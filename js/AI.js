@@ -139,6 +139,7 @@ var AI = {
 
             behavior.update = function (){
                 ownerAIObject.sprite.body.velocity.x = 0;
+                ownerAIObject.sprite.animations.play('idle');
             };
 
             return behavior;
@@ -195,14 +196,24 @@ var AI = {
                 if( behavior.target ) {
                     var owner = behavior.ownerAIObject;
                     if( owner.sprite.body.x + Math.abs(owner.sprite.body.width) < behavior.target.body.x ){
+                        if( owner.sprite.entitydata.facingLeft )
+                            owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
                         owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
                     }
                     else if ( owner.sprite.body.x > behavior.target.body.x+behavior.target.body.width){
+                        if( !owner.sprite.entitydata.facingLeft )
+                            owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
                         owner.sprite.body.velocity.x = -owner.sprite.entitydata.speed;
                     }
                     //else do nothing when in tolerance range
+                    
+                    owner.sprite.animations.play('walk');
+                }
+                else{
+                    //invalid target, return to idle
+                    ownerAIObject.setState('idle');
                 }
             };
 
