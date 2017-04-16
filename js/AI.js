@@ -28,11 +28,19 @@
 *         @returns the behavior object owned by the AIObject
 *     setState( statename )
 *         sets the behavior of the AIObject
+*     addState( statename , behaviorObj )
+*         add a new behavior to the AIObject
 *
 *
 ====================================================================================
-* Available states and their properties:
+* All behaviors should have:
+* -ownerAIObject //reference to the owner AI
+* -update() //method
 ====================================================================================
+====================================================================================
+* Available behavior objects and their public properties:
+====================================================================================
+*
 *   'idle'
 *   'meander'
 *           -radius
@@ -49,18 +57,32 @@ function _AIObject ( sprite ) {
 _AIObject.prototype.constructor = _AIObject;
 
 var AI = {
-    _list : [],
+    list : [],
 
     update : function (){
-        AI._list.forEach( function ( e ) { e.update(); } );
+        AI.list.forEach( function ( e ) { e.update(); } );
     },
     
+    
     enableAI : function ( sprite ) {
+        
+        //validate sprite
+        if( !sprite.entitydata ){
+            console.debug("Sprite is not decorated with entitydata");
+            return undefined;
+        }
+        
+        //create AIObject
         var newAI = new _AIObject( sprite );
         
-        newAI.states.meander = this.BehaviorFactory.createMeander( newAI.sprite.x , 100, newAI );
-        newAI.states.pursue = this.BehaviorFactory.createPursue( newAI );
-        newAI.states.idle = this.BehaviorFactory.createIdle( newAI );
+        //add behaviors
+        newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , 100, newAI );
+        newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
+        newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
+        
+        //create more behaviors in the BehaviorFactory, then add them here
+        
+        //set up more methods
         newAI.getState = function ( stateName ) { 
             return newAI.states[stateName] ;
         };
@@ -71,34 +93,45 @@ var AI = {
             }
             return state;
         };
+        newAI.addState = function ( name, behavior ){
+            newAI.state[name] = behavior;
+        };
         
-        AI._list.push( newAI );
+        //initial state
+        newAI.setState('meander');
+        
+        //keep track for maintenance
+        AI.list.push( newAI );
         return newAI;
     },
     
     getAI : function ( sprite ) {
-        for ( var i = 0; i < AI._list.length; i++ ){
-            if( AI._list[i].sprite === sprite ){
-                return AI._list[i];
+        for ( var i = 0; i < AI.list.length; i++ ){
+            if( AI.list[i].sprite === sprite ){
+                return AI.list[i];
             }
         }
         return undefined;
     },
     
+    
     disableAI : function ( sprite ) {
         var index;
-        for ( var i = 0; i < AI._list.length; i++ ){
-            if( AI._list[i].sprite === sprite ){
+        for ( var i = 0; i < AI.list.length; i++ ){
+            if( AI.list[i].sprite === sprite ){
                 index = i;
                 break;
             }
         }
         if(index)
-            AI._list.splice(index, 1);
+            AI.list.splice(index, 1);
     },
     
-    BehaviorFactory : {
     
+    //create more behaivors here, though you don't have to
+    BehaviorFactory : {
+        
+        //idle behavior
         createIdle : function ( ownerAIObject ) {
             var behavior = {};
 
@@ -111,6 +144,7 @@ var AI = {
             return behavior;
         },
 
+        //meander behavior
         createMeander : function (x, radius, ownerAIObject) {
             var behavior = {};
 
@@ -122,8 +156,9 @@ var AI = {
                 var owner = behavior.ownerAIObject;
                 if( owner.sprite.entitydata.facingLeft ){
                     if( owner.sprite.body.x < behavior.x - behavior.radius || 
-                        owner.sprite.body.blocked.left || owner.sprite.body.blocked.right
+                        owner.sprite.body.wasTouching.left
                       ) {
+                        owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
                         owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
                     }
@@ -133,8 +168,9 @@ var AI = {
                 }
                 else{
                     if( owner.sprite.body.x > behavior.x + behavior.radius || 
-                        owner.sprite.body.blocked.left || owner.sprite.body.blocked.right
+                        owner.sprite.body.wasTouching.right
                       ) {
+                        owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
                         owner.sprite.body.velocity.x = -owner.sprite.entitydata.speed;
                     }
@@ -142,11 +178,13 @@ var AI = {
                         owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
                     }
                 }
+                owner.sprite.animations.play('walk');
             };
 
             return behavior;
         },
 
+        //pursue behavior
         createPursue : function ( ownerAIObject ) {
             var behavior = {};
 
@@ -156,7 +194,7 @@ var AI = {
             behavior.update = function (){
                 if( behavior.target ) {
                     var owner = behavior.ownerAIObject;
-                    if( owner.sprite.body.x + owner.sprite.body.width < behavior.target.body.x ){
+                    if( owner.sprite.body.x + Math.abs(owner.sprite.body.width) < behavior.target.body.x ){
                         owner.sprite.entitydata.facingLeft = false;
                         owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
                     }

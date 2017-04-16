@@ -52,7 +52,6 @@ var menuState = {
         eye_white.scale.setTo(eye_scale);
     },
     update: function(){
-        console.debug("test");
         if(currentState == "Splash Screen"){
             eyeMovement();
         }

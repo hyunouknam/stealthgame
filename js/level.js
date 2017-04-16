@@ -40,7 +40,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     }
     
     //create level function
-    level.create = function () {
+    level.create = function ( spawner ) {
         level.game.stage.backgroundColor = '#ffffff';
 
         //create map images
@@ -91,13 +91,31 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                         break;
                     case 'mob spawn' :                                  //temporary, til we have json for spawning
                         for(var j = 0; j < objectarray.length; j++){
-                            var mob = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'enemy1' );
+                            var mob;
+                            
+                            //decorate with spawner
+                            if( spawner && objectarray[j].properties.id ){
+                                mob = spawner.spawn( objectarray[j].x, objectarray[j].y, objectarray[j].properties.id );
+                                
+                                //enable AI
+                                AI.enableAI(mob);
+                                
+                            }
+                            
+                            //default mob
+                            else{
+                                mob = level.game.add.sprite(objectarray[j].x, objectarray[j].y, 'enemy1' );
+                                mob.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
+                                mob.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
+                                mob.animations.add('run', [0, 1, 2, 3, 4], 10, true);
+                            }
+                            
+                            
+                            
                             level.game.physics.enable(mob);
                             mob.body.gravity.y = 300;
                             level.spawnGroup.add( mob );
-                            mob.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
-                            mob.animations.play('idle');
-                            mob.alpha = 0.5;
+                            
                         }
                         break;
                     case 'key object' : 
