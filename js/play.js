@@ -423,14 +423,14 @@ function pause(){
 }
 
 function playerDamaged( player, mob ){
-    if(!godMode){
+    if(!godMode.enabled){
         health -= health <= 0 ? 0: 1;
         healthBar.width -= health <= 1 ? 0: 1;
     }
 }
 
 function loseStamina(){
-    if(!godMode){
+    if(!godMode.enabled){
         stamina -= stamina <= 1 ? stamina: 1;
         staminaBar.width = stamina;
     }
