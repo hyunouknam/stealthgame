@@ -153,7 +153,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         
         //test
         var bitmap = level.game.add.bitmapData( level.game.width, level.game.height );
-        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0.7)';
         bitmap.context.fillRect( 0, 0, level.game.width, level.game.height );
         var mask =level.game.add.sprite( 0, 0, bitmap );
         mask.fixedToCamera = true;
@@ -167,7 +167,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             level.game.world.bringToTop( level.doorGroup );
             level.game.world.bringToTop( level.keyGroup );
         
-        level.mask.bringToTop();
+        //level.mask.bringToTop();
         
         for( var i in level.layers) {
             if(i === 'foreground decoration' || i === 'specials'){
@@ -181,6 +181,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             
             
         }
+        level.mask.bringToTop();
         if( topgroup !== null)
             level.game.world.bringToTop( topgroup );
         
