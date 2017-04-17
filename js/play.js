@@ -367,23 +367,6 @@ function playerHoldItem(){
                     currentItem = null;
                 }
                 mask.alpha = 0;
-                if(currentItem == null){
-                    if(faceLeft){
-                        currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,'lantern');
-                        currentItem.scale.setTo(.75,.75);
-                    }else{
-                        currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
-                        currentItem.scale.setTo(.75, .75);
-                    }
-                }else{
-                    if(faceLeft){
-                        currentItem.position.x = player.position.x + 1;
-                        currentItem.position.y = player.position.y + 26;
-                    }else{
-                        currentItem.position.x = player.position.x + 25;
-                        currentItem.position.y = player.position.y + 26;
-                    }
-                }
 
             break;
             case "flashlight":
@@ -400,29 +383,29 @@ function playerHoldItem(){
                 if(!godMode.enabled){
                     mask.alpha = 1;
                 }
-                //mask.alpha = 1;
-                if(currentItem == null){
-                    if(faceLeft){
-                        currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,'bomb');
-                        currentItem.scale.setTo(.75,.75);
-                    }else{
-                        currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, 'bomb');
-                        currentItem.scale.setTo(.75, .75);
-                    }
-                }else{
-                    if(faceLeft){
-                        currentItem.position.x = player.position.x + 1;
-                        currentItem.position.y = player.position.y + 26;
-                    }else{
-                        currentItem.position.x = player.position.x + 25;
-                        currentItem.position.y = player.position.y + 26;
-                    }
-                }
+                
             break;
             //case "":        // add more items
 
             //break;
 
+        }
+        if(currentItem == null){
+            if(faceLeft){
+                currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,items[currentItemIndex].key);
+                currentItem.scale.setTo(.75,.75);
+            }else{
+                currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, items[currentItemIndex].key);
+                currentItem.scale.setTo(.75, .75);
+            }
+        }else{
+            if(faceLeft){
+                currentItem.position.x = player.position.x + 1;
+                currentItem.position.y = player.position.y + 26;
+            }else{
+                currentItem.position.x = player.position.x + 25;
+                currentItem.position.y = player.position.y + 26;
+            }
         }
     }else{
         if(!godMode.enabled){
