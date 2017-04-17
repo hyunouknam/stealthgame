@@ -21,13 +21,13 @@ var faceLeft = false;
 var level;
 var spawner;
 
-var staticLantern, playerLantern;
+var itemGroup, staticLantern, playerLantern, staticBomb, playerBomb;
 
 var currentItem;
 var currentItemIndex = 0;
 var items = [null, null, null, null, null];
 var isHolding = false;
-var lantern; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
+var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
     preload: function(){
@@ -82,7 +82,21 @@ var playState = {
 
         largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
         largeMask.anchor.setTo(.5);
+
+
+        // spawn test lantern
+
+        lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
+        game.physics.arcade.enable(lantern);
+        lantern.body.gravity.y = 700;
+
+        // spawn test bomb
+
+        bomb = game.add.sprite(level.playerSpawnPoint.x + 500, level.playerSpawnPoint.y, 'bomb');
+        game.physics.arcade.enable(bomb);
+        bomb.body.gravity.y = 700;
         
+
         hudGroup = game.add.group();
         hudGroup.add(mask);
         hudGroup.add(largeMask);
@@ -103,12 +117,6 @@ var playState = {
 
         level.renderSort ( player , hudGroup);
 
-        // spawn test item
-
-        lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
-        game.physics.arcade.enable(lantern);
-        lantern.body.gravity.y = 700;
-
     },
     update: function(){
         AI.update();
@@ -123,6 +131,8 @@ var playState = {
         game.physics.arcade.collide(level.doorGroup, level.spawnGroup);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
+        game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
+        game.physics.arcade.collide(bomb, level.solidGroup);
         game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
 
         if(collideDown){
@@ -316,13 +326,28 @@ function collectItem(player, item){
     if(amtOfItems<5){
         item.kill();
 
+        // lantern
         if(item.key == 'lantern'){
             for(var i = 0; i < items.length; i++){
                 if(items[i] == null){
-                    staticLantern = game.add.sprite(853 + (i * 55), 612, 'lantern');
+                    staticLantern = game.add.sprite(860 + (i * 55), 615, 'lantern');    //853
                     items[i] = staticLantern;
 
                     staticLantern.fixedToCamera = true;
+                    break;
+                }
+            }
+
+        }
+
+        // bomb
+        if(item.key == 'bomb'){
+            for(var i = 0; i < items.length; i++){
+                if(items[i] == null){
+                    staticBomb = game.add.sprite(860 + (i * 55), 615, 'bomb');
+                    items[i] = staticBomb;
+
+                    staticBomb.fixedToCamera = true;
                     break;
                 }
             }
@@ -337,44 +362,75 @@ function playerHoldItem(){
     if(items[currentItemIndex] != null){
         switch(items[currentItemIndex].key) {
             case "lantern":
+                if(currentItem != null && currentItem.key != 'lantern'){
+                    currentItem.kill();
+                    currentItem = null;
+                }
                 mask.alpha = 0;
-                if(playerLantern == null){
+                if(currentItem == null){
                     if(faceLeft){
-                        playerLantern = game.add.sprite(player.position.x + 1,player.position.y + 26,'lantern');
-                        playerLantern.scale.setTo(.75,.75);
+                        currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,'lantern');
+                        currentItem.scale.setTo(.75,.75);
                     }else{
-                        playerLantern = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
-                        playerLantern.scale.setTo(.75, .75);
+                        currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, 'lantern');
+                        currentItem.scale.setTo(.75, .75);
                     }
                 }else{
                     if(faceLeft){
-                        playerLantern.position.x = player.position.x + 1;
-                        playerLantern.position.y = player.position.y + 26;
+                        currentItem.position.x = player.position.x + 1;
+                        currentItem.position.y = player.position.y + 26;
                     }else{
-                        playerLantern.position.x = player.position.x + 25;
-                        playerLantern.position.y = player.position.y + 26;
+                        currentItem.position.x = player.position.x + 25;
+                        currentItem.position.y = player.position.y + 26;
+                    }
+                }
+
+            break;
+            case "flashlight":
+
+            break;
+            case "rock":
+
+            break;
+            case "bomb":
+                if(currentItem != null && currentItem.key != 'bomb'){
+                    currentItem.kill();
+                    currentItem = null;
+                }
+                if(!godMode.enabled){
+                    mask.alpha = 1;
+                }
+                //mask.alpha = 1;
+                if(currentItem == null){
+                    if(faceLeft){
+                        currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,'bomb');
+                        currentItem.scale.setTo(.75,.75);
+                    }else{
+                        currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, 'bomb');
+                        currentItem.scale.setTo(.75, .75);
+                    }
+                }else{
+                    if(faceLeft){
+                        currentItem.position.x = player.position.x + 1;
+                        currentItem.position.y = player.position.y + 26;
+                    }else{
+                        currentItem.position.x = player.position.x + 25;
+                        currentItem.position.y = player.position.y + 26;
                     }
                 }
             break;
-            case "flashlight":
+            //case "":        // add more items
 
-            break;
-            case "flashlight":
-
-            break;
-            case "flashlight":
-
-            break;
-            default:
+            //break;
 
         }
     }else{
         if(!godMode.enabled){
             mask.alpha = 1;
         }
-        if(playerLantern != null){
-            playerLantern.kill();
-            playerLantern = null;
+        if(currentItem != null){
+            currentItem.kill();
+            currentItem = null;
         }
     }
 }
