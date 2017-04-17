@@ -1,7 +1,7 @@
 
-var eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,
-    levelSelectionButton,controlsButton,helpButton,mainMenuButton,level1,level2,level3,lvl2Locked,lvl3Locked,
-    fade = false;
+var eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,lvl2Locked,lvl3Locked; //Sprites
+var levelSelectionButton,controlsButton,helpButton,mainMenuButton,level1,level2,level3; //Buttons
+var fade = false;
 var currentState = "Splash Screen";
 
 // may require variable to show level is unlocked
@@ -52,37 +52,52 @@ var menuState = {
         eye_white.scale.setTo(eye_scale);
     },
     update: function(){
-        if(currentState == "Splash Screen"){
-            eyeMovement();
-        }
-        if(start.fade && currentState == "Splash Screen"){
-            fadeOut(start,.005);
-            if(start.alpha <= 0){
-                start.fade = !start.fade;
-            }
-        }else if(!start.fade && currentState == "Splash Screen"){
-            fadeIn(start,.005);
-            if(start.alpha >= 1){
-                start.fade = !start.fade;
-            }
-        }
-        if(game.input.activePointer.leftButton.isDown && currentState == "Splash Screen"){ //Start Transition to title screen
-            currentState = "Title Screen Transition";
-        }
-        if(currentState == "Title Screen Transition"){
-            titleScreenTransition();
-        }else if(currentState == "Help Screen Transition"){
-            helpScreenTransition();
-        }else if(currentState == "Remove Help Screen"){
-            removeHelpScreen();
-        }else if(currentState == "Controls Screen Transition"){
-            controlsScreenTransition();
-        }else if(currentState == "Remove Controls Screen"){
-            removeControlsScreen();
-        }else if(currentState == "Level Screen Transition"){
-            levelScreenTransition();                          // 
-        }else if(currentState == "Remove Level Screen"){
-            removeLevelScreen();                          // 
+        switch(currentState){
+            case "Splash Screen":
+                eyeMovement();
+                if(start.fade){
+                    fadeOut(start,.005);
+                    if(start.alpha <= 0){
+                        start.fade = !start.fade;
+                    }
+                }else{
+                    fadeIn(start,.005);
+                    if(start.alpha >= 1){
+                        start.fade = !start.fade;
+                    }
+                }
+                if(game.input.activePointer.leftButton.isDown){
+                    currentState = "Title Screen Transition";
+                }
+                break;
+            
+            case "Title Screen Transition":
+                titleScreenTransition();
+                break;
+
+            case "Help Screen Transition":
+                helpScreenTransition();
+                break;
+
+            case "Remove Help Screen":
+                removeHelpScreen();
+                break;
+
+            case "Controls Screen Transition":
+                controlsScreenTransition();
+                break;
+
+            case "Remove Controls Screen":
+                removeControlsScreen();
+                break;
+
+            case "Level Screen Transition":
+                levelScreenTransition();
+                break;
+
+            case "Remove Level Screen":
+                removeLevelScreen();
+            
         }
     }
 }
@@ -112,7 +127,7 @@ function fadeIn(object,speed){
     object.alpha += speed;
 }
 function titleScreenTransition(){
-    if(start.alpha > 0 || eye_white.alpha > 0 || eye_iris.alpha > 0 ){ //Transition to title screen
+    if(eye_iris.alpha > 0 ){ //Transition to title screen
             fadeOut(start,.02);
             fadeOut(eye_white,.02);
             fadeOut(eye_iris,.02);
@@ -123,15 +138,19 @@ function titleScreenTransition(){
 
         logo = game.add.sprite(0,0,'logo');
         logo.alpha = 0;
+        
         levelSelectionButton = game.add.button(600,290,'level_selection',function(){currentState = "Level Screen Transition";fade = false;});
         levelSelectionButton.anchor.setTo(.5);
         levelSelectionButton.alpha = 0;
+        
         controlsButton = game.add.button(600,410,'controls',function(){currentState = "Controls Screen Transition";fade = false;});
         controlsButton.anchor.setTo(.5);
         controlsButton.alpha = 0;
+        
         helpButton = game.add.button(600,530,'help',function(){currentState = "Help Screen Transition";fade=false;});
         helpButton.anchor.setTo(.5);
         helpButton.alpha = 0;
+        
         fade = true;
     }
     if(fade){
