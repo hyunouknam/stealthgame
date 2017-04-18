@@ -1,14 +1,10 @@
-
-var eye_iris,eye_white,start,titleImage,logo,helpScreen,controlsScreen,lvl2Locked,lvl3Locked; //Sprites
-var levelSelectionButton,controlsButton,helpButton,mainMenuButton,level1,level2,level3; //Buttons
-var fade = false;
-var currentState = "Splash Screen";
-
-// may require variable to show level is unlocked
-
 var eye_scale = 4;
 
 var menuState = {
+    eye_iris: null,eye_white: null,start: null,titleImage: null,logo: null,helpScreen: null,controlsScreen: null,lvl2Locked: null,lvl3Locked: null, //Sprites
+    levelSelectionButton: null,controlsButton: null,helpButton: null,mainMenuButton: null,level1: null,level2: null,level3: null, //Buttons
+    fade: false,
+    currentState: "Splash Screen",
     preload: function(){
         game.load.image('title','../assets/menus/Id_Title.png');
         game.load.image('eye_white', '../assets/menus/Eye_White.png');
@@ -33,41 +29,41 @@ var menuState = {
     create: function(){
         //game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = "#444";
-        titleImage = game.add.sprite(600,90,'title');
-        titleImage.anchor.setTo(.5);
-        start = game.add.sprite(600,600,'start');
-        start.anchor.setTo(.5);
-        start.fade = true;
-        eye_white = game.add.sprite(600,350,'eye_white')
-        eye_white.anchor.setTo(.5);
-        eye_white.scale.setTo(5);
-        eye_iris = game.add.sprite(600,350,'eye_iris');
-        eye_iris.anchor.setTo(.5);
-        eye_iris.scale.setTo(5);
+        menuState.titleImage = game.add.sprite(600,90,'title');
+        menuState.titleImage.anchor.setTo(.5);
+        menuState.start = game.add.sprite(600,600,'start');
+        menuState.start.anchor.setTo(.5);
+        menuState.start.fade = true;
+        menuState.eye_white = game.add.sprite(600,350,'eye_white')
+        menuState.eye_white.anchor.setTo(.5);
+        menuState.eye_white.scale.setTo(5);
+        menuState.eye_iris = game.add.sprite(600,350,'eye_iris');
+        menuState.eye_iris.anchor.setTo(.5);
+        menuState.eye_iris.scale.setTo(5);
 
         game.input.mouse.capture = true;
         
         game.stage.smoothed = false;
-        eye_iris.scale.setTo(eye_scale);
-        eye_white.scale.setTo(eye_scale);
+        menuState.eye_iris.scale.setTo(eye_scale);
+        menuState.eye_white.scale.setTo(eye_scale);
     },
     update: function(){
-        switch(currentState){
+        switch(menuState.currentState){
             case "Splash Screen":
                 eyeMovement();
-                if(start.fade){
-                    fadeOut(start,.005);
-                    if(start.alpha <= 0){
-                        start.fade = !start.fade;
+                if(menuState.start.fade){
+                    fadeOut(menuState.start,.005);
+                    if(menuState.start.alpha <= 0){
+                        menuState.start.fade = !menuState.start.fade;
                     }
                 }else{
-                    fadeIn(start,.005);
-                    if(start.alpha >= 1){
-                        start.fade = !start.fade;
+                    fadeIn(menuState.start,.005);
+                    if(menuState.start.alpha >= 1){
+                        menuState.start.fade = !menuState.start.fade;
                     }
                 }
                 if(game.input.activePointer.leftButton.isDown){
-                    currentState = "Title Screen Transition";
+                    menuState.currentState = "Title Screen Transition";
                 }
                 break;
             
@@ -106,17 +102,17 @@ var menuState = {
 function eyeMovement(){
     var mouseX = game.input.mousePointer.x;
     var mouseY = game.input.mousePointer.y;
-    var dx = mouseX-eye_white.x;
-    var dy = mouseY-eye_white.y;
+    var dx = mouseX-menuState.eye_white.x;
+    var dy = mouseY-menuState.eye_white.y;
 
     if(dx*dx+dy*dy <= eye_scale*eye_scale*225){             // 225 is area using 15 below
-        eye_iris.x = mouseX;
-        eye_iris.y = mouseY;
+        menuState.eye_iris.x = mouseX;
+        menuState.eye_iris.y = mouseY;
     }else{
         if(dx*dx+dy*dy>25){ 
             var angle=Math.atan2(dy,dx);    //Get the angle
-            eye_iris.x = eye_white.x + 65 * Math.cos(angle);
-            eye_iris.y = eye_white.y + 65 * Math.sin(angle);
+            menuState.eye_iris.x = menuState.eye_white.x + 65 * Math.cos(angle);
+           menuState.eye_iris.y = menuState.eye_white.y + 65 * Math.sin(angle);
         }
     }
 }
@@ -127,201 +123,202 @@ function fadeIn(object,speed){
     object.alpha += speed;
 }
 function titleScreenTransition(){
-    if(eye_iris.alpha > 0 ){ //Transition to title screen
-            fadeOut(start,.02);
-            fadeOut(eye_white,.02);
-            fadeOut(eye_iris,.02);
-    }else if(!fade){ //Complete Transition
-        start.destroy();
-        eye_white.destroy();
-        eye_iris.destroy();
+    if(menuState.eye_iris.alpha > 0 ){ //Transition to title screen
+            fadeOut(menuState.start,.02);
+            fadeOut(menuState.eye_white,.02);
+            fadeOut(menuState.eye_iris,.02);
+    }else if(!menuState.fade){ //Complete Transition
+        menuState.start.destroy();
+        menuState.eye_white.destroy();
+        menuState.eye_iris.destroy();
 
-        logo = game.add.sprite(0,0,'logo');
-        logo.alpha = 0;
+        menuState.logo = game.add.sprite(0,0,'logo');
+        menuState.logo.alpha = 0;
         
-        levelSelectionButton = game.add.button(600,290,'level_selection',function(){currentState = "Level Screen Transition";fade = false;});
-        levelSelectionButton.anchor.setTo(.5);
-        levelSelectionButton.alpha = 0;
+        menuState.levelSelectionButton = game.add.button(600,290,'level_selection',function(){menuState.currentState = "Level Screen Transition";menuState.fade = false;});
+        menuState.levelSelectionButton.anchor.setTo(.5);
+        menuState.levelSelectionButton.alpha = 0;
         
-        controlsButton = game.add.button(600,410,'controls',function(){currentState = "Controls Screen Transition";fade = false;});
-        controlsButton.anchor.setTo(.5);
-        controlsButton.alpha = 0;
+        menuState.controlsButton = game.add.button(600,410,'controls',function(){menuState.currentState = "Controls Screen Transition";menuState.fade = false;});
+        menuState.controlsButton.anchor.setTo(.5);
+        menuState.controlsButton.alpha = 0;
         
-        helpButton = game.add.button(600,530,'help',function(){currentState = "Help Screen Transition";fade=false;});
-        helpButton.anchor.setTo(.5);
-        helpButton.alpha = 0;
+        menuState.helpButton = game.add.button(600,530,'help',function(){menuState.currentState = "Help Screen Transition";menuState.fade=false;});
+        menuState.helpButton.anchor.setTo(.5);
+        menuState.helpButton.alpha = 0;
         
-        fade = true;
+        menuState.fade = true;
     }
-    if(fade){
-        if(levelSelectionButton.alpha < 1 || controlsButton.alpha < 1 || helpButton.alpha < 1 || logo.alpha < 1){
-            fadeIn(levelSelectionButton,.02);
-            fadeIn(controlsButton,.02);
-            fadeIn(helpButton,.02);
-            fadeIn(logo,.02);
-            if(titleImage.alpha<1){
-                fadeIn(titleImage,.02);
-            }
+    if(menuState.fade){
+        if(menuState.titleImage.alpha<1){
+                fadeIn(menuState.titleImage,.02);
+        }else if(menuState.levelSelectionButton.alpha < 1 || menuState.logo.alpha < 1){
+            fadeIn(menuState.levelSelectionButton,.02);
+            fadeIn(menuState.logo,.02);
+        }else if(menuState.controlsButton.alpha < 1){
+            fadeIn(menuState.controlsButton,.02);
+        }else if(menuState.helpButton.alpha < 1){
+            fadeIn(menuState.helpButton,.02);
         }else{
-            currentState = "Title Screen";
-            if(eye_white.alpha > 0){
-                currentState = "Title Screen Transition";
+            menuState.currentState = "Title Screen";
+            if(menuState.eye_white.alpha > 0){
+                menuState.currentState = "Title Screen Transition";
             }
-            fade = false;
+            menuState.fade = false;
         }
     }
 }
 function levelScreenTransition(){
-    if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
-            fadeOut(levelSelectionButton,.02);
-            fadeOut(controlsButton,.02);
-            fadeOut(helpButton,.02);
-            fadeOut(logo,.02);
-            fadeOut(titleImage,.02);
-    }else if(!fade){
-        levelSelectionButton.destroy();
-        controlsButton.destroy();
-        helpButton.destroy();
-        logo.destroy();
+    if(menuState.levelSelectionButton.alpha > 0 || menuState.titleImage.alpha>0){
+            fadeOut(menuState.levelSelectionButton,.02);
+            fadeOut(menuState.controlsButton,.02);
+            fadeOut(menuState.helpButton,.02);
+            fadeOut(menuState.logo,.02);
+            fadeOut(menuState.titleImage,.02);
+    }else if(!menuState.fade){
+        menuState.levelSelectionButton.destroy();
+        menuState.controlsButton.destroy();
+        menuState.helpButton.destroy();
+        menuState.logo.destroy();
 
-        level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();currentState="Splash Screen";game.state.start('play');});
-        level1.anchor.setTo(.5);
-        level1.alpha = 0;
+        menuState.level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');});
+        menuState.level1.anchor.setTo(.5);
+        menuState.level1.alpha = 0;
 
-        level2 = game.add.button(600,350,'level2',function(){if(!level2.locked){game.world.removeAll();currentState="Splash Screen";game.state.start('play');}});
-        level2.anchor.setTo(.5);
-        level2.alpha = 0;
-        level2.locked = true;
-        lvl2Locked = game.add.sprite(600,350,'locked');
-        lvl2Locked.anchor.setTo(.5);
-        lvl2Locked.alpha = 0;
+        menuState.level2 = game.add.button(600,350,'level2',function(){if(!menuState.level2.locked){menuState.game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
+        menuState.level2.anchor.setTo(.5);
+        menuState.level2.alpha = 0;
+        menuState.level2.locked = true;
+        menuState.lvl2Locked = game.add.sprite(600,350,'locked');
+        menuState.lvl2Locked.anchor.setTo(.5);
+        menuState.lvl2Locked.alpha = 0;
         
-        level3 = game.add.button(975,350,'level3',function(){if(!level3.locked){game.world.removeAll();currentState="Splash Screen";game.state.start('play');}});
-        level3.anchor.setTo(.5);
-        level3.alpha = 0;
-        level3.locked = true;
-        lvl3Locked = game.add.sprite(975,350,'locked');
-        lvl3Locked.anchor.setTo(.5);
-        lvl3Locked.alpha = 0;
+        menuState.level3 = game.add.button(975,350,'level3',function(){if(!menuState.level3.locked){game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
+        menuState.level3.anchor.setTo(.5);
+        menuState.level3.alpha = 0;
+        menuState.level3.locked = true;
+        menuState.lvl3Locked = game.add.sprite(975,350,'locked');
+        menuState.lvl3Locked.anchor.setTo(.5);
+        menuState.lvl3Locked.alpha = 0;
 
-        mainMenuButton = game.add.button(10,10,'main_menu',function(){currentState = "Remove Level Screen";fade=false;});
-        mainMenuButton.alpha = 0;
-        mainMenuButton.scale.setTo(.5);
-        fade = true;
+        menuState.mainMenuButton = game.add.button(10,10,'main_menu',function(){menuState.currentState = "Remove Level Screen";menuState.fade=false;});
+        menuState.mainMenuButton.alpha = 0;
+        menuState.mainMenuButton.scale.setTo(.5);
+        menuState.fade = true;
     }
-    if(fade){
-        if(level1.alpha < 1){
-            fadeIn(level1,.02);
-            fadeIn(level2,.02);
-            fadeIn(level3,.02);
-            fadeIn(lvl2Locked,.02);
-            fadeIn(lvl3Locked,.02);
-            fadeIn(mainMenuButton,.02);
+    if(menuState.fade){
+        if(menuState.level1.alpha < 1){
+            fadeIn(menuState.level1,.02);
+            fadeIn(menuState.level2,.02);
+            fadeIn(menuState.level3,.02);
+            fadeIn(menuState.lvl2Locked,.02);
+            fadeIn(menuState.lvl3Locked,.02);
+            fadeIn(menuState.mainMenuButton,.02);
         }else{
-            currentState = "Level Screen";
-            fade = false;
+            menuState.currentState = "Level Screen";
+            menuState.fade = false;
         }
     }
 }
 function removeLevelScreen(){
-    if(mainMenuButton.alpha > 0){
-        fadeOut(level1,.02);
-        fadeOut(level2,.02);
-        fadeOut(level3,.02);
-        fadeOut(lvl2Locked,.02);
-        fadeOut(lvl3Locked,.02);
-        fadeOut(mainMenuButton,.02);
+    if(menuState.mainMenuButton.alpha > 0){
+        fadeOut(menuState.level1,.02);
+        fadeOut(menuState.level2,.02);
+        fadeOut(menuState.level3,.02);
+        fadeOut(menuState.lvl2Locked,.02);
+        fadeOut(menuState.lvl3Locked,.02);
+        fadeOut(menuState.mainMenuButton,.02);
     }else{
-        level1.destroy();
-        level2.destroy();
-        level3.destroy();
-        lvl2Locked.destroy();
-        lvl3Locked.destroy();
-        mainMenuButton.destroy();
-        currentState = "Title Screen Transition";
+        menuState.level1.destroy();
+        menuState.level2.destroy();
+        menuState.level3.destroy();
+        menuState.lvl2Locked.destroy();
+        menuState.lvl3Locked.destroy();
+        menuState.mainMenuButton.destroy();
+        menuState.currentState = "Title Screen Transition";
     }
 }
 function helpScreenTransition(){
-    if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
-            fadeOut(levelSelectionButton,.02);
-            fadeOut(controlsButton,.02);
-            fadeOut(helpButton,.02);
-            fadeOut(logo,.02);
-            fadeOut(titleImage,.02);
-    }else if(!fade){
-        levelSelectionButton.destroy();
-        controlsButton.destroy();
-        helpButton.destroy();
+    if(menuState.levelSelectionButton.alpha > 0 || menuState.titleImage.alpha>0){
+            fadeOut(menuState.levelSelectionButton,.02);
+            fadeOut(menuState.controlsButton,.02);
+            fadeOut(menuState.helpButton,.02);
+            fadeOut(menuState.logo,.02);
+            fadeOut(menuState.titleImage,.02);
+    }else if(!menuState.fade){
+        menuState.levelSelectionButton.destroy();
+        menuState.controlsButton.destroy();
+        menuState.helpButton.destroy();
 
-        helpScreen = game.add.sprite(600,350,'help_screen');
-        helpScreen.anchor.setTo(.5);
-        helpScreen.alpha = 0;
-        helpScreen.scale.setTo(1.35);
+        menuState.helpScreen = game.add.sprite(600,350,'help_screen');
+        menuState.helpScreen.anchor.setTo(.5);
+        menuState.helpScreen.alpha = 0;
+        menuState.helpScreen.scale.setTo(1.35);
 
-        mainMenuButton = game.add.button(10,10,'main_menu',function(){currentState = "Remove Help Screen";fade=false;});
-        mainMenuButton.alpha = 0;
-        mainMenuButton.scale.setTo(.5);
-        fade = true;
+        menuState.mainMenuButton = game.add.button(10,10,'main_menu',function(){menuState.currentState = "Remove Help Screen";menuState.fade=false;});
+        menuState.mainMenuButton.alpha = 0;
+        menuState.mainMenuButton.scale.setTo(.5);
+        menuState.fade = true;
     }
-    if(fade){
-        if(helpScreen.alpha < 1){
-            fadeIn(helpScreen,.02);
-            fadeIn(mainMenuButton,.02);
+    if(menuState.fade){
+        if(menuState.helpScreen.alpha < 1){
+            fadeIn(menuState.helpScreen,.02);
+            fadeIn(menuState.mainMenuButton,.02);
         }else{
-            currentState = "Help Screen";
-            fade = false;
+            menuState.currentState = "Help Screen";
+            menuState.fade = false;
         }
     }
 }
 function removeHelpScreen(){
-    if(mainMenuButton.alpha > 0){
-        fadeOut(helpScreen,.02);
-        fadeOut(mainMenuButton,.02);
+    if(menuState.mainMenuButton.alpha > 0){
+        fadeOut(menuState.helpScreen,.02);
+        fadeOut(menuState.mainMenuButton,.02);
     }else{
-        helpScreen.destroy();
-        mainMenuButton.destroy();
-        currentState = "Title Screen Transition";
+        menuState.helpScreen.destroy();
+        menuState.mainMenuButton.destroy();
+        menuState.currentState = "Title Screen Transition";
     }
 }
 function controlsScreenTransition(){
-    if(levelSelectionButton.alpha > 0 || titleImage.alpha>0){
-            fadeOut(levelSelectionButton,.02);
-            fadeOut(controlsButton,.02);
-            fadeOut(helpButton,.02);
-            fadeOut(logo,.02);
-            fadeOut(titleImage,.02);
-    }else if(!fade){
-        levelSelectionButton.destroy();
-        controlsButton.destroy();
-        helpButton.destroy();
+    if(menuState.levelSelectionButton.alpha > 0 || menuState.titleImage.alpha>0){
+            fadeOut(menuState.levelSelectionButton,.02);
+            fadeOut(menuState.controlsButton,.02);
+            fadeOut(menuState.helpButton,.02);
+            fadeOut(menuState.logo,.02);
+            fadeOut(menuState.titleImage,.02);
+    }else if(!menuState.fade){
+        menuState.levelSelectionButton.destroy();
+        menuState.controlsButton.destroy();
+        menuState.helpButton.destroy();
 
-        controlsScreen = game.add.sprite(600,350,'controls_screen');
-        controlsScreen.anchor.setTo(.5);
-        controlsScreen.alpha = 0;
-        controlsScreen.scale.setTo(1.35);
+        menuState.controlsScreen = game.add.sprite(600,350,'controls_screen');
+        menuState.controlsScreen.anchor.setTo(.5);
+        menuState.controlsScreen.alpha = 0;
+        menuState.controlsScreen.scale.setTo(1.35);
 
-        mainMenuButton = game.add.button(10,10,'main_menu',function(){currentState = "Remove Controls Screen";fade=false;});
-        mainMenuButton.alpha = 0;
-        mainMenuButton.scale.setTo(.5);
-        fade = true;
+        menuState.mainMenuButton = game.add.button(10,10,'main_menu',function(){menuState.currentState = "Remove Controls Screen";menuState.fade=false;});
+        menuState.mainMenuButton.alpha = 0;
+        menuState.mainMenuButton.scale.setTo(.5);
+        menuState.fade = true;
     }
-    if(fade){
-        if(controlsScreen.alpha < 1){
-            fadeIn(controlsScreen,.02);
-            fadeIn(mainMenuButton,.02);
+    if(menuState.fade){
+        if(menuState.controlsScreen.alpha < 1){
+            fadeIn(menuState.controlsScreen,.02);
+            fadeIn(menuState.mainMenuButton,.02);
         }else{
-            currentState = "Controls Screen";
-            fade = false;
+            menuState.currentState = "Controls Screen";
+            menuState.fade = false;
         }
     }
 }
 function removeControlsScreen(){
-    if(mainMenuButton.alpha > 0){
-        fadeOut(controlsScreen,.02);
-        fadeOut(mainMenuButton,.02);
+    if(menuState.mainMenuButton.alpha > 0){
+        fadeOut(menuState.controlsScreen,.02);
+        fadeOut(menuState.mainMenuButton,.02);
     }else{
-        controlsScreen.destroy();
-        mainMenuButton.destroy();
-        currentState = "Title Screen Transition";
+        menuState.controlsScreen.destroy();
+        menuState.mainMenuButton.destroy();
+        menuState.currentState = "Title Screen Transition";
     }
 }
