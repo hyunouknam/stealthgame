@@ -127,13 +127,14 @@ var playState = {
         game.physics.arcade.collide(player, level.doorGroup);
         game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
-        game.physics.arcade.collide(level.solidGroup, level.spawnGroup);
-        game.physics.arcade.collide(level.doorGroup, level.spawnGroup);
+        game.physics.arcade.collide(level.solidGroup, level.collidableSpawnGroup);
+        game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
         game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
         game.physics.arcade.collide(bomb, level.solidGroup);
-        game.physics.arcade.collide(player, level.spawnGroup, playerDamaged, null, this);
+        game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
+        game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
 
         if(collideDown){
             game.physics.arcade.collide(player, level.platformGroup);

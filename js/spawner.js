@@ -37,6 +37,7 @@ var loadSpawner = function ( game, profilejsonkey ) {
             sprite = spawner.game.add.sprite( x, y, profile.spritesheet.referencename );
             sprite.anchor.setTo(0.5, 0.5);
             
+            
             //add animations
             for( var i = 0; i < profile.animations.length; i++ ){
                 var animInfo = profile.animations[i];

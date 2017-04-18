@@ -3980,6 +3980,96 @@
                  "width":32,
                  "x":416,
                  "y":1600
+                }, 
+                {
+                 "height":32,
+                 "id":330,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_regular"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":544,
+                 "y":1376
+                }, 
+                {
+                 "height":0,
+                 "id":331,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_masked_crazy"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":640,
+                 "y":1088
+                }, 
+                {
+                 "height":0,
+                 "id":333,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_teethed"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1152,
+                 "y":128
+                }, 
+                {
+                 "height":0,
+                 "id":334,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_teethed"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1056,
+                 "y":2304
+                }, 
+                {
+                 "height":32,
+                 "id":335,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_masked_crazy"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1440,
+                 "y":1184
+                }, 
+                {
+                 "height":0,
+                 "id":338,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"fish_teethed"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2752,
+                 "y":1952
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4084,7 +4174,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":330,
+ "nextobjectid":340,
  "orientation":"orthogonal",
  "properties":
     {

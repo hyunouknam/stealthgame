@@ -76,7 +76,7 @@ var AI = {
         var newAI = new _AIObject( sprite );
         
         //add behaviors
-        newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , 100, newAI );
+        newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , Math.random()*400+100, newAI );
         newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
         newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
         
@@ -157,7 +157,7 @@ var AI = {
                 var owner = behavior.ownerAIObject;
                 if( owner.sprite.entitydata.facingLeft ){
                     if( owner.sprite.body.x < behavior.x - behavior.radius || 
-                        owner.sprite.body.wasTouching.left
+                        (owner.sprite.body.wasTouching.left && !owner.sprite.entitydata.passthrough)
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
@@ -169,7 +169,7 @@ var AI = {
                 }
                 else{
                     if( owner.sprite.body.x > behavior.x + behavior.radius || 
-                        owner.sprite.body.wasTouching.right
+                        (owner.sprite.body.wasTouching.right && !owner.sprite.entitydata.passthrough)
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;

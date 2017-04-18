@@ -17,13 +17,21 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.tilesetList = [];
     level.layers = {};
     level.mapJSON = game.cache.getJSON(jsonFileKey);
+    
+    //map
     level.background = game.add.group();
     level.solidGroup = game.add.group();
     level.platformGroup = game.add.group();
-    level.spawnGroup = game.add.group();
-    level.playerSpawnPoint = { x : 64, y : 64 };    //temporary
     level.keyGroup = game.add.group();
     level.doorGroup = game.add.group();
+    
+    //spawns
+    //level.spawnGroup = game.add.group(); deprecated
+    level.passthroughSpawnGroup = game.add.group();
+    level.collidableSpawnGroup = game.add.group();
+    
+    //player
+    level.playerSpawnPoint = { x : 64, y : 64 };    //temporary
     
     
     game.load.image('level_background', 'assets/forestlevelbackground.png');    //temporary, to be changed so it loads from JSON
@@ -97,6 +105,21 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             if( spawner && objectarray[j].properties.id ){
                                 mob = spawner.spawn( objectarray[j].x, objectarray[j].y, objectarray[j].properties.id );
                                 
+                                level.game.physics.enable(mob);
+                                mob.body.gravity.y = mob.entitydata.gravity;
+                                
+                                var originalWidth = mob.width;
+                                var originalHeight = mob.height;
+                                mob.scale.setTo(mob.entitydata.spritescale);
+                                mob.body.setSize(originalWidth * mob.entitydata.bodyscale, originalHeight * mob.entitydata.bodyscale, 0, 0);
+                                
+                                if(mob.entitydata.passthrough){
+                                    level.passthroughSpawnGroup.add ( mob );
+                                }
+                                else{
+                                    level.collidableSpawnGroup.add ( mob );
+                                }
+                                
                                 //enable AI
                                 AI.enableAI(mob);
                                 
@@ -108,13 +131,11 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                                 mob.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
                                 mob.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
                                 mob.animations.add('run', [0, 1, 2, 3, 4], 10, true);
+                                console.debug("INVALID MOB ENCOUNTERED");
                             }
                             
                             
-                            
-                            level.game.physics.enable(mob);
-                            mob.body.gravity.y = 300;
-                            level.spawnGroup.add( mob );
+                            //level.spawnGroup.add( mob );
                             
                         }
                         break;
@@ -161,7 +182,8 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     };
     
     level.renderSort = function( midgroup, topgroup ){
-        level.game.world.bringToTop(level.spawnGroup);
+        level.game.world.bringToTop(level.collidableSpawnGroup);
+        level.game.world.bringToTop(level.passthroughSpawnGroup);
         if( midgroup !== null)
             level.game.world.bringToTop( midgroup );
             level.game.world.bringToTop( level.doorGroup );
