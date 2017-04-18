@@ -487,6 +487,6 @@ function generateStamina(){
 }
 
 function openDoor( player, keySprite){
-    level.getDoor( keySprite ).kill();
+    level.openDoor( keySprite );
     keySprite.kill();
 }

@@ -187,6 +187,15 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         
     };
     
+    level.openDoor = function ( keySprite ){
+        for( var i = 0; i < level.doorGroup.children.length; i++){
+            if(level.doorGroup.children[i].linkhash == keySprite.linkhash){
+                level.doorGroup.children[i].kill();
+            }
+        }
+        return undefined;
+    }
+    /*
     level.getDoor = function ( keySprite ){
         for( var i = 0; i < level.doorGroup.children.length; i++){
             if(level.doorGroup.children[i].linkhash == keySprite.linkhash){
@@ -195,6 +204,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         }
         return undefined;
     }
+    */
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
         //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud
