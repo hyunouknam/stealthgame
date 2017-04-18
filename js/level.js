@@ -111,7 +111,11 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                                 var originalWidth = mob.width;
                                 var originalHeight = mob.height;
                                 mob.scale.setTo(mob.entitydata.spritescale);
-                                mob.body.setSize(originalWidth * mob.entitydata.bodyscale, originalHeight * mob.entitydata.bodyscale, 0, 0);
+                                
+                                mob.body.setSize(originalWidth*mob.entitydata.bodyscale, 
+                                                 originalHeight*mob.entitydata.bodyscale, 
+                                                 (1-mob.entitydata.bodyscale)/2*originalWidth, 
+                                                 (1-mob.entitydata.bodyscale)/2*originalHeight);
                                 
                                 if(mob.entitydata.passthrough){
                                     level.passthroughSpawnGroup.add ( mob );
@@ -227,6 +231,16 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         return undefined;
     }
     */
+    
+    level.debugRender = function (){
+        //level.solidGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.platformGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.keyGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.doorGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+    
+        level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+    }
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
         //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud

@@ -174,7 +174,6 @@ var playState = {
             }
         }
     }
-    
 }
 function playerCreate(){
     player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
