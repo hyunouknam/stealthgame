@@ -4057,7 +4057,7 @@
                  "y":1184
                 }, 
                 {
-                 "height":0,
+                 "height":64,
                  "id":338,
                  "name":"",
                  "properties":
@@ -4067,7 +4067,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
+                 "width":64,
                  "x":2752,
                  "y":1952
                 }],

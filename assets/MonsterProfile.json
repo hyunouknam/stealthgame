@@ -103,19 +103,19 @@
         "animations": [
             { 	
                 "name" : "idle",
-                "frames" : [24, 25, 26, 27],
+                "frames" : [20, 21, 22, 23],
                 "framerate" : 10,
                 "loop" : true
             },
             { 	
                 "name" : "walk",
-                "frames" : [24, 25, 26, 27],
+                "frames" : [20, 21, 22, 23],
                 "framerate" : 10,
                 "loop" : true
             },
             { 	
                 "name" : "run",
-                "frames" : [24, 25, 26, 27],
+                "frames" : [20, 21, 22, 23],
                 "framerate" : 20,
                 "loop" : true
             }
