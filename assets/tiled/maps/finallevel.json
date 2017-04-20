@@ -2605,16 +2605,16 @@
                  "height":160,
                  "id":5,
                  "name":"",
-                 "properties":
+		"properties":
                     {
                      "linkhash":"5000"
                     },
-                 "rotation":90,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":3168,
-                 "y":927.981
+                 "x":3072,
+                 "y":704
                 }, 
                 {
                  "height":160,
@@ -2725,7 +2725,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":327,
+ "nextobjectid":329,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

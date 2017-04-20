@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="327">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="329">
  <tileset firstgid="1" name="oneblock" tilewidth="32" tileheight="32" tilecount="45" columns="5">
   <image source="../tilesets/oneblock.png" width="160" height="288"/>
  </tileset>
@@ -764,7 +764,7 @@
  <objectgroup name="item spawn"/>
  <objectgroup name="door object">
   <object id="2" x="1216" y="3008.04" width="32" height="160"/>
-  <object id="5" x="3168" y="927.981" width="32" height="160" rotation="90"/>
+  <object id="5" x="3072" y="704" width="32" height="160"/>
   <object id="6" x="1215.5" y="1792.04" width="32" height="160"/>
   <object id="7" x="1215.98" y="1344.04" width="32" height="160"/>
   <object id="8" x="1215.98" y="895.92" width="32" height="160"/>
