@@ -56,8 +56,11 @@ var playState = {
         game.load.image('key', '../assets/key.png');
         game.load.image('door', '../assets/door.png');
         
-        spawner = loadSpawner( game, 'monster_profile_json');
-        level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
+        //spawner = loadSpawner( game, 'monster_profile_json');
+        //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
+
+        //spawner = loadSpawner( game, 'monster_profile_json');
+        level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
     },
     create: function(){
         level.create( spawner );
@@ -209,14 +212,14 @@ function playerCreate(){
 function playerMove(){
     player.body.velocity.x = 0;
     if (cKey.isDown && player.body.touching.down && cursors.right.isDown) {
-        player.body.velocity.y = -380;
+        player.body.velocity.y = -380
         player.animations.play("jump right hold item");
     }
     else if (cKey.isDown && player.body.touching.down && cursors.left.isDown) {
-        player.body.velocity.y = -380;
+        player.body.velocity.y = -380
         player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
-        player.body.velocity.y = -380;
+        player.body.velocity.y = -380
         if(faceLeft){
             player.animations.play('default left');
         }else{
