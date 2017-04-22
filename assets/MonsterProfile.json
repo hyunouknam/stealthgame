@@ -40,6 +40,47 @@
         ]
     },
     
+        "testghost" : {
+        "name" : "you can name naything you wawnt, this is only an ign not the id used in tiledmap loading",
+        "passthrough" : false,
+        "spritescale" : 1,
+        "bodyscale" : 1,
+        "gravity" : 300,
+        "health" : 1,
+        "speed" : 100,
+        "damage" : 10,
+        "facingLeft" : true,
+        "attack_range" : 0,
+        
+        "spritesheet" : {
+            "url" : "../assets/ghost.png",
+            "referencename" : "testghost",
+            "width" :  48,
+            "height" : 72
+        },
+        
+        "animations": [
+            { 	
+                "name" : "idle",
+                "frames" : [0, 1, 2, 3, 4],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "walk",
+                "frames" : [0, 1, 2, 3, 4],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "run",
+                "frames" : [0, 1, 2, 3, 4],
+                "framerate" : 20,
+                "loop" : true
+            }
+        ]
+    },
+    
     "fish_regular" : {
         "name" : "fish_regular",
         "passthrough" : true,

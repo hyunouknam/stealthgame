@@ -50,19 +50,82 @@
 */
 
 function _AIObject ( sprite ) { 
+    var self = this;
     this.sprite = sprite;  
     this.update = function() {};  
     this.states = {};
+    
+    //raycasts
+    this.raycast = {};
+    this.raycast.leftFoot = new Phaser.Line( this.sprite.body.x, this.sprite.body.y, this.sprite.body.x ,  this.sprite.body.y + 10 );
+    this.raycast.rightFoot = new Phaser.Line( this.sprite.body.width , this.sprite.body.y , this.sprite.body.width, this.sprite.body.y + 10);
+    this.raycast.sight = new Phaser.Line( this.sprite.x, this.sprite.y, this.sprite.x, this.sprite.y );
+    this.raycast.sight.target = undefined;
+    this.raycast.update = function () { 
+        this.leftFoot.start.set( self.sprite.body.x , self.sprite.body.y +self.sprite.body.height ); 
+        this.leftFoot.end.set( self.sprite.body.x ,  self.sprite.body.y + self.sprite.body.height + 10); 
+        this.rightFoot.start.set( self.sprite.body.x + self.sprite.body.width , self.sprite.body.y + self.sprite.body.height ); 
+        this.rightFoot.end.set( self.sprite.body.x + self.sprite.body.width, self.sprite.body.y + self.sprite.body.height + 10);
+        this.sight.start.set( self.sprite.x, self.sprite.y);
+        
+        if( self.raycast.sight.target )
+            this.sight.end.set( this.sight.target.x, this.sight.target.y );
+        else
+            this.sight.end.set( self.sprite.x, self.sprite.y );
+    };
+    
 }
+
 _AIObject.prototype.constructor = _AIObject;
+
 
 var AI = {
     list : [],
-
-    update : function (){
-        AI.list.forEach( function ( e ) { e.update(); } );
+    terrain : undefined,
+    
+    newTerrainInfo : function ( collidableLayer ){ 
+        var terrain = {};
+        terrain.layer = collidableLayer;
+        terrain.obstructed = function ( line ) {
+            if(line.width > 200)                                    //temporary range variable
+                return true;
+            var collidedTiles = terrain.layer.getRayCastTiles(line, 4, false, false);
+            for(var i = 0 ; i < collidedTiles.length; i++){
+                if(collidedTiles[i].index != -1){
+                    return true;
+                }
+            }
+            return false;
+        };
+        terrain.collidedTiles = function ( line ) {
+            var collidedTiles = terrain.layer.getRayCastTiles(line, 4, false, false);
+            return collidedTiles;
+        }
+        return terrain;
     },
     
+    initTerrain : function ( layer ) {
+        AI.terrain = AI.newTerrainInfo( layer ) ;
+    },
+    
+    setTarget : function ( sprite ) {
+        AI.list.forEach( function (e) { e.raycast.sight.target = sprite; } );
+    },
+
+    update : function (){
+        AI.list.forEach( function ( e ) { 
+            e.raycast.update(); 
+            e.update(); 
+        } );
+    },
+    
+    debugRaycast : function (game) {
+        AI.list.forEach ( function (e) { 
+            game.debug.geom(e.raycast.leftFoot);
+            game.debug.geom(e.raycast.rightFoot); 
+            game.debug.geom(e.raycast.sight); 
+        } );
+    },
     
     enableAI : function ( sprite ) {
         
@@ -128,7 +191,6 @@ var AI = {
             AI.list.splice(index, 1);
     },
     
-    
     //create more behaivors here, though you don't have to
     BehaviorFactory : {
         
@@ -153,12 +215,20 @@ var AI = {
             behavior.x = x;
             behavior.radius = radius;
             behavior.ownerAIObject = ownerAIObject;
+            
 
             behavior.update = function (){
+                //var list = AI.terrain.collidedTiles(ownerAIObject.raycast.sight)
+                //list.forEach( function (e) {console.log(e.alpha)} )
+                //console.log(AI.terrain.obstructed(ownerAIObject.raycast.sight));
                 var owner = behavior.ownerAIObject;
+                
+                var leftGrounded = AI.terrain.obstructed(owner.raycast.leftFoot);
+                var rightGrounded = AI.terrain.obstructed(owner.raycast.rightFoot);
                 if( owner.sprite.entitydata.facingLeft ){
-                    if( owner.sprite.body.x < behavior.x - behavior.radius || 
-                        (owner.sprite.body.wasTouching.left && !owner.sprite.entitydata.passthrough)
+                    if( owner.sprite.body.x < behavior.x - behavior.radius 
+                        || (owner.sprite.body.wasTouching.left && !owner.sprite.entitydata.passthrough) 
+                       || (!leftGrounded && rightGrounded  && !owner.sprite.entitydata.passthrough)
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
@@ -169,8 +239,9 @@ var AI = {
                     }
                 }
                 else{
-                    if( owner.sprite.body.x > behavior.x + behavior.radius || 
-                        (owner.sprite.body.wasTouching.right && !owner.sprite.entitydata.passthrough)
+                    if( owner.sprite.body.x > behavior.x + behavior.radius 
+                        || (owner.sprite.body.wasTouching.right && !owner.sprite.entitydata.passthrough)
+                       ||(leftGrounded && !rightGrounded && !owner.sprite.entitydata.passthrough)
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
@@ -190,19 +261,20 @@ var AI = {
         createPursue : function ( ownerAIObject ) {
             var behavior = {};
 
-            behavior.target = undefined;
+            //behavior.target = undefined;
             behavior.ownerAIObject = ownerAIObject;
 
             behavior.update = function (){
-                if( behavior.target ) {
+                var target = ownerAIObject.raycast.sight.target;
+                if( target ) {
                     var owner = behavior.ownerAIObject;
-                    if( owner.sprite.body.x + Math.abs(owner.sprite.body.width) < behavior.target.body.x ){
+                    if( owner.sprite.body.x + Math.abs(owner.sprite.body.width) < target.target.body.x ){
                         if( owner.sprite.entitydata.facingLeft )
                             owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
                         owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
                     }
-                    else if ( owner.sprite.body.x > behavior.target.body.x+behavior.target.body.width){
+                    else if ( owner.sprite.body.x > behavior.target.body.x + target.body.width){
                         if( !owner.sprite.entitydata.facingLeft )
                             owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
@@ -214,7 +286,7 @@ var AI = {
                 }
                 else{
                     //invalid target, return to idle
-                    ownerAIObject.setState('idle');
+                    //ownerAIObject.setState('idle');
                 }
             };
 

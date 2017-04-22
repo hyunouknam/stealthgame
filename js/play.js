@@ -56,14 +56,15 @@ var playState = {
         game.load.image('key', '../assets/key.png');
         game.load.image('door', '../assets/door.png');
         
-        //spawner = loadSpawner( game, 'monster_profile_json');
-        //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
+        spawner = loadSpawner( game, 'monster_profile_json');
+        level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
 
         //spawner = loadSpawner( game, 'monster_profile_json');
-        level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
+        //level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
     },
     create: function(){
         level.create( spawner );
+        AI.initTerrain( level.layers['solids'] );
         game.camera.height = 550;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -120,10 +121,11 @@ var playState = {
         playerCreate();
 
         level.renderSort ( player , hudGroup);
-
+        AI.setTarget( player );
     },
     update: function(){
         AI.update();
+        //AI.debugRaycast(game);
         pause();
         resume();
 
