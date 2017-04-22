@@ -11,7 +11,7 @@ var rested = true;
 
 var playerDead = false;
 
-var escKey, shiftKey, cKey, vKey;
+var escKey, shiftKey, cKey, vKey, kKey;
 var player, cursors, mask, largeMask;
 var collideDown = true;
 var hudGroup;
@@ -115,6 +115,7 @@ var playState = {
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
         gKey = game.input.keyboard.addKey(Phaser.Keyboard.G);
+        kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
 
         playerCreate();
 
@@ -154,6 +155,11 @@ var playState = {
             }
             game.time.events.add(200,function(){godMode.locked = false;});
         }
+
+        if(kKey.isDown && godMode.enabled){
+            killDoorAndKeys();
+        }
+
         if(!isPaused){
             playerDeath();
             if(!playerDead){
@@ -492,4 +498,9 @@ function generateStamina(){
 function openDoor( player, keySprite){
     level.openDoor( keySprite );
     keySprite.kill();
+}
+
+function killDoorAndKeys(){
+    level.keyGroup.forEach(function (a) { a.kill(); });
+    level.doorGroup.forEach(function (b) { b.kill(); });
 }
