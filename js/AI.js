@@ -74,7 +74,7 @@ var AI = {
         
         //create AIObject
         var newAI = new _AIObject( sprite );
-        sprite.AIObject = newAI;
+        sprite.ai = newAI;
         
         //add behaviors
         newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , Math.random()*400+100, newAI );
