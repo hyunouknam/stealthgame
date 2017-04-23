@@ -6,10 +6,12 @@
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "speed" : 100,
+        "walkspeed" : 100,
+        "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
         "attack_range" : 0,
+        "aggro_range" : 500,
         
         "spritesheet" : {
             "url" : "../assets/ghost.png",
@@ -41,16 +43,18 @@
     },
     
         "testghost" : {
-        "name" : "you can name naything you wawnt, this is only an ign not the id used in tiledmap loading",
+        "name" : "testghost",
         "passthrough" : false,
         "spritescale" : 1,
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "speed" : 100,
+        "walkspeed" : 100,
+        "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
         "attack_range" : 0,
+        "aggro_range" : 500,
         
         "spritesheet" : {
             "url" : "../assets/ghost.png",
@@ -88,10 +92,12 @@
         "bodyscale" : 0.4,
         "gravity" : 0,
         "health" : 1,
-        "speed" : 100,
+        "walkspeed" : 100,
+        "runspeed" : 150,
         "damage" : 10,
         "facingLeft" : true,
         "attack_range" : 0,
+        "aggro_range" : 300,
         
         "spritesheet" : {
             "url" : "../assets/fish.png",
@@ -129,10 +135,12 @@
         "bodyscale" : 0.4,
         "gravity" : 0,
         "health" : 1,
-        "speed" : 100,
+        "walkspeed" : 100,
+        "runspeed" : 150,
         "damage" : 10,
         "facingLeft" : true,
         "attack_range" : 0,
+        "aggro_range" : 300,
         
         "spritesheet" : {
             "url" : "../assets/fish.png",
@@ -172,10 +180,12 @@
         "bodyscale" : 0.4,
         "gravity" : 0,
         "health" : 1,
-        "speed" : 100,
+        "walkspeed" : 100,
+        "runspeed" : 150,
         "damage" : 10,
         "facingLeft" : true,
         "attack_range" : 0,
+        "aggro_range" : 300,
         
         "spritesheet" : {
             "url" : "../assets/fish.png",

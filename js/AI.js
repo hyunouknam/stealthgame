@@ -66,10 +66,10 @@ function _AIObject ( sprite ) {
         this.leftFoot.end.set( self.sprite.body.x ,  self.sprite.body.y + self.sprite.body.height + 10); 
         this.rightFoot.start.set( self.sprite.body.x + self.sprite.body.width , self.sprite.body.y + self.sprite.body.height ); 
         this.rightFoot.end.set( self.sprite.body.x + self.sprite.body.width, self.sprite.body.y + self.sprite.body.height + 10);
-        this.sight.start.set( self.sprite.x, self.sprite.y);
+        this.sight.start.set( self.sprite.body.x + self.sprite.body.width/2, self.sprite.body.y + self.sprite.body.height/2);
         
         if( self.raycast.sight.target )
-            this.sight.end.set( this.sight.target.x, this.sight.target.y );
+            this.sight.end.set( this.sight.target.x + this.sight.target.width/2, this.sight.target.y + this.sight.target.height/2);
         else
             this.sight.end.set( self.sprite.x, self.sprite.y );
     };
@@ -100,7 +100,7 @@ var AI = {
         terrain.collidedTiles = function ( line ) {
             var collidedTiles = terrain.layer.getRayCastTiles(line, 4, false, false);
             return collidedTiles;
-        }
+        };
         return terrain;
     },
     
@@ -154,6 +154,9 @@ var AI = {
             var state;
             if ( (state = newAI.getState( stateName )) ){
                 newAI.update = state.update;
+            }
+            else{
+                console.debug('no such state: '+stateName);
             }
             return state;
         };
@@ -218,24 +221,27 @@ var AI = {
             
 
             behavior.update = function (){
-                //var list = AI.terrain.collidedTiles(ownerAIObject.raycast.sight)
-                //list.forEach( function (e) {console.log(e.alpha)} )
-                //console.log(AI.terrain.obstructed(ownerAIObject.raycast.sight));
                 var owner = behavior.ownerAIObject;
+                
+                
+                if(!AI.terrain.obstructed(owner.raycast.sight) && owner.raycast.sight.length < owner.sprite.entitydata.aggro_range ){
+                    owner.setState('pursue');
+                }
                 
                 var leftGrounded = AI.terrain.obstructed(owner.raycast.leftFoot);
                 var rightGrounded = AI.terrain.obstructed(owner.raycast.rightFoot);
+                
                 if( owner.sprite.entitydata.facingLeft ){
                     if( owner.sprite.body.x < behavior.x - behavior.radius 
                         || (owner.sprite.body.wasTouching.left && !owner.sprite.entitydata.passthrough) 
-                       || (!leftGrounded && rightGrounded  && !owner.sprite.entitydata.passthrough)
+                        || (!leftGrounded && rightGrounded  && !owner.sprite.entitydata.passthrough)
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
-                        owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.walkspeed;
                     }
                     else {
-                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.walkspeed;
                     }
                 }
                 else{
@@ -245,10 +251,10 @@ var AI = {
                       ) {
                         owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
-                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.walkspeed;
                     }
                     else {
-                        owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.walkspeed;
                     }
                 }
                 owner.sprite.animations.play('walk');
@@ -263,30 +269,45 @@ var AI = {
 
             //behavior.target = undefined;
             behavior.ownerAIObject = ownerAIObject;
+            behavior.tolerance = 50;
 
             behavior.update = function (){
-                var target = ownerAIObject.raycast.sight.target;
-                if( target ) {
-                    var owner = behavior.ownerAIObject;
-                    if( owner.sprite.body.x + Math.abs(owner.sprite.body.width) < target.target.body.x ){
+                var owner = behavior.ownerAIObject;
+                var target = owner.raycast.sight.target;
+                var inAggroRange = owner.raycast.sight.length < owner.sprite.entitydata.aggro_range && owner.sprite.entitydata.passthrough?  true : !AI.terrain.obstructed(owner.raycast.sight);
+                
+                if( target && inAggroRange) {
+                    var ownerCenterX = owner.sprite.body.x + Math.abs(owner.sprite.body.width)/2;
+                    if( ownerCenterX < target.body.x + target.body.width/2 - behavior.tolerance ){
                         if( owner.sprite.entitydata.facingLeft )
-                            owner.sprite.scale.x *= -1;
+                        owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = false;
-                        owner.sprite.body.velocity.x = owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.runspeed;
                     }
-                    else if ( owner.sprite.body.x > behavior.target.body.x + target.body.width){
+                    else if ( ownerCenterX > target.body.x + target.body.width/2 + behavior.tolerance){
                         if( !owner.sprite.entitydata.facingLeft )
-                            owner.sprite.scale.x *= -1;
+                        owner.sprite.scale.x *= -1;
                         owner.sprite.entitydata.facingLeft = true;
-                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.speed;
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.runspeed;
                     }
-                    //else do nothing when in tolerance range
+                    
+                    //for floating monsters
+                    if(owner.sprite.entitydata.passthrough) {
+                        var ownerCenterY = owner.sprite.body.y + Math.abs(owner.sprite.body.height)/2 ;
+                        if( ownerCenterY < target.body.y + target.body.height - behavior.tolerance ){
+                            owner.sprite.body.velocity.y = owner.sprite.entitydata.runspeed;
+                        }
+                        else if( ownerCenterY > target.body.y + target.body.width/2 + behavior.tolerance ){
+                            owner.sprite.body.velocity.y = -owner.sprite.entitydata.runspeed;
+                        }
+                    }
                     
                     owner.sprite.animations.play('walk');
                 }
                 else{
                     //invalid target, return to idle
-                    //ownerAIObject.setState('idle');
+                    owner.sprite.body.velocity.y = 0;
+                    owner.setState('meander');
                 }
             };
 
