@@ -143,6 +143,7 @@ var AI = {
         newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , Math.random()*400+100, newAI );
         newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
         newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
+        newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
         
         //create more behaviors in the BehaviorFactory, then add them here
         
@@ -194,6 +195,18 @@ var AI = {
             AI.list.splice(index, 1);
     },
     
+    pause : function () {
+         for ( var i = 0; i < AI.list.length; i++ ){
+            AI.list[i].setState('pause');
+        }
+    },
+    
+    start : function () {
+        for ( var i = 0; i < AI.list.length; i++ ){
+            AI.list[i].setState('meander');
+        }
+    },
+    
     //create more behaivors here, though you don't have to
     BehaviorFactory : {
         
@@ -206,6 +219,19 @@ var AI = {
             behavior.update = function (){
                 ownerAIObject.sprite.body.velocity.x = 0;
                 ownerAIObject.sprite.animations.play('idle');
+            };
+
+            return behavior;
+        },
+        
+        createPause : function ( ownerAIObject ) {
+            var behavior = {};
+
+            behavior.ownerAIObject = ownerAIObject;
+
+            behavior.update = function (){
+                ownerAIObject.sprite.body.velocity.x = 0;
+                ownerAIObject.sprite.body.velocity.y = 0;
             };
 
             return behavior;

@@ -118,11 +118,11 @@ var playState = {
         
         pause();
         resume();
+            AI.update();
 
 
         if(!isPaused){
 
-            AI.update();
             //AI.debugRaycast(game);
             game.physics.arcade.collide(player, level.doorGroup);
             game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
@@ -457,6 +457,7 @@ function resume(){
                 mainMenuButtonIngame.destroy();
                 controlsMenu.destroy();
                 isPaused = false;
+                AI.start();
             }); 
         }
     }
@@ -470,7 +471,7 @@ function pause(){
             pausedMenu.fixedToCamera = true;
             resumeButton = game.add.button(425,130,'resume_button',function(){
                 resumeButton.isPressed=true;
-                resume()
+                resume();
             },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
             mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
@@ -485,6 +486,7 @@ function pause(){
             game.time.events.add(Phaser.Timer.SECOND,function(){
                 locked = false;
             });
+            AI.pause();
         }
     }
 }
