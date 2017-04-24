@@ -13,7 +13,7 @@ var staticLantern, staticBomb;
 var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
-
+    collectionSound: null,
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -39,6 +39,9 @@ var playState = {
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
         game.load.image('door', '../assets/door.png');
+
+        
+        game.load.audio('collection_sound','../assets/sounds/collection_sound.mp3');
         
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
@@ -52,6 +55,7 @@ var playState = {
         game.camera.height = 550;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
+        playState.collectionSound = game.add.audio('collection_sound');
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
@@ -326,6 +330,7 @@ function maskFollowPlayer(){
 
 function collectItem(player, item){
     amtOfItems = 0;
+    playState.collectionSound.play();
     player.items.forEach(function(e){
         if(e!=null){
             amtOfItems++;
@@ -496,6 +501,7 @@ function generateStamina(){
 
 function openDoor( player, keySprite){
     level.openDoor( keySprite );
+    playState.collectionSound.play();
     keySprite.kill();
 }
 

@@ -24,7 +24,6 @@ var menuState = {
         game.load.image('locked', '../assets/menus/Locked_Level.png');
         
 
-
     },
     create: function(){
         //game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -155,14 +154,14 @@ function titleScreenTransition(){
     }
     if(menuState.fade){
         if(menuState.titleImage.alpha<1){
-            fadeIn(menuState.titleImage,.05);
+            fadeIn(menuState.titleImage,.035);
         }else if(menuState.levelSelectionButton.alpha < 1){
-            fadeIn(menuState.levelSelectionButton,.05);
-            fadeIn(menuState.logo,.05);
+            fadeIn(menuState.levelSelectionButton,.035);
+            fadeIn(menuState.logo,.035);
         }else if(menuState.controlsButton.alpha < 1){
-            fadeIn(menuState.controlsButton,.05);
+            fadeIn(menuState.controlsButton,.035);
         }else if(menuState.helpButton.alpha < 1){
-            fadeIn(menuState.helpButton,.05);
+            fadeIn(menuState.helpButton,.035);
         }else{
             menuState.currentState = "Title Screen";
             if(menuState.eye_white.alpha > 0){
