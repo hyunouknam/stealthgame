@@ -122,7 +122,12 @@ var playState = {
     update: function(){
 
         game.physics.arcade.collide(player, level.solidGroup);
+        game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
         game.physics.arcade.collide(level.solidGroup, level.collidableSpawnGroup);
+
+        game.physics.arcade.collide(bomb, level.solidGroup);
+        game.physics.arcade.collide(lantern, level.solidGroup);
+        game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         
         pause();
         resume();
@@ -134,13 +139,10 @@ var playState = {
             //AI.debugRaycast(game);
             game.physics.arcade.collide(player, level.doorGroup);
             game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
-            game.physics.arcade.collide(level.keyGroup, level.solidGroup);
             
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
             game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
-            game.physics.arcade.collide(lantern, level.solidGroup);
             game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
-            game.physics.arcade.collide(bomb, level.solidGroup);
             game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
 
@@ -187,6 +189,14 @@ var playState = {
                     game.time.events.add(200,function(){selected.locked=false;});
                 }
             }
+
+            player.body.gravity.y = 700;
+
+            // return velocity if it was not 0, based on right before pausing / player.currentVelocityX etc.
+        }else{
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+            player.body.gravity.y = 0;
         }
     }
 }
