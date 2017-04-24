@@ -122,6 +122,9 @@ function fadeOut(object,speed){
 }
 function fadeIn(object,speed){
     object.alpha += speed;
+    if(object.alpha>1){
+        object.alpha = 1;
+    }
 }
 function titleScreenTransition(){
     if(menuState.eye_iris.alpha > 0 ){ //Transition to title screen
@@ -152,14 +155,14 @@ function titleScreenTransition(){
     }
     if(menuState.fade){
         if(menuState.titleImage.alpha<1){
-                fadeIn(menuState.titleImage,.02);
-        }else if(menuState.levelSelectionButton.alpha < 1 || menuState.logo.alpha < 1){
-            fadeIn(menuState.levelSelectionButton,.02);
-            fadeIn(menuState.logo,.02);
+            fadeIn(menuState.titleImage,.05);
+        }else if(menuState.levelSelectionButton.alpha < 1){
+            fadeIn(menuState.levelSelectionButton,.05);
+            fadeIn(menuState.logo,.05);
         }else if(menuState.controlsButton.alpha < 1){
-            fadeIn(menuState.controlsButton,.02);
+            fadeIn(menuState.controlsButton,.05);
         }else if(menuState.helpButton.alpha < 1){
-            fadeIn(menuState.helpButton,.02);
+            fadeIn(menuState.helpButton,.05);
         }else{
             menuState.currentState = "Title Screen";
             if(menuState.eye_white.alpha > 0){
