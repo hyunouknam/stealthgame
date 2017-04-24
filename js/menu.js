@@ -127,6 +127,7 @@ function titleScreenTransition(){
             fadeOut(menuState.start,.02);
             fadeOut(menuState.eye_white,.02);
             fadeOut(menuState.eye_iris,.02);
+            menuState.fade = false; // Fixes glitch where buttons won't be created after coming out of game.
     }else if(!menuState.fade){ //Complete Transition
         menuState.start.destroy();
         menuState.eye_white.destroy();

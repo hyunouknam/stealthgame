@@ -40,7 +40,7 @@ var playState = {
         game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
 
         game.load.image('resume_button','../assets/buttons/Resume_Button.png');
-        game.load.image('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png');
+        game.load.spritesheet('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png',350,150);
 
         game.load.image('mask','../assets/mask.png');
         game.load.image('mask large','../assets/mask large.png');
@@ -467,7 +467,7 @@ function pause(){
                 isPaused = false;
                 locked = false;
                 game.state.start('menu');
-            });
+            },this,0,0,1,0);
             mainMenuButtonIngame.fixedToCamera = true;
             controlsMenu = game.add.sprite(100,100,'controls_screen');
             controlsMenu.fixedToCamera = true;
