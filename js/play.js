@@ -60,6 +60,7 @@ var playState = {
 
         playState.collectionSound = game.add.audio('collection_sound');
         playState.walkingSound = game.add.audio('walking_sound');
+        playState.walkingSound.volume = .75
         playState.runningSound = game.add.audio('running_sound');
         music = game.add.audio('music');
         music.play(null,0,.2,true);
