@@ -194,10 +194,10 @@ function playerCreate(){
     player.animations.add('default right', [12], 10, true);
     player.animations.add('default left', [8], 10, true);
 
-    player.animations.add('walk left', [0, 1, 2, 3], 10, true);
-    player.animations.add('walk right', [4, 5, 6, 7], 10, true);
-    player.animations.add('walk left hold item', [8, 9, 10, 11], 10, true);
-    player.animations.add('walk right hold item', [12, 13, 14, 15], 10, true);
+    player.animations.add('walk left', [0, 1, 2, 3], 5, true);
+    player.animations.add('walk right', [4, 5, 6, 7], 5, true);
+    player.animations.add('walk left hold item', [8, 9, 10, 11], 5, true);
+    player.animations.add('walk right hold item', [12, 13, 14, 15], 5, true);
     player.animations.add('jump right', [16], 10, true);
     player.animations.add('jump left', [20], 10, true);
     player.animations.add('jump left hold item', [24], 10, true);
@@ -206,10 +206,10 @@ function playerCreate(){
     player.animations.add('throw right', [36, 37, 38, 39], 10, false);
     player.animations.add('death', [40, 41, 42, 43], 7, false);
 
-    player.animations.add('run left', [0, 1, 2, 3], 15, true);
-    player.animations.add('run right', [4, 5, 6, 7], 15, true);
-    player.animations.add('run left hold item', [8, 9, 10, 11], 15, true);
-    player.animations.add('run right hold item', [12, 13, 14, 15], 15, true);
+    player.animations.add('run left', [0, 1, 2, 3], 10, true);
+    player.animations.add('run right', [4, 5, 6, 7], 10, true);
+    player.animations.add('run left hold item', [8, 9, 10, 11], 10, true);
+    player.animations.add('run right hold item', [12, 13, 14, 15], 10, true);
 
     player.health = 194;
     player.stamina = 194;
