@@ -1,35 +1,19 @@
-var health = 194;
-var stamina = 194;
-var sanity = 194;
-var godMode = {enabled:false,locked:false};
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
-var escKey, shiftKey, cKey,vKey, lockItem;
-var maxHealth = 194;
-var maxStamina = 194;
-var rested = true;
-
-var playerDead = false;
 
 var escKey, shiftKey, cKey, vKey, kKey;
 var player, cursors, mask, largeMask;
-var collideDown = true;
 var hudGroup;
 
-var faceLeft = false;
 
 var level;
 var spawner;
 
-var itemGroup, staticLantern, playerLantern, staticBomb, playerBomb;
-
-var currentItem;
-var currentItemIndex = 0;
-var items = [null, null, null, null, null];
-var isHolding = false;
+var staticLantern, staticBomb;
 var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
+
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -39,7 +23,7 @@ var playState = {
         game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
         game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
 
-        game.load.image('resume_button','../assets/buttons/Resume_Button.png');
+        game.load.spritesheet('resume_button','../assets/buttons/Resume_Button.png',350,150);
         game.load.spritesheet('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png',350,150);
 
         game.load.image('mask','../assets/mask.png');
@@ -142,42 +126,42 @@ var playState = {
         game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
         game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
 
-        if(collideDown){
+        if(player.collideDown){
             game.physics.arcade.collide(player, level.platformGroup);
         }
-        if(gKey.isDown && !godMode.locked){
-            godMode.locked = true;
-            godMode.enabled = !godMode.enabled;
-            if(godMode.enabled){
+        if(gKey.isDown && !player.godMode.locked){
+            player.godMode.locked = true;
+            player.godMode.enabled = !player.godMode.enabled;
+            if(player.godMode.enabled){
                 mask.alpha = 0;
                 largeMask.alpha = 0;
             }else{
                 mask.alpha = 1;
                 largeMask.alpha = 1;
             }
-            game.time.events.add(200,function(){godMode.locked = false;});
+            game.time.events.add(200,function(){player.godMode.locked = false;});
         }
 
-        if(kKey.isDown && godMode.enabled){
+        if(kKey.isDown && player.godMode.enabled){
             killDoorAndKeys();
         }
 
         if(!isPaused){
             playerDeath();
-            if(!playerDead){
+            if(!player.dead){
                 playerMove();
             }
             game.camera.follow( player );
             maskFollowPlayer();
             playerHoldItem();
             if(vKey.isDown && !selected.locked){
-                if(currentItemIndex==4){
-                    currentItemIndex=0;
+                if(player.currentItemIndex==4){
+                    player.currentItemIndex=0;
                     selected.cameraOffset.x = 855;
                     selected.locked = true;
                     game.time.events.add(200,function(){selected.locked=false;});
                 }else{
-                    currentItemIndex++;
+                    player.currentItemIndex++;
                     selected.cameraOffset.x += 55;
                     selected.locked = true;
                     game.time.events.add(200,function(){selected.locked=false;});
@@ -215,6 +199,19 @@ function playerCreate(){
     player.animations.add('run left hold item', [8, 9, 10, 11], 15, true);
     player.animations.add('run right hold item', [12, 13, 14, 15], 15, true);
 
+    player.health = 194;
+    player.stamina = 194;
+    player.sanity = 194;
+    player.maxHealth = 194;
+    player.maxStamina = 194;
+    player.rested = true;
+    player.dead = false;
+    player.currentItem = null;
+    player.currentItemIndex = 0;
+    player.items = [null, null, null, null, null];
+    player.isFacingLeft = false;
+    player.godMode = {enabled:false,locked:false};
+    player.collideDown = true;
 }
 
 function playerMove(){
@@ -228,20 +225,20 @@ function playerMove(){
         player.animations.play("jump left hold item");
     }else if (cKey.isDown && player.body.touching.down){
         player.body.velocity.y = -380
-        if(faceLeft){
+        if(player.isFacingLeft){
             player.animations.play('default left');
         }else{
             player.animations.play('default right');
         }
-    /*}else if(shiftKey.isDown && stamina>0){
+    /*}else if(shiftKey.isDown && player.stamina>0){
         rested = false;
-<<<<<<< HEAD
-        if(faceLeft){
+    <<<<<<< HEAD
+        if(player.isFacingLeft){
             player.animations.play('default left');
         }else{
             player.animations.play('default right');
         }*/
-    }else if(shiftKey.isDown && stamina>0){
+    }else if(shiftKey.isDown && player.stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
                 loseStamina();
@@ -250,7 +247,7 @@ function playerMove(){
                 loseStamina();
                 player.body.velocity.x = 300;
             }else{
-                if(faceLeft){
+                if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
                     player.animations.play('default right');
@@ -261,14 +258,14 @@ function playerMove(){
                 loseStamina();
                 player.body.velocity.x = -300;
                 player.animations.play('run left hold item');
-                faceLeft = true;
+                player.isFacingLeft = true;
             }else if (cursors.right.isDown){
                 loseStamina();
                 player.body.velocity.x = 300;
                 player.animations.play('run right hold item');
-                faceLeft = false;
+                player.isFacingLeft = false;
             }else{
-                if(faceLeft){
+                if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
                     player.animations.play('default right');
@@ -276,7 +273,7 @@ function playerMove(){
             }
         }
     }else{
-        if(rested)
+        if(player.rested)
             generateStamina();
         if(!player.body.touching.down){
             if (cursors.left.isDown){
@@ -285,7 +282,7 @@ function playerMove(){
             {
                 player.body.velocity.x = 150;
             }else{
-                if(faceLeft){
+                if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
                     player.animations.play('default right');
@@ -295,14 +292,14 @@ function playerMove(){
             if (cursors.left.isDown){
                 player.body.velocity.x = -150;
                 player.animations.play('walk left hold item');
-                faceLeft = true;
+                player.isFacingLeft = true;
             }else if (cursors.right.isDown)
             {   
                 player.body.velocity.x = 150;
                 player.animations.play('walk right hold item');
-                faceLeft = false;
+                player.isFacingLeft = false;
             }else{
-                if(faceLeft){
+                if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
                     player.animations.play('default right');
@@ -310,13 +307,13 @@ function playerMove(){
             }
         }
     }
-    if(cursors.down.isDown && collideDown){
-        collideDown = false;
-        game.time.events.add(Phaser.Timer.SECOND*.3,function(){collideDown = true;});
+    if(cursors.down.isDown && player.collideDown){
+        player.collideDown = false;
+        game.time.events.add(Phaser.Timer.SECOND*.3,function(){player.collideDown = true;});
     }
     
     if(cursors.left.isUp && cursors.right.isUp){
-        rested = true;
+        player.rested = true;
     }
 }
 
@@ -329,7 +326,7 @@ function maskFollowPlayer(){
 
 function collectItem(player, item){
     amtOfItems = 0;
-    items.forEach(function(e){
+    player.items.forEach(function(e){
         if(e!=null){
             amtOfItems++;
         }
@@ -339,10 +336,10 @@ function collectItem(player, item){
 
         // lantern
         if(item.key == 'lantern'){
-            for(var i = 0; i < items.length; i++){
-                if(items[i] == null){
+            for(var i = 0; i < player.items.length; i++){
+                if(player.items[i] == null){
                     staticLantern = game.add.sprite(860 + (i * 55), 615, 'lantern');    //853
-                    items[i] = staticLantern;
+                    player.items[i] = staticLantern;
 
                     staticLantern.fixedToCamera = true;
                     break;
@@ -353,10 +350,10 @@ function collectItem(player, item){
 
         // bomb
         if(item.key == 'bomb'){
-            for(var i = 0; i < items.length; i++){
-                if(items[i] == null){
+            for(var i = 0; i < player.items.length; i++){
+                if(player.items[i] == null){
                     staticBomb = game.add.sprite(860 + (i * 55), 615, 'bomb');
-                    items[i] = staticBomb;
+                    player.items[i] = staticBomb;
 
                     staticBomb.fixedToCamera = true;
                     break;
@@ -370,12 +367,12 @@ function collectItem(player, item){
 }
 
 function playerHoldItem(){
-    if(items[currentItemIndex] != null){
-        switch(items[currentItemIndex].key) {
+    if(player.items[player.currentItemIndex] != null){
+        switch(player.items[player.currentItemIndex].key) {
             case "lantern":
-                if(currentItem != null && currentItem.key != 'lantern'){
-                    currentItem.kill();
-                    currentItem = null;
+                if(player.currentItem != null && player.currentItem.key != 'lantern'){
+                    player.currentItem.kill();
+                    player.currentItem = null;
                 }
                 mask.alpha = 0;
 
@@ -387,11 +384,11 @@ function playerHoldItem(){
 
             break;
             case "bomb":
-                if(currentItem != null && currentItem.key != 'bomb'){
-                    currentItem.kill();
-                    currentItem = null;
+                if(player.currentItem != null && player.currentItem.key != 'bomb'){
+                    player.currentItem.kill();
+                    player.currentItem = null;
                 }
-                if(!godMode.enabled){
+                if(!player.godMode.enabled){
                     mask.alpha = 1;
                 }
                 
@@ -401,38 +398,38 @@ function playerHoldItem(){
             //break;
 
         }
-        if(currentItem == null){
-            if(faceLeft){
-                currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,items[currentItemIndex].key);
-                currentItem.scale.setTo(.75,.75);
+        if(player.currentItem == null){
+            if(player.isFacingLeft){
+                player.currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,player.items[player.currentItemIndex].key);
+                player.currentItem.scale.setTo(.75,.75);
             }else{
-                currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, items[currentItemIndex].key);
-                currentItem.scale.setTo(.75, .75);
+                player.currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, player.items[player.currentItemIndex].key);
+                player.currentItem.scale.setTo(.75, .75);
             }
         }else{
-            if(faceLeft){
-                currentItem.position.x = player.position.x + 1;
-                currentItem.position.y = player.position.y + 26;
+            if(player.isFacingLeft){
+                player.currentItem.position.x = player.position.x + 1;
+                player.currentItem.position.y = player.position.y + 26;
             }else{
-                currentItem.position.x = player.position.x + 25;
-                currentItem.position.y = player.position.y + 26;
+                player.currentItem.position.x = player.position.x + 25;
+                player.currentItem.position.y = player.position.y + 26;
             }
         }
     }else{
-        if(!godMode.enabled){
+        if(!player.godMode.enabled){
             mask.alpha = 1;
         }
-        if(currentItem != null){
-            currentItem.kill();
-            currentItem = null;
+        if(player.currentItem != null){
+            player.currentItem.kill();
+            player.currentItem = null;
         }
     }
 }
 
 function playerDeath(){
-    if(health <= 0){
+    if(player.health <= 0){
         player.animations.play('death');
-        playerDead = true;
+        player.dead = true;
     }
 }
 
@@ -451,7 +448,7 @@ function resume(){
     }
 }
 function pause(){
-    if(!isPaused && !playerDead){
+    if(!isPaused && !player.dead){
         if(escKey.isDown && !locked){
             locked = true;
             isPaused = true;
@@ -460,7 +457,7 @@ function pause(){
             resumeButton = game.add.button(425,130,'resume_button',function(){
                 resumeButton.isPressed=true;
                 resume()
-            });
+            },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
             mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 game.world.removeAll();
@@ -479,22 +476,22 @@ function pause(){
 }
 
 function playerDamaged( player, mob ){
-    if(!godMode.enabled){
-        health -= health <= 0 ? 0: 1;
-        healthBar.width -= health <= 1 ? 0: 1;
+    if(!player.godMode.enabled){
+        player.health -= player.health <= 0 ? 0: 1;
+        healthBar.width -= player.health <= 1 ? 0: 1;
     }
 }
 
 function loseStamina(){
-    if(!godMode.enabled){
-        stamina -= stamina <= 1 ? stamina: 1;
-        staminaBar.width = stamina;
+    if(!player.godMode.enabled){
+        player.stamina -= player.stamina <= 1 ? player.stamina: 1;
+        staminaBar.width = player.stamina;
     }
 }
 
 function generateStamina(){
-    stamina = stamina+1 >= maxStamina ? maxStamina: stamina+1;
-    staminaBar.width = stamina;
+    player.stamina = player.stamina+1 >= player.maxStamina ? player.maxStamina: player.stamina+1;
+    staminaBar.width = player.stamina
 }
 
 function openDoor( player, keySprite){
