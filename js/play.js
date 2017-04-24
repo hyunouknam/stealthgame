@@ -13,7 +13,7 @@ var staticLantern, staticBomb;
 var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var playState = {
-    collectionSound: null,
+    collectionSound: null,walkingSound: null,runningSound: null,
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -42,6 +42,9 @@ var playState = {
 
         
         game.load.audio('collection_sound','../assets/sounds/collection_sound.mp3');
+        game.load.audio('walking_sound','../assets/sounds/walking_sound.mp3');
+        game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
+        game.load.audio('music','../assets/sounds/music.wav');
         
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
@@ -56,6 +59,10 @@ var playState = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         playState.collectionSound = game.add.audio('collection_sound');
+        playState.walkingSound = game.add.audio('walking_sound');
+        playState.runningSound = game.add.audio('running_sound');
+        music = game.add.audio('music');
+        music.play(null,0,.2,true);
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
@@ -242,14 +249,6 @@ function playerMove(){
         }else{
             player.animations.play('default right');
         }
-    /*}else if(shiftKey.isDown && player.stamina>0){
-        rested = false;
-    <<<<<<< HEAD
-        if(player.isFacingLeft){
-            player.animations.play('default left');
-        }else{
-            player.animations.play('default right');
-        }*/
     }else if(shiftKey.isDown && player.stamina>0){
         if(!player.body.touching.down){
             if (cursors.left.isDown){
@@ -271,12 +270,27 @@ function playerMove(){
                 player.body.velocity.x = -300;
                 player.animations.play('run left hold item');
                 player.isFacingLeft = true;
+                if(!playState.runningSound.isPlaying){
+                    if(playState.runningSound.paused){
+                        playState.runningSound.resume(null,true);
+                    }else{
+                        playState.runningSound.play(null,true);
+                    }
+                }
             }else if (cursors.right.isDown){
                 loseStamina();
                 player.body.velocity.x = 300;
                 player.animations.play('run right hold item');
                 player.isFacingLeft = false;
+                if(!playState.runningSound.isPlaying){
+                    if(playState.runningSound.paused){
+                        playState.runningSound.resume(null,true);
+                    }else{
+                        playState.runningSound.play(null,true);
+                    }
+                }
             }else{
+                playState.runningSound.pause();
                 if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
@@ -302,6 +316,13 @@ function playerMove(){
             }
         }else{
             if (cursors.left.isDown){
+                if(!playState.walkingSound.isPlaying){
+                    if(playState.walkingSound.paused){
+                        playState.walkingSound.resume(null,true);
+                    }else{
+                        playState.walkingSound.play(null,true);
+                    }
+                }
                 player.body.velocity.x = -150;
                 player.animations.play('walk left hold item');
                 player.isFacingLeft = true;
@@ -310,7 +331,15 @@ function playerMove(){
                 player.body.velocity.x = 150;
                 player.animations.play('walk right hold item');
                 player.isFacingLeft = false;
+                if(!playState.walkingSound.isPlaying){
+                    if(playState.walkingSound.paused){
+                        playState.walkingSound.resume(null,true);
+                    }else{
+                        playState.walkingSound.play(null,true);
+                    }
+                }
             }else{
+                playState.walkingSound.pause();
                 if(player.isFacingLeft){
                     player.animations.play('default left');
                 }else{
