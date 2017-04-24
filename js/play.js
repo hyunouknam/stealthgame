@@ -103,7 +103,7 @@ var playState = {
         cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
-        gKey = game.input.keyboard.addKey(Phaser.Keyboard.G);
+        iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
         kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
 
         playerCreate();
@@ -112,45 +112,53 @@ var playState = {
         AI.setTarget( player );
     },
     update: function(){
-        AI.update();
-        //AI.debugRaycast(game);
+
+        game.physics.arcade.collide(player, level.solidGroup);
+        game.physics.arcade.collide(level.solidGroup, level.collidableSpawnGroup);
+        
         pause();
         resume();
 
-        game.physics.arcade.collide(player, level.solidGroup);
-        game.physics.arcade.collide(player, level.doorGroup);
-        game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
-        game.physics.arcade.collide(level.keyGroup, level.solidGroup);
-        game.physics.arcade.collide(level.solidGroup, level.collidableSpawnGroup);
-        game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
-        game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
-        game.physics.arcade.collide(lantern, level.solidGroup);
-        game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
-        game.physics.arcade.collide(bomb, level.solidGroup);
-        game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
-        game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
-
-        if(player.collideDown){
-            game.physics.arcade.collide(player, level.platformGroup);
-        }
-        if(gKey.isDown && !player.godMode.locked){
-            player.godMode.locked = true;
-            player.godMode.enabled = !player.godMode.enabled;
-            if(player.godMode.enabled){
-                mask.alpha = 0;
-                largeMask.alpha = 0;
-            }else{
-                mask.alpha = 1;
-                largeMask.alpha = 1;
-            }
-            game.time.events.add(200,function(){player.godMode.locked = false;});
-        }
-
-        if(kKey.isDown && player.godMode.enabled){
-            killDoorAndKeys();
-        }
 
         if(!isPaused){
+
+            AI.update();
+            //AI.debugRaycast(game);
+            game.physics.arcade.collide(player, level.doorGroup);
+            game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
+            game.physics.arcade.collide(level.keyGroup, level.solidGroup);
+            
+            game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
+            game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
+            game.physics.arcade.collide(lantern, level.solidGroup);
+            game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
+            game.physics.arcade.collide(bomb, level.solidGroup);
+            game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
+            game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
+
+            if(player.collideDown){
+                game.physics.arcade.collide(player, level.platformGroup);
+            }
+            if(iKey.isDown && !player.godMode.locked){
+                player.godMode.locked = true;
+                player.godMode.enabled = !player.godMode.enabled;
+                if(player.godMode.enabled){
+                    mask.alpha = 0;
+                    largeMask.alpha = 0;
+                }else{
+                    mask.alpha = 1;
+                    largeMask.alpha = 1;
+                }
+                game.time.events.add(200,function(){player.godMode.locked = false;});
+            }
+
+            if(kKey.isDown && player.godMode.enabled){
+                killDoorAndKeys();
+            }
+
+
+
+
             playerDeath();
             if(!player.dead){
                 playerMove();
@@ -435,6 +443,7 @@ function playerDeath(){
     if(player.health <= 0){
         player.animations.play('death');
         player.dead = true;
+        player.body.velocity.x = 0;
     }
 }
 
