@@ -46,11 +46,11 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         
-        spawner = loadSpawner( game, 'monster_profile_json');
-        level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
-
         //spawner = loadSpawner( game, 'monster_profile_json');
-        //level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
+        //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
+
+        spawner = loadSpawner( game, 'monster_profile_json');
+        level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
     },
     create: function(){
         level.create( spawner );
@@ -192,8 +192,20 @@ var playState = {
 
             player.body.gravity.y = 700;
 
+            player.currentVelocityX = player.body.velocity.x;
+            player.currentVelocityY = player.body.velocity.y;
+
             // return velocity if it was not 0, based on right before pausing / player.currentVelocityX etc.
         }else{
+            if(player.body.velocity.x > 0){
+                player.currentVelocityX = player.body.velocity.x;
+            }
+
+            if(player.body.velocity.y > 0){
+                player.currentVelocityY = player.body.velocity.y;
+            }
+
+
             player.body.velocity.x = 0;
             player.body.velocity.y = 0;
             player.body.gravity.y = 0;

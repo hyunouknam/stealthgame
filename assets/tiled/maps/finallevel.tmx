@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="330">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="345">
  <tileset firstgid="1" name="oneblock" tilewidth="32" tileheight="32" tilecount="45" columns="5">
   <image source="../tilesets/oneblock.png" width="160" height="288"/>
  </tileset>
@@ -748,24 +748,161 @@
   <object id="3" x="96" y="96" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="mob spawn">
-  <object id="301" x="1792" y="416" width="32" height="32"/>
-  <object id="302" x="2272" y="416" width="32" height="32"/>
-  <object id="303" x="2880" y="96" width="32" height="32"/>
-  <object id="304" x="2144" y="864" width="32" height="32"/>
-  <object id="305" x="1760" y="864" width="32" height="32"/>
-  <object id="306" x="128" y="2848" width="32" height="32"/>
-  <object id="308" x="512" y="2720" width="32" height="32"/>
-  <object id="309" x="416" y="2464" width="32" height="32"/>
-  <object id="310" x="928" y="2240" width="32" height="32"/>
-  <object id="311" x="1120" y="800" width="32" height="32"/>
-  <object id="312" x="96" y="992" width="32" height="32"/>
-  <object id="313" x="128" y="704" width="32" height="32"/>
-  <object id="315" x="96" y="1440" width="32" height="32"/>
-  <object id="316" x="576" y="480" width="32" height="32"/>
-  <object id="317" x="1536" y="256" width="32" height="32"/>
-  <object id="318" x="1152" y="320" width="32" height="32"/>
-  <object id="321" x="928" y="608" width="32" height="32"/>
-  <object id="326" x="1088" y="1120" width="32" height="32"/>
+  <object id="301" x="1792" y="416" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="302" x="2272" y="416" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="303" x="2880" y="96" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="304" x="2144" y="864" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="305" x="1760" y="864" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="306" x="128" y="2848" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="308" x="512" y="2720" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="309" x="416" y="2464" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="310" x="928" y="2240" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="311" x="1120" y="800" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="312" x="96" y="992" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="313" x="128" y="704" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="315" x="96" y="1440" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="316" x="576" y="480" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="317" x="1536" y="256" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="318" x="1152" y="320" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="321" x="928" y="608" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="326" x="1088" y="1120" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="330" x="1632" y="2496" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="331" x="1536" y="2976" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="332" x="2048" y="2976" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="333" x="2656" y="2976" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="335" x="2752" y="2496" width="32" height="32">
+   <properties>
+    <property name="id" value="doll monster"/>
+   </properties>
+  </object>
+  <object id="336" x="2400" y="288" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="338" x="928" y="288" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="339" x="672" y="928" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="340" x="1152" y="1408" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="341" x="256" y="2176" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="342" x="512" y="3040" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="343" x="2496" y="2464" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
+  <object id="344" x="1792" y="2464" width="32" height="32">
+   <properties>
+    <property name="id" value="face monster"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="item spawn"/>
  <objectgroup name="door object">
