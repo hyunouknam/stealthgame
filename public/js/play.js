@@ -46,7 +46,10 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6b0bada31696467edad115e4f92b774907bbd057
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
 
@@ -524,8 +527,7 @@ function playerDeath(){
         player.animations.play('death');
         player.dead = true;
         player.body.velocity.x = 0;
-        if(player.currentItem)
-            player.currentItem.kill();
+        player.currentItem.kill();
     }
 }
 
