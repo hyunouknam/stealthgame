@@ -48,12 +48,7 @@ var playState = {
         
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
-        
-        //spawner = loadSpawner( game, 'monster_profile_json');
-        //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
 
-        spawner = loadSpawner( game, 'monster_profile_json');
-        level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
     },
     create: function(){
         level.create( spawner );
@@ -172,16 +167,19 @@ var playState = {
                 killDoorAndKeys();
             }
             if(oneKey.isDown){
+                music.stop();
                 game.level_json='forest_level_json';
                 game.level_tilemap = 'forest_level_tilemap';
                 game.world.removeAll();
                 game.state.start('play');
             }else if(twoKey.isDown){
+                music.stop();
                 game.level_json='dungeon_level_json';
                 game.level_tilemap = 'dungeon_level_tilemap';
                 game.world.removeAll();
                 game.state.start('play');
             }else if(threeKey.isDown){
+                music.stop();
                 game.level_json='final_level_json';
                 game.level_tilemap = 'final_level_tilemap';
                 game.world.removeAll();
