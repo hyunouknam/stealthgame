@@ -1,5 +1,4 @@
 var eye_scale = 4;
-
 var menuState = {
     eye_iris: null,eye_white: null,start: null,titleImage: null,logo: null,helpScreen: null,controlsScreen: null,lvl2Locked: null,lvl3Locked: null, //Sprites
     levelSelectionButton: null,controlsButton: null,helpButton: null,mainMenuButton: null,level1: null,level2: null,level3: null, //Buttons
@@ -184,7 +183,7 @@ function levelScreenTransition(){
         menuState.helpButton.destroy();
         menuState.logo.destroy();
 
-        menuState.level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');});
+        menuState.level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();menuState.currentState="Splash Screen";game.level_json="forest_level_json";game.level_tilemap="forest_level_tilemap";game.state.start('play');});
         menuState.level1.anchor.setTo(.5);
         menuState.level1.alpha = 0;
 
