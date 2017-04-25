@@ -9,7 +9,7 @@ var bootState = {
         game.load.json('monster_profile_json', '../assets/MonsterProfile.json');
 
         game.load.json('dungeon_level_json', '../assets/tiled/maps/dungeonLevel.json');
-        game.load.tilemap('dungeon_level_json','../assets/tiled/maps/dungeonLevel.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('dungeon_level_tilemap','../assets/tiled/maps/dungeonLevel.json', null, Phaser.Tilemap.TILED_JSON);
 
         game.load.json('final_level_json', '../assets/tiled/maps/finallevel.json');
         game.load.tilemap('final_level_tilemap', '../assets/tiled/maps/finallevel.json', null, Phaser.Tilemap.TILED_JSON);

@@ -1,7 +1,7 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
 
-var escKey, shiftKey, cKey, vKey, kKey;
+var escKey, shiftKey, cKey, vKey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
 var hudGroup;
 
@@ -46,6 +46,12 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         
+<<<<<<< HEAD
+=======
+        spawner = loadSpawner( game, 'monster_profile_json');
+        level = loadLevel( game, game.level_json, game.level_tilemap);
+
+>>>>>>> 19e40d5aa84ac666a6edb7a4a3fc399c1ad19100
         //spawner = loadSpawner( game, 'monster_profile_json');
         //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
 
@@ -63,7 +69,7 @@ var playState = {
         playState.walkingSound.volume = .75
         playState.runningSound = game.add.audio('running_sound');
         music = game.add.audio('music');
-        music.play(null,0,.2,true);
+        music.play(null,0,.15,true);
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
@@ -113,6 +119,9 @@ var playState = {
         vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
         iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
         kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
+        oneKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+        twoKey = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+        threeKey = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 
         playerCreate();
 
@@ -164,6 +173,22 @@ var playState = {
 
             if(kKey.isDown && player.godMode.enabled){
                 killDoorAndKeys();
+            }
+            if(oneKey.isDown){
+                game.level_json='forest_level_json';
+                game.level_tilemap = 'forest_level_tilemap';
+                game.world.removeAll();
+                game.state.start('play');
+            }else if(twoKey.isDown){
+                game.level_json='dungeon_level_json';
+                game.level_tilemap = 'dungeon_level_tilemap';
+                game.world.removeAll();
+                game.state.start('play');
+            }else if(threeKey.isDown){
+                game.level_json='final_level_json';
+                game.level_tilemap = 'final_level_tilemap';
+                game.world.removeAll();
+                game.state.start('play');
             }
 
 
