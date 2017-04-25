@@ -517,6 +517,7 @@ function playerDeath(){
         player.animations.play('death');
         player.dead = true;
         player.body.velocity.x = 0;
+        player.currentItem.kill();
     }
 }
 
