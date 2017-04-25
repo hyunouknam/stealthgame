@@ -295,7 +295,7 @@ var AI = {
 
             //behavior.target = undefined;
             behavior.ownerAIObject = ownerAIObject;
-            behavior.tolerance = 50;
+            behavior.tolerance = 40;
 
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
@@ -304,6 +304,7 @@ var AI = {
                 
                 if( target && inAggroRange) {
                     var ownerCenterX = owner.sprite.body.x + Math.abs(owner.sprite.body.width)/2;
+                    
                     if( ownerCenterX < target.body.x + target.body.width/2 - behavior.tolerance ){
                         if( owner.sprite.entitydata.facingLeft )
                         owner.sprite.scale.x *= -1;
