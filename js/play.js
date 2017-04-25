@@ -212,6 +212,10 @@ var playState = {
 
             player.body.gravity.y = 700;
 
+            //player.body.velocity.x = player.currentVelocityX;
+            //player.body.velocity.y = player.currentVelocityY;
+
+
             player.currentVelocityX = player.body.velocity.x;
             player.currentVelocityY = player.body.velocity.y;
 
