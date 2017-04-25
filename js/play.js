@@ -46,6 +46,7 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         
+
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
 
