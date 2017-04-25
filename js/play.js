@@ -1,5 +1,5 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
-    pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu;
+    pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false;
 
 var escKey, shiftKey, cKey, vKey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
@@ -135,7 +135,6 @@ var playState = {
         resume();
             AI.update();
 
-
         if(!isPaused){
 
             //AI.debugRaycast(game);
@@ -212,9 +211,10 @@ var playState = {
             }
 
             player.body.gravity.y = 700;
-
-            //player.body.velocity.x = player.currentVelocityX;
-            //player.body.velocity.y = player.currentVelocityY;
+            if(resumeVelocity){
+                player.body.velocity.x = player.currentVelocityX;
+                player.body.velocity.y = player.currentVelocityY;
+            }
 
 
             player.currentVelocityX = player.body.velocity.x;
@@ -234,6 +234,7 @@ var playState = {
             player.body.velocity.x = 0;
             player.body.velocity.y = 0;
             player.body.gravity.y = 0;
+
         }
     }
 }
@@ -279,6 +280,8 @@ function playerCreate(){
     player.isFacingLeft = false;
     player.godMode = {enabled:false,locked:false};
     player.collideDown = true;
+    player.currentVelocityX = 0;
+    player.currentVelocityY = 0;
 }
 
 function playerMove(){
@@ -537,6 +540,10 @@ function resume(){
                 isPaused = false;
                 AI.start();
             }); 
+
+            game.time.events.add(Phaser.Timer.SECOND*.215,function(){
+                resumeVelocity = false;
+            }); 
         }
     }
 }
@@ -545,6 +552,7 @@ function pause(){
         if(escKey.isDown && !locked){
             locked = true;
             isPaused = true;
+            resumeVelocity = true;
             pausedMenu = game.add.sprite(0,0,'paused_image');
             pausedMenu.fixedToCamera = true;
             resumeButton = game.add.button(425,130,'resume_button',function(){
