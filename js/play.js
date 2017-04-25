@@ -46,17 +46,10 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         
-<<<<<<< HEAD
-=======
+
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
 
->>>>>>> 19e40d5aa84ac666a6edb7a4a3fc399c1ad19100
-        //spawner = loadSpawner( game, 'monster_profile_json');
-        //level = loadLevel( game, 'forest_level_json', 'forest_level_tilemap');
-
-        spawner = loadSpawner( game, 'monster_profile_json');
-        level = loadLevel( game, 'final_level_json', 'final_level_tilemap');
     },
     create: function(){
         level.create( spawner );
