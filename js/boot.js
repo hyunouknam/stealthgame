@@ -18,6 +18,8 @@ var bootState = {
     },
     
     create : function () {
+        game.level2Locked = true;
+        game.level3Locked = true;
         game.state.start('menu');
     }
     

@@ -1,5 +1,5 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
-    pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false;
+    pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false;
 
 var escKey, shiftKey, aKey, sKey, dKey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
@@ -23,9 +23,11 @@ var playState = {
         game.load.image('paused_image','../assets/menus/Paused_Menu.png');
         game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
         game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
+        game.load.image('next_level_menu','../assets/menus/Level_Complete_Menu.png');
 
         game.load.spritesheet('resume_button','../assets/buttons/Resume_Button.png',350,150);
         game.load.spritesheet('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png',350,150);
+        game.load.spritesheet('next_level_button','../assets/buttons/Next_Level_Button.png',350,150);
 
         game.load.image('mask','../assets/mask.png');
         game.load.image('mask large','../assets/mask large.png');
@@ -138,7 +140,7 @@ var playState = {
         resume();
             AI.update();
 
-        if(!isPaused){
+        if(!isPaused && !levelCompleted){
 
             //AI.debugRaycast(game);
             game.physics.arcade.collide(player, level.doorGroup);
@@ -254,20 +256,51 @@ var playState = {
         }
     },
     levelTransition: function(){
+
+        levelCompleted = true;
+        AI.pause();
+        nextLevelMenu = game.add.sprite(0,0,'next_level_menu');
+        nextLevelMenu.fixedToCamera = true;
+        if(game.level_json != 'final_level_json'){
+            nextLevelButton = game.add.button(425,130,'next_level_button',function(){
+                game.world.removeAll();
+                music.stop();
+                levelCompleted = false;
+                game.state.start('play');
+            },this,0,0,1,0);
+            nextLevelButton.fixedToCamera = true;
+            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+                game.world.removeAll();
+                isPaused = false;
+                locked = false;
+                music.stop();
+                game.state.start('menu');
+                levelCompleted = false;
+            },this,0,0,1,0);
+            mainMenuButtonIngame.fixedToCamera = true;
+        }else{
+            mainMenuButtonIngame = game.add.button(425, 130,'main_menu_button',function(){
+            game.world.removeAll();
+            isPaused = false;
+            locked = false;
+            music.stop();
+            game.state.start('menu');
+            levelCompleted = false;
+            },this,0,0,1,0);
+            mainMenuButtonIngame.fixedToCamera = true;
+        }
+        
+        
         switch(game.level_json){
             case 'forest_level_json':
                 game.level_json = 'dungeon_level_json';
                 game.level_tilemap = 'dungeon_level_tilemap';
-                game.world.removeAll();
-                music.stop();
-                game.state.start('play');
+                game.level2Locked = false;
                 break;
             case 'dungeon_level_json':
                 game.level_json = 'final_level_json';
                 game.level_tilemap = 'final_level_tilemap';
-                game.world.removeAll();
-                music.stop();
-                game.state.start('play');
+                game.level3Locked = false;
             default:
         }
     }

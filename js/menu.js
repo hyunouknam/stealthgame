@@ -187,18 +187,16 @@ function levelScreenTransition(){
         menuState.level1.anchor.setTo(.5);
         menuState.level1.alpha = 0;
 
-        menuState.level2 = game.add.button(600,350,'level2',function(){if(!menuState.level2.locked){menuState.game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
+        menuState.level2 = game.add.button(600,350,'level2',function(){if(!game.level2Locked){menuState.game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
         menuState.level2.anchor.setTo(.5);
         menuState.level2.alpha = 0;
-        menuState.level2.locked = true;
         menuState.lvl2Locked = game.add.sprite(600,350,'locked');
         menuState.lvl2Locked.anchor.setTo(.5);
         menuState.lvl2Locked.alpha = 0;
         
-        menuState.level3 = game.add.button(975,350,'level3',function(){if(!menuState.level3.locked){game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
+        menuState.level3 = game.add.button(975,350,'level3',function(){if(!game.level3Locked){game.world.removeAll();menuState.currentState="Splash Screen";game.state.start('play');}});
         menuState.level3.anchor.setTo(.5);
         menuState.level3.alpha = 0;
-        menuState.level3.locked = true;
         menuState.lvl3Locked = game.add.sprite(975,350,'locked');
         menuState.lvl3Locked.anchor.setTo(.5);
         menuState.lvl3Locked.alpha = 0;
@@ -213,8 +211,16 @@ function levelScreenTransition(){
             fadeIn(menuState.level1,.02);
             fadeIn(menuState.level2,.02);
             fadeIn(menuState.level3,.02);
-            fadeIn(menuState.lvl2Locked,.02);
-            fadeIn(menuState.lvl3Locked,.02);
+            if(game.level2Locked){
+                fadeIn(menuState.lvl2Locked,.02);
+            }else{
+                menuState.lvl2Locked = null;
+            }
+            if(game.level3Locked){
+                fadeIn(menuState.lvl3Locked,.02);
+            }else{
+                menuState.lvl3Locked = null;
+            }
             fadeIn(menuState.mainMenuButton,.02);
         }else{
             menuState.currentState = "Level Screen";
