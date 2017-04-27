@@ -24,6 +24,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.platformGroup = game.add.group();
     level.keyGroup = game.add.group();
     level.doorGroup = game.add.group();
+    level.nextLevelGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -162,6 +163,14 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             
                         }
                         break;
+                    case 'level key':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var nextLevel = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'key');
+                            level.game.physics.enable(nextLevel);
+                            nextLevel.body.gravity.y = 30;
+                            level.nextLevelGroup.add(nextLevel);
+                        }
+                        break;
                     default : break;
                 }
             }
@@ -192,6 +201,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             level.game.world.bringToTop( midgroup );
             level.game.world.bringToTop( level.doorGroup );
             level.game.world.bringToTop( level.keyGroup );
+            level.game.world.bringToTop( level.nextLevelGroup);
         
         //level.mask.bringToTop();
         

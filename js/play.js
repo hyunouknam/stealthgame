@@ -3,6 +3,7 @@ var healthBar,staminaBar,sanityBar,selected, isPaused=false,
 
 var escKey, shiftKey, cKey, vKey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
+var music;
 var hudGroup;
 
 
@@ -130,6 +131,7 @@ var playState = {
         game.physics.arcade.collide(bomb, level.solidGroup);
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
+        game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
         
         pause();
         resume();
@@ -140,6 +142,7 @@ var playState = {
             //AI.debugRaycast(game);
             game.physics.arcade.collide(player, level.doorGroup);
             game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
+            game.physics.arcade.overlap(player, level.nextLevelGroup,playState.levelTransition,null,this);
             
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
             game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
@@ -235,6 +238,24 @@ var playState = {
             player.body.velocity.y = 0;
             player.body.gravity.y = 0;
 
+        }
+    },
+    levelTransition: function(){
+        switch(game.level_json){
+            case 'forest_level_json':
+                game.level_json = 'dungeon_level_json';
+                game.level_tilemap = 'dungeon_level_tilemap';
+                game.world.removeAll();
+                music.stop();
+                game.state.start('play');
+                break;
+            case 'dungeon_level_json':
+                game.level_json = 'final_level_json';
+                game.level_tilemap = 'final_level_tilemap';
+                game.world.removeAll();
+                music.stop();
+                game.state.start('play');
+            default:
         }
     }
 }
