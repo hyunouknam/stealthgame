@@ -1,7 +1,7 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false;
 
-var escKey, shiftKey, cKey, vKey, kKey,oneKey,twoKey,threeKey;
+var escKey, shiftKey, aKey, sKey, dKey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
 var music;
 var hudGroup;
@@ -108,9 +108,10 @@ var playState = {
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
-        cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-        vKey = game.input.keyboard.addKey(Phaser.Keyboard.V);
+        aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+        sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
         kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
         oneKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -199,7 +200,7 @@ var playState = {
             game.camera.follow( player );
             maskFollowPlayer();
             playerHoldItem();
-            if(vKey.isDown && !selected.locked){
+            if(dKey.isDown && !selected.locked){
                 if(player.currentItemIndex==4){
                     player.currentItemIndex=0;
                     selected.cameraOffset.x = 855;
@@ -208,6 +209,18 @@ var playState = {
                 }else{
                     player.currentItemIndex++;
                     selected.cameraOffset.x += 55;
+                    selected.locked = true;
+                    game.time.events.add(200,function(){selected.locked=false;});
+                }
+            }if(aKey.isDown && !selected.locked){
+                if(player.currentItemIndex==0){
+                    player.currentItemIndex=4;
+                    selected.cameraOffset.x = 855+(55*4);
+                    selected.locked = true;
+                    game.time.events.add(200,function(){selected.locked=false;});
+                }else{
+                    player.currentItemIndex--;
+                    selected.cameraOffset.x -= 55;
                     selected.locked = true;
                     game.time.events.add(200,function(){selected.locked=false;});
                 }
@@ -307,14 +320,14 @@ function playerCreate(){
 
 function playerMove(){
     player.body.velocity.x = 0;
-    if (cKey.isDown && player.body.touching.down && cursors.right.isDown) {
+    if (cursors.up.isDown && player.body.touching.down && cursors.right.isDown) {
         player.body.velocity.y = -380
         player.animations.play("jump right hold item");
     }
-    else if (cKey.isDown && player.body.touching.down && cursors.left.isDown) {
+    else if (cursors.up.isDown && player.body.touching.down && cursors.left.isDown) {
         player.body.velocity.y = -380
         player.animations.play("jump left hold item");
-    }else if (cKey.isDown && player.body.touching.down){
+    }else if (cursors.up.isDown && player.body.touching.down){
         player.body.velocity.y = -380
         if(player.isFacingLeft){
             player.animations.play('default left');
