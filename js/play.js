@@ -150,7 +150,7 @@ var playState = {
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
             game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
             game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
-            game.physics.arcade.collide(player, level.collidableSpawnGroup, playerDamaged, null, this);
+            game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
 
             if(player.collideDown){
@@ -269,7 +269,7 @@ var playState = {
                 game.state.start('play');
             },this,0,0,1,0);
             nextLevelButton.fixedToCamera = true;
-            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+            /*mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
@@ -277,7 +277,7 @@ var playState = {
                 game.state.start('menu');
                 levelCompleted = false;
             },this,0,0,1,0);
-            mainMenuButtonIngame.fixedToCamera = true;
+            mainMenuButtonIngame.fixedToCamera = true;*/
         }else{
             mainMenuButtonIngame = game.add.button(425, 130,'main_menu_button',function(){
             game.world.removeAll();
@@ -591,8 +591,7 @@ function playerDeath(){
         player.animations.play('death');
         player.dead = true;
         player.body.velocity.x = 0;
-        if(player.currentItem)
-            player.currentItem.kill();
+        player.currentItem.kill();
     }
 }
 
@@ -603,7 +602,7 @@ function resume(){
             game.time.events.add(Phaser.Timer.SECOND*.2,function(){
                 pausedMenu.destroy();
                 resumeButton.destroy();
-                mainMenuButtonIngame.destroy();
+                //mainMenuButtonIngame.destroy();
                 controlsMenu.destroy();
                 isPaused = false;
                 AI.start();
@@ -628,13 +627,13 @@ function pause(){
                 resume();
             },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
-            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+            /*mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
                 game.state.start('menu');
             },this,0,0,1,0);
-            mainMenuButtonIngame.fixedToCamera = true;
+            mainMenuButtonIngame.fixedToCamera = true;*/
             controlsMenu = game.add.sprite(100,100,'controls_screen');
             controlsMenu.fixedToCamera = true;
             game.time.events.add(Phaser.Timer.SECOND,function(){
