@@ -6,7 +6,7 @@
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "walkspeed" : 100,
+        "walkspeed" : 0,
         "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
@@ -29,7 +29,7 @@
             },
             { 	
                 "name" : "walk",
-                "frames" : [0, 1, 2, 3, 4],
+                "frames" : [5],
                 "framerate" : 10,
                 "loop" : true
             },
@@ -38,6 +38,18 @@
                 "frames" : [0, 1, 2, 3, 4],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 5,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
+                "framerate" : 5,
+                "loop" : false
             }
         ]
     },
@@ -49,7 +61,7 @@
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "walkspeed" : 100,
+        "walkspeed" : 0,
         "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
@@ -72,7 +84,7 @@
             },
             { 	
                 "name" : "walk",
-                "frames" : [0, 1, 2, 3, 4],
+                "frames" : [5],
                 "framerate" : 10,
                 "loop" : true
             },
@@ -81,6 +93,18 @@
                 "frames" : [0, 1, 2, 3, 4],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 5,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
+                "framerate" : 5,
+                "loop" : false
             }
         ]
     },
@@ -124,6 +148,18 @@
                 "frames" : [0, 1, 2, 3],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -167,6 +203,18 @@
                 "frames" : [20, 21, 22, 23],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [20, 21, 22, 23],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [20, 21, 22, 23],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -212,6 +260,18 @@
                 "frames" : [8, 9, 10, 11],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [8, 9, 10, 11],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [8, 9, 10, 11],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -255,6 +315,18 @@
                 "frames" : [0, 1, 2, 3],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -298,6 +370,18 @@
                 "frames" : [0],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     }

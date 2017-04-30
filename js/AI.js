@@ -245,8 +245,7 @@ var AI = {
             behavior.radius = radius;
             behavior.ownerAIObject = ownerAIObject;
             
-
-            behavior.update = function (){
+            behavior.update2 = function (){
                 var owner = behavior.ownerAIObject;
                 
                 
@@ -284,6 +283,14 @@ var AI = {
                     }
                 }
                 owner.sprite.animations.play('walk');
+            }
+
+            behavior.update = function (){
+                var owner = behavior.ownerAIObject;
+                owner.sprite.animations.play('calmed');
+                owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
+                    owner.update = behavior.update2; 
+                }, behavior );
             };
 
             return behavior;
@@ -297,7 +304,7 @@ var AI = {
             behavior.ownerAIObject = ownerAIObject;
             behavior.tolerance = 40;
 
-            behavior.update = function (){
+            behavior.update2 = function  () {
                 var owner = behavior.ownerAIObject;
                 var target = owner.raycast.sight.target;
                 var inAggroRange = owner.raycast.sight.length < owner.sprite.entitydata.aggro_range && owner.sprite.entitydata.passthrough?  true : !AI.terrain.obstructed(owner.raycast.sight);
@@ -329,13 +336,21 @@ var AI = {
                         }
                     }
                     
-                    owner.sprite.animations.play('walk');
+                    owner.sprite.animations.play('run');
                 }
                 else{
                     //invalid target, return to idle
                     owner.sprite.body.velocity.y = 0;
                     owner.setState('meander');
                 }
+            };
+            
+            behavior.update = function (){
+                var owner = behavior.ownerAIObject;
+                owner.sprite.animations.play('alerted');
+                owner.sprite.animations.getAnimation('alerted').onComplete.add(function () {
+                    owner.update = behavior.update2; 
+                }, behavior );
             };
 
             return behavior;
