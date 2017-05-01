@@ -187,7 +187,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         
         //test
         var bitmap = level.game.add.bitmapData( level.game.width, level.game.height );
-        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0)';/////////////////////////////////////////////////
         bitmap.context.fillRect( 0, 0, level.game.width, level.game.height );
         var mask =level.game.add.sprite( 0, 0, bitmap );
         mask.fixedToCamera = true;

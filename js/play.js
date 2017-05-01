@@ -9,9 +9,13 @@ var hudGroup;
 
 var level;
 var spawner;
+var lightManager;
 
 var staticLantern, staticBomb;
 var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
+
+var lanternRadius = 300;
+var defaultLightRaidus = 100;
 
 var playState = {
     collectionSound: null,walkingSound: null,runningSound: null,
@@ -55,9 +59,11 @@ var playState = {
 
     },
     create: function(){
+        lightManager = createLightingManager(game);
         level.create( spawner );
         AI.initTerrain( level.layers['solids'] );
-        game.camera.height = 550;
+        //game.camera.height = 550;
+        game.camera.height = 576;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         playState.collectionSound = game.add.audio('collection_sound');
@@ -79,11 +85,11 @@ var playState = {
         selected.fixedToCamera = true;
 
         // create a mask over player
-        mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
-        mask.anchor.setTo(.5);
+        //mask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask');
+        //mask.anchor.setTo(.5);
 
-        largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
-        largeMask.anchor.setTo(.5);
+        //largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
+        //largeMask.anchor.setTo(.5);
 
 
         // spawn test lantern
@@ -100,8 +106,9 @@ var playState = {
         
 
         hudGroup = game.add.group();
-        hudGroup.add(mask);
-        hudGroup.add(largeMask);
+        //hudGroup.add(mask);
+        //hudGroup.add(largeMask);
+        hudGroup.add(lightManager.lightSprite);
         hudGroup.add(hud);
         hudGroup.add(healthBar);
         hudGroup.add(staminaBar);
@@ -124,8 +131,28 @@ var playState = {
 
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
+        
+        /*
+        var test = game.add.sprite(50, 50, null);///////////////////////////////////
+        lightManager.requestLight(test, 200);////////////////////////////////////////
+        test = game.add.sprite(300, 300, null);///////////////////////////////////
+        lightManager.requestLight(test, 200);////////////////////////////////////////
+        test = game.add.sprite(600, 600, null);///////////////////////////////////
+        lightManager.requestLight(test, 200);////////////////////////////////////////
+        test = game.add.sprite(300, 600, null);///////////////////////////////////
+        lightManager.requestLight(test, 200);////////////////////////////////////////
+        test = game.add.sprite(300, 900, null);///////////////////////////////////
+        lightManager.requestLight(test, 200);////////////////////////////////////////
+        */
+        lightManager.requestLight(player, defaultLightRaidus);
+    },
+    render: function(){
+        
+        lightManager.update();
     },
     update: function(){
+        //game.time.advancedTiming = true; 
+        //console.debug(game.time.fps) ;
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -138,7 +165,7 @@ var playState = {
         
         pause();
         resume();
-            AI.update();
+        AI.update();
 
         if(!isPaused && !levelCompleted){
 
@@ -160,11 +187,13 @@ var playState = {
                 player.godMode.locked = true;
                 player.godMode.enabled = !player.godMode.enabled;
                 if(player.godMode.enabled){
-                    mask.alpha = 0;
-                    largeMask.alpha = 0;
+                    //mask.alpha = 0;
+                    //largeMask.alpha = 0;
+                    lightManager.lightAll();
                 }else{
-                    mask.alpha = 1;
-                    largeMask.alpha = 1;
+                    lightManager.lightDown();
+                    //mask.alpha = 1;
+                    //largeMask.alpha = 1;
                 }
                 game.time.events.add(200,function(){player.godMode.locked = false;});
             }
@@ -200,7 +229,7 @@ var playState = {
                 playerMove();
             }
             game.camera.follow( player );
-            maskFollowPlayer();
+            //maskFollowPlayer();
             playerHoldItem();
             if(dKey.isDown && !selected.locked){
                 if(player.currentItemIndex==4){
@@ -254,6 +283,8 @@ var playState = {
             player.body.gravity.y = 0;
 
         }
+        
+        
     },
     levelTransition: function(){
 
@@ -534,7 +565,9 @@ function playerHoldItem(){
                     player.currentItem.kill();
                     player.currentItem = null;
                 }
-                mask.alpha = 0;
+                //mask.alpha = 0;
+                lightManager.removeLight(player);
+                lightManager.requestLight(player, lanternRadius);
 
             break;
             case "flashlight":
@@ -549,7 +582,8 @@ function playerHoldItem(){
                     player.currentItem = null;
                 }
                 if(!player.godMode.enabled){
-                    mask.alpha = 1;
+                    //mask.alpha = 1;
+                    lightManager.lightAll();
                 }
                 
             break;
@@ -577,7 +611,8 @@ function playerHoldItem(){
         }
     }else{
         if(!player.godMode.enabled){
-            mask.alpha = 1;
+            //mask.alpha = 1;
+            lightManager.lightDown();
         }
         if(player.currentItem != null){
             player.currentItem.kill();

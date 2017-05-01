@@ -87,7 +87,7 @@ var AI = {
         var terrain = {};
         terrain.layer = collidableLayer;
         terrain.obstructed = function ( line ) {
-            if(line.width > 200)                                    //temporary range variable
+            if(line.length > 200)                                    //temporary range variable
                 return true;
             var collidedTiles = terrain.layer.getRayCastTiles(line, 4, false, false);
             for(var i = 0 ; i < collidedTiles.length; i++){
