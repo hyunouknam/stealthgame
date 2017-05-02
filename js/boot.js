@@ -4,6 +4,9 @@ var bootState = {
     
     preload : function () {
         //load json
+        game.load.json('tutorial_level_json', '../assets/tiled/maps/tutorialLevel.json');
+        game.load.tilemap('tutorial_level_tilemap', '../assets/tiled/maps/tutorialLevel.json', null, Phaser.Tilemap.TILED_JSON);
+
         game.load.json('forest_level_json', '../assets/tiled/maps/forestlevel.json');
         game.load.tilemap('forest_level_tilemap', '../assets/tiled/maps/forestlevel.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.json('monster_profile_json', '../assets/MonsterProfile.json');
@@ -18,6 +21,7 @@ var bootState = {
     },
     
     create : function () {
+        game.level1Locked = true;
         game.level2Locked = true;
         game.level3Locked = true;
         game.state.start('menu');

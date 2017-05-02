@@ -202,18 +202,21 @@ var playState = {
                 game.level_json='forest_level_json';
                 game.level_tilemap = 'forest_level_tilemap';
                 game.world.removeAll();
+                resumeVelocity = false;
                 game.state.start('play');
             }else if(twoKey.isDown){
                 music.stop();
                 game.level_json='dungeon_level_json';
                 game.level_tilemap = 'dungeon_level_tilemap';
                 game.world.removeAll();
+                resumeVelocity = false;
                 game.state.start('play');
             }else if(threeKey.isDown){
                 music.stop();
                 game.level_json='final_level_json';
                 game.level_tilemap = 'final_level_tilemap';
                 game.world.removeAll();
+                resumeVelocity = false;
                 game.state.start('play');
             }
 
@@ -296,21 +299,23 @@ var playState = {
                 game.state.start('play');
             },this,0,0,1,0);
             nextLevelButton.fixedToCamera = true;
-            /*mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
                 music.stop();
+                resumeVelocity = false;
                 game.state.start('menu');
                 levelCompleted = false;
             },this,0,0,1,0);
-            mainMenuButtonIngame.fixedToCamera = true;*/
+            mainMenuButtonIngame.fixedToCamera = true;
         }else{
             mainMenuButtonIngame = game.add.button(425, 130,'main_menu_button',function(){
             game.world.removeAll();
             isPaused = false;
             locked = false;
             music.stop();
+            resumeVelocity = false;
             game.state.start('menu');
             levelCompleted = false;
             },this,0,0,1,0);
@@ -579,7 +584,8 @@ function playerHoldItem(){
                 }
                 if(!player.godMode.enabled){
                     //mask.alpha = 1;
-                    lightManager.lightAll();
+                    lightManager.requestLight(player,defaultLightRaidus);
+                    lightManager.lightDown();
                 }
                 
             break;
@@ -608,6 +614,7 @@ function playerHoldItem(){
     }else{
         if(!player.godMode.enabled){
             //mask.alpha = 1;
+            lightManager.requestLight(player, defaultLightRaidus);
             lightManager.lightDown();
         }
         if(player.currentItem != null){
@@ -633,7 +640,7 @@ function resume(){
             game.time.events.add(Phaser.Timer.SECOND*.2,function(){
                 pausedMenu.destroy();
                 resumeButton.destroy();
-                //mainMenuButtonIngame.destroy();
+                mainMenuButtonIngame.destroy();
                 controlsMenu.destroy();
                 isPaused = false;
                 AI.start();
@@ -658,13 +665,14 @@ function pause(){
                 resume();
             },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
-            /*mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+            mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
+                resumeVelocity = false;
                 game.state.start('menu');
             },this,0,0,1,0);
-            mainMenuButtonIngame.fixedToCamera = true;*/
+            mainMenuButtonIngame.fixedToCamera = true;
             controlsMenu = game.add.sprite(100,100,'controls_screen');
             controlsMenu.fixedToCamera = true;
             game.time.events.add(Phaser.Timer.SECOND,function(){
