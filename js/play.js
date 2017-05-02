@@ -10,6 +10,7 @@ var hudGroup;
 var level;
 var spawner;
 var lightManager;
+var terrainDestructor;
 
 var staticLantern, staticBomb;
 var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
@@ -46,6 +47,10 @@ var playState = {
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
         game.load.image('door', '../assets/door.png');
+        
+        
+        game.load.image('rockparticle', '../assets/rockparticle.png');
+        game.load.image('dirtparticle', '../assets/dirtparticle.png');
 
         
         game.load.audio('collection_sound','../assets/sounds/collection_sound.mp3');
@@ -62,6 +67,8 @@ var playState = {
         lightManager = createLightingManager(game);
         level.create( spawner );
         AI.initTerrain( level.layers['solids'] );
+        terrainDestructor = createDestructor(game, level.solidGroup, level.layers.solids, level.tilemap);///////////////////////////////////////////////////////////////
+        
         //game.camera.height = 550;
         game.camera.height = 576;
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -132,22 +139,10 @@ var playState = {
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
         
-        /*
-        var test = game.add.sprite(50, 50, null);///////////////////////////////////
-        lightManager.requestLight(test, 200);////////////////////////////////////////
-        test = game.add.sprite(300, 300, null);///////////////////////////////////
-        lightManager.requestLight(test, 200);////////////////////////////////////////
-        test = game.add.sprite(600, 600, null);///////////////////////////////////
-        lightManager.requestLight(test, 200);////////////////////////////////////////
-        test = game.add.sprite(300, 600, null);///////////////////////////////////
-        lightManager.requestLight(test, 200);////////////////////////////////////////
-        test = game.add.sprite(300, 900, null);///////////////////////////////////
-        lightManager.requestLight(test, 200);////////////////////////////////////////
-        */
         lightManager.requestLight(player, defaultLightRaidus);
     },
     render: function(){
-        
+        //level.debugRender();
         lightManager.update();
     },
     update: function(){
@@ -162,6 +157,7 @@ var playState = {
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
+        terrainDestructor.collideParticles();
         
         pause();
         resume();
@@ -702,6 +698,7 @@ function openDoor( player, keySprite){
     level.openDoor( keySprite );
     playState.collectionSound.play();
     keySprite.kill();
+    terrainDestructor.destroyTerrain(player.x-50, player.y+50, 100, 100, 'dirtparticle');//////////////////////////////////////////////////////////////
 }
 
 function killDoorAndKeys(){

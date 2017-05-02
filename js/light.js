@@ -17,6 +17,7 @@ var createLightingManager = function (game) {
     manager.lightSprite = game.add.image(0,0,manager.wholeMask);
     manager.lightSprite.fixedToCamera = true;
     manager.lightSprite.blendMode = Phaser.blendModes.MULTIPLY;
+    //manager.wholeMask.blendLuminosity()
     
     manager.cameraRect = new Phaser.Rectangle(game.camera.x, game.camera.y, game.camera.width, game.camera.height);
     manager.lightCircle = new Phaser.Circle(0,0,0);
@@ -45,7 +46,7 @@ var createLightingManager = function (game) {
     };
     
     //optimizers
-    manager.counter = 2;
+    manager.counter = 0;
     manager.maxCounter = 2;
     
     manager.update = function () { 

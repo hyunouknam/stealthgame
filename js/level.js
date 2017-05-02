@@ -17,6 +17,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.tilesetList = [];
     level.layers = {};
     level.mapJSON = game.cache.getJSON(jsonFileKey);
+    level.tilemap;
     
     //map
     level.background = game.add.group();
@@ -53,7 +54,8 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         level.game.stage.backgroundColor = '#ffffff';
 
         //create map images
-        var tilemap = game.add.tilemap( level.tiledmapKey );
+        level.tilemap = game.add.tilemap( level.tiledmapKey );
+        var tilemap = level.tilemap;
         for(var i = 0; i < level.tilesetList.length; i++)
             tilemap.addTilesetImage( level.tilesetList[i] );
         
@@ -88,8 +90,10 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                     case 'solid object' : 
                         for(var j = 0; j < objectarray.length; j++){
                             var collisionObject = level.game.add.sprite(objectarray[j].x, objectarray[j].y, null);
+                            collisionObject.width = objectarray[j].width;
+                            collisionObject.height = objectarray[j].height;
                             level.game.physics.enable(collisionObject);
-                            collisionObject.body.setSize(objectarray[j].width, objectarray[j].height );
+                            //collisionObject.body.setSize(objectarray[j].width, objectarray[j].height );
                             collisionObject.body.immovable =  true;
                             level.solidGroup.add(collisionObject);
                         }
@@ -243,13 +247,13 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     */
     
     level.debugRender = function (){
-        //level.solidGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        level.solidGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.platformGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.keyGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.doorGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
     
-        level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
-        level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
     }
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
