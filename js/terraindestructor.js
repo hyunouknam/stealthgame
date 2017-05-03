@@ -65,6 +65,9 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
             }
         });
         
+        if(overlappedSprites.length <= 0)
+            return;
+        
         //calculate the properties for the new splitted sprites
         
         var newShapes = [];
