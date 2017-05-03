@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="6022">
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="6023">
  <tileset firstgid="1" name="Blocks" tilewidth="32" tileheight="32" tilecount="45" columns="5">
   <image source="../tilesets/oneblock.png" width="160" height="288"/>
  </tileset>
@@ -273,7 +273,6 @@
   <object id="5889" x="0" y="3104" width="3168" height="96"/>
   <object id="5890" x="0" y="288" width="32" height="2816"/>
   <object id="5891" x="32" y="288" width="480" height="96"/>
-  <object id="5892" x="672" y="288" width="1600" height="96"/>
   <object id="5893" x="1408" y="384" width="224" height="160"/>
   <object id="5894" x="1632" y="480" width="96" height="32"/>
   <object id="5895" x="2048" y="384" width="96" height="480"/>
@@ -337,6 +336,7 @@
   <object id="6018" x="1408" y="544" width="32"/>
   <object id="6020" x="1408" y="768" width="192" height="32"/>
   <object id="6021" x="1408" y="544" width="224" height="224"/>
+  <object id="6022" x="640" y="288" width="1632" height="96"/>
  </objectgroup>
  <objectgroup name="level key">
   <object id="4009" gid="63" x="3104" y="864" width="32" height="32"/>
