@@ -1,7 +1,7 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false;
 
-var escKey, shiftKey, aKey, sKey, dKey, kKey,oneKey,twoKey,threeKey;
+var escKey, shiftKey, aKey, sKey, dKey, ekey, kKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
 var music;
 var hudGroup;
@@ -10,6 +10,7 @@ var hudGroup;
 var level;
 var spawner;
 var lightManager;
+var itemManager;
 var terrainDestructor;
 
 var staticLantern, staticBomb;
@@ -46,6 +47,7 @@ var playState = {
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
+        game.load.image('sign','../assets/sign.png');
         game.load.image('door', '../assets/door.png');
         
         
@@ -127,6 +129,7 @@ var playState = {
         escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+        eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
         sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
         kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
@@ -135,7 +138,7 @@ var playState = {
         threeKey = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 
         playerCreate();
-
+        itemManager = createItemManager(game,player);
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
         
@@ -157,10 +160,12 @@ var playState = {
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
+        game.physics.arcade.collide(level.signGroup,level.solidGroup);
         terrainDestructor.collideParticles();
         
         pause();
         resume();
+        
         AI.update();
 
         if(!isPaused && !levelCompleted){
@@ -171,8 +176,8 @@ var playState = {
             game.physics.arcade.overlap(player, level.nextLevelGroup,playState.levelTransition,null,this);
             
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
-            game.physics.arcade.overlap(player, lantern, collectItem, null, this);  // testing lantern
-            game.physics.arcade.overlap(player, bomb, collectItem, null, this);  // testing bomb
+            game.physics.arcade.overlap(player, lantern, itemManager.collectItem, null, this);  // testing lantern
+            game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
 
@@ -229,32 +234,9 @@ var playState = {
             }
             game.camera.follow( player );
             //maskFollowPlayer();
-            playerHoldItem();
-            if(dKey.isDown && !selected.locked){
-                if(player.currentItemIndex==4){
-                    player.currentItemIndex=0;
-                    selected.cameraOffset.x = 855;
-                    selected.locked = true;
-                    game.time.events.add(200,function(){selected.locked=false;});
-                }else{
-                    player.currentItemIndex++;
-                    selected.cameraOffset.x += 55;
-                    selected.locked = true;
-                    game.time.events.add(200,function(){selected.locked=false;});
-                }
-            }if(aKey.isDown && !selected.locked){
-                if(player.currentItemIndex==0){
-                    player.currentItemIndex=4;
-                    selected.cameraOffset.x = 855+(55*4);
-                    selected.locked = true;
-                    game.time.events.add(200,function(){selected.locked=false;});
-                }else{
-                    player.currentItemIndex--;
-                    selected.cameraOffset.x -= 55;
-                    selected.locked = true;
-                    game.time.events.add(200,function(){selected.locked=false;});
-                }
-            }
+            itemManager.switchItem();
+            itemManager.holdItem();
+            itemManager.useItem();
 
             player.body.gravity.y = 700;
             if(resumeVelocity){
@@ -373,9 +355,6 @@ function playerCreate(){
     player.maxStamina = 194;
     player.rested = true;
     player.dead = false;
-    player.currentItem = null;
-    player.currentItemIndex = 0;
-    player.items = [null, null, null, null, null];
     player.isFacingLeft = false;
     player.godMode = {enabled:false,locked:false};
     player.collideDown = true;
@@ -515,114 +494,6 @@ function maskFollowPlayer(){
     largeMask.position.y = player.position.y + 36;
 }
 
-function collectItem(player, item){
-    amtOfItems = 0;
-    playState.collectionSound.play();
-    player.items.forEach(function(e){
-        if(e!=null){
-            amtOfItems++;
-        }
-    });
-    if(amtOfItems<5){
-        item.kill();
-
-        // lantern
-        if(item.key == 'lantern'){
-            for(var i = 0; i < player.items.length; i++){
-                if(player.items[i] == null){
-                    staticLantern = game.add.sprite(860 + (i * 55), 615, 'lantern');    //853
-                    player.items[i] = staticLantern;
-
-                    staticLantern.fixedToCamera = true;
-                    break;
-                }
-            }
-
-        }
-
-        // bomb
-        if(item.key == 'bomb'){
-            for(var i = 0; i < player.items.length; i++){
-                if(player.items[i] == null){
-                    staticBomb = game.add.sprite(860 + (i * 55), 615, 'bomb');
-                    player.items[i] = staticBomb;
-
-                    staticBomb.fixedToCamera = true;
-                    break;
-                }
-            }
-
-        }
-
-    }
-    
-}
-
-function playerHoldItem(){
-    if(player.items[player.currentItemIndex] != null){
-        switch(player.items[player.currentItemIndex].key) {
-            case "lantern":
-                if(player.currentItem != null && player.currentItem.key != 'lantern'){
-                    player.currentItem.kill();
-                    player.currentItem = null;
-                }
-                //mask.alpha = 0;
-                lightManager.removeLight(player);
-                lightManager.requestLight(player, lanternRadius);
-
-            break;
-            case "flashlight":
-
-            break;
-            case "rock":
-
-            break;
-            case "bomb":
-                if(player.currentItem != null && player.currentItem.key != 'bomb'){
-                    player.currentItem.kill();
-                    player.currentItem = null;
-                }
-                if(!player.godMode.enabled){
-                    //mask.alpha = 1;
-                    lightManager.requestLight(player,defaultLightRaidus);
-                    lightManager.lightDown();
-                }
-                
-            break;
-            //case "":        // add more items
-
-            //break;
-
-        }
-        if(player.currentItem == null){
-            if(player.isFacingLeft){
-                player.currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,player.items[player.currentItemIndex].key);
-                player.currentItem.scale.setTo(.75,.75);
-            }else{
-                player.currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, player.items[player.currentItemIndex].key);
-                player.currentItem.scale.setTo(.75, .75);
-            }
-        }else{
-            if(player.isFacingLeft){
-                player.currentItem.position.x = player.position.x + 1;
-                player.currentItem.position.y = player.position.y + 26;
-            }else{
-                player.currentItem.position.x = player.position.x + 25;
-                player.currentItem.position.y = player.position.y + 26;
-            }
-        }
-    }else{
-        if(!player.godMode.enabled){
-            //mask.alpha = 1;
-            lightManager.requestLight(player, defaultLightRaidus);
-            lightManager.lightDown();
-        }
-        if(player.currentItem != null){
-            player.currentItem.kill();
-            player.currentItem = null;
-        }
-    }
-}
 
 function playerDeath(){
     if(player.health <= 0){
