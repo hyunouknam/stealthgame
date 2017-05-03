@@ -671,6 +671,7 @@ function pause(){
                 locked = false;
                 resumeVelocity = false;
                 game.state.start('menu');
+                music.stop();
             },this,0,0,1,0);
             mainMenuButtonIngame.fixedToCamera = true;
             controlsMenu = game.add.sprite(100,100,'controls_screen');
