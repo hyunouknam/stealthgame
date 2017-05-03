@@ -32,10 +32,17 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
     destructor.removeTile = function (x, y, width, height){
         var tiles = destructor.layer.getTiles(x, y, width, height, false, false);
         var rect = {};
+        var right = destructor.game.math.snapToCeil(x + width, 32);
+        var down = destructor.game.math.snapToCeil(y + height, 32);
         rect.x = destructor.game.math.snapToFloor(x, 32);/////////////////////////////////////////////hardcoded 32
         rect.y = destructor.game.math.snapToFloor(y, 32);/////////////////////////////////////////////hardcoded 32
-        rect.width = destructor.game.math.snapToCeil(x+width, 32)-rect.x;/////////////////////////////////////////////hardcoded 32
-        rect.height = destructor.game.math.snapToCeil(y+height, 32)-rect.y;/////////////////////////////////////////////hardcoded 32
+        rect.width = right-rect.x;/////////////////////////////////////////////hardcoded 32
+        rect.height = down-rect.y;/////////////////////////////////////////////hardcoded 32
+        
+        
+                //console.log('request: '+x+ " "+y+" "+width+" "+ height)
+                //console.log('calc request: '+rect.x+ " "+rect.y+" "+rect.width+" "+ rect.height)
+        
         rect.isValid = false;
         if(tiles.length > 0)
             rect.isValid = true;
@@ -71,10 +78,12 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
         //calculate the properties for the new splitted sprites
         
         var newShapes = [];
+        var rect = {x: x, y: y, width: width, height: height};
         for(var i = 0; i < overlappedSprites.length; i++){
             var solid = overlappedSprites[i];
-            var rect = {x: x, y: y, width: width, height: height};
+            
             if(rect.x > solid.x){   //left
+                //console.debug("LEFT")
                 var newRect = {};
                 newRect.x = solid.x;
                 newRect.y = solid.y;
@@ -83,6 +92,8 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
                 newShapes.push(newRect);
             }
             if(rect.x + rect.width < solid.x + solid.width){  //right
+                //console.debug("RIGHT")
+                
                 var newRect = {};
                 newRect.x = rect.x + rect.width;
                 newRect.y = solid.y;
@@ -91,6 +102,7 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
                 newShapes.push(newRect);
             }
             if(rect.y > solid.y){   //top
+                //console.debug("TOP")
                 var newRect = {};
                 newRect.x = rect.x > solid.x ? rect.x : solid.x;
                 newRect.y = solid.y;
@@ -115,6 +127,7 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
                 newShapes.push(newRect);
             }
             if(rect.y + rect.height < solid.y + solid.height){  //bottom
+                //console.debug("BOTTOM")
                 var newRect = {};
                 newRect.x = rect.x > solid.x ? rect.x : solid.x;
                 newRect.y = rect.y + rect.height;
@@ -122,7 +135,7 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
                 var rectRight = rect.x + rect.width;
                 var solidRight = solid.x + solid.width;
                 if(rect.x <= solid.x && rectRight >= solidRight){    //both sides
-                    console.log("BOTH");
+                    //console.log("BOTH");
                     width = solid.width;
                 }
                 else if (rect.x  > solid.x && rectRight >= solidRight){  //right side

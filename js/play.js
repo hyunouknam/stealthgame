@@ -142,7 +142,7 @@ var playState = {
         lightManager.requestLight(player, defaultLightRaidus);
     },
     render: function(){
-        level.debugRender();
+        //level.debugRender();
         lightManager.update();
     },
     update: function(){
