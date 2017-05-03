@@ -20,6 +20,7 @@ var menuState = {
         game.load.image('level1','../assets/buttons/level1.png');
         game.load.image('level2','../assets/buttons/level2.png');
         game.load.image('level3','../assets/buttons/level3.png');
+        game.load.image('tutorial','../assets/buttons/tutorial.png');
         game.load.image('locked', '../assets/menus/Locked_Level.png');
         
 
@@ -183,6 +184,16 @@ function levelScreenTransition(){
         menuState.helpButton.destroy();
         menuState.logo.destroy();
 
+        menuState.tutorial = game.add.button(225,150,'tutorial',function(){
+            game.world.removeAll();
+            menuState.currentState="Splash Screen";
+            game.level_json="tutorial_level_json";
+            game.level_tilemap="tutorial_level_tilemap";
+            game.state.start('play');
+        });
+        menuState.tutorial.anchor.setTo(.5);
+        menuState.tutorial.alpha = 0;
+
         menuState.level1 = game.add.button(225,350,'level1',function(){game.world.removeAll();menuState.currentState="Splash Screen";game.level_json="forest_level_json";game.level_tilemap="forest_level_tilemap";game.state.start('play');});
         menuState.level1.anchor.setTo(.5);
         menuState.level1.alpha = 0;
@@ -208,20 +219,21 @@ function levelScreenTransition(){
     }
     if(menuState.fade){
         if(menuState.level1.alpha < 1){
-            fadeIn(menuState.level1,.02);
-            fadeIn(menuState.level2,.02);
-            fadeIn(menuState.level3,.02);
+            fadeIn(menuState.tutorial,.05);
+            fadeIn(menuState.level1,.05);
+            fadeIn(menuState.level2,.05);
+            fadeIn(menuState.level3,.05);
             if(game.level2Locked){
-                fadeIn(menuState.lvl2Locked,.02);
+                fadeIn(menuState.lvl2Locked,.05);
             }else{
                 menuState.lvl2Locked = null;
             }
             if(game.level3Locked){
-                fadeIn(menuState.lvl3Locked,.02);
+                fadeIn(menuState.lvl3Locked,.05);
             }else{
                 menuState.lvl3Locked = null;
             }
-            fadeIn(menuState.mainMenuButton,.02);
+            fadeIn(menuState.mainMenuButton,.05);
         }else{
             menuState.currentState = "Level Screen";
             menuState.fade = false;
@@ -230,6 +242,7 @@ function levelScreenTransition(){
 }
 function removeLevelScreen(){
     if(menuState.mainMenuButton.alpha > 0){
+        fadeOut(menuState.tutorial,.02);
         fadeOut(menuState.level1,.02);
         fadeOut(menuState.level2,.02);
         fadeOut(menuState.level3,.02);
@@ -237,6 +250,7 @@ function removeLevelScreen(){
         fadeOut(menuState.lvl3Locked,.02);
         fadeOut(menuState.mainMenuButton,.02);
     }else{
+        menuState.tutorial.destroy();
         menuState.level1.destroy();
         menuState.level2.destroy();
         menuState.level3.destroy();
