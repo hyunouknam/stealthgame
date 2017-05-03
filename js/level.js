@@ -63,9 +63,10 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         var layerlist = level.mapJSON.layers;
         for(var i = 0; i < layerlist.length; i++){
             if( layerlist[i].type === 'tilelayer' ){
-                var layer = tilemap.createLayer( layerlist[i].name )
+                var layer = tilemap.createLayer( layerlist[i].name );
                 layer.resizeWorld();
-                level.layers[layerlist[i].name] = layer;
+                var newName = layerlist[i].name.replace(' ', '_');
+                level.layers[newName] = layer;
             }
         }
 
@@ -199,18 +200,24 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     };
     
     level.renderSort = function( midgroup, topgroup ){
+        //hacked solution of background decoration blocking player
+        level.game.world.sendToBack(level.layers.background_decoration);
+        level.game.world.sendToBack(level.background);
+        
+        //reorder
         level.game.world.bringToTop(level.collidableSpawnGroup);
         level.game.world.bringToTop(level.passthroughSpawnGroup);
-        if( midgroup !== null)
+        if( midgroup !== null){
             level.game.world.bringToTop( midgroup );
-            level.game.world.bringToTop( level.doorGroup );
-            level.game.world.bringToTop( level.keyGroup );
-            level.game.world.bringToTop( level.nextLevelGroup);
+        }
+        level.game.world.bringToTop( level.doorGroup );
+        level.game.world.bringToTop( level.keyGroup );
+        level.game.world.bringToTop( level.nextLevelGroup);
         
         //level.mask.bringToTop();
         
         for( var i in level.layers) {
-            if(i === 'foreground decoration' || i === 'specials'){
+            if(i === 'foreground_decoration' || i === 'specials'){
                 level.game.world.bringToTop(level.layers[i]);
             }
             
@@ -221,10 +228,9 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             
             
         }
-        level.mask.bringToTop();
+        //level.mask.bringToTop();
         if( topgroup !== null)
             level.game.world.bringToTop( topgroup );
-        
     };
     
     level.openDoor = function ( keySprite ){
@@ -234,7 +240,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             }
         }
         return undefined;
-    }
+    };
     /*
     level.getDoor = function ( keySprite ){
         for( var i = 0; i < level.doorGroup.children.length; i++){
@@ -254,11 +260,11 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     
         //level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
-    }
+    };
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
         //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud
-    }
+    };
     
     
     return level;

@@ -13,7 +13,6 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
     destructor.map = map;
     destructor.layer = tilelayer;
     destructor.game = game;
-    destructor.particleRef = 'destructor_particle';
     destructor.particleEmitter = game.add.emitter();
     destructor.particleEmitter.setYSpeed(350, 400);
     destructor.particleEmitter.bounce.set(0.2, 0.2);
