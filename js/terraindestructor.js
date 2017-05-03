@@ -50,6 +50,13 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
         return {rect, tiles};
     };
     
+    
+    destructor.intersects = function (a, b) {
+        if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
+            return false;
+        return !(a.right <= b.x || a.bottom <= b.y || a.x >= b.right || a.y >= b.bottom);
+    };
+    
     destructor.removeBody = function ( x, y, width, height, tiles ) {
         //get overlaps
         var overlappedSprites = [];
@@ -64,17 +71,18 @@ var createDestructor = function (game, solidgroup, tilelayer, map){
             solidRect.y = e.y;
             solidRect.width = e.width;
             solidRect.height = e.height;
-            if(Phaser.Rectangle.intersects(solidRect, inputRect)){
+            if(destructor.intersects(solidRect, inputRect)){
                 //console.debug(b.x + " "+ b.y )
                 //console.debug(a.x + " "+ a.y )
                 //console.debug(overlapper.x + " "+ overlapper.y )
                 overlappedSprites.push(e);
+                console.log(e.x+ " "+e.y+" "+e.width+" "+ e.height)
             }
         });
         
         if(overlappedSprites.length <= 0)
             return;
-        
+        console.debug('length '+overlappedSprites.length);
         //calculate the properties for the new splitted sprites
         
         var newShapes = [];
