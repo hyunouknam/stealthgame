@@ -32,8 +32,6 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
         group.destination = e;
         group.add(base);
         group.add(waypointSprite);
-        //waypointSprite.destination = e;
-        //waypointManager.waypointGroup.add(waypointSprite);
         waypointManager.waypointGroup.add(group);
     });
     
@@ -50,6 +48,12 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
     };
     
     waypointManager.add = function (sprite){    //ADD ON THE WAY!!!!
+        //var alreadyIn = false;
+        var waypointArr = waypointManager.waypointGroup.children;
+        for(var i = 0; i<waypointArr.length; i++){
+            if(waypointArr[i].destination === sprite)
+                return;
+        }
         var group = game.add.group();
         var base = game.add.sprite(0,0,'waypointarrow');
         var waypointSprite = game.add.sprite(0,0,sprite.key);
