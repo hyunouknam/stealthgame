@@ -19,6 +19,8 @@ var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb
 var lanternRadius = 300;
 var defaultLightRaidus = 100;
 
+var waypoint;
+
 var playState = {
     collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,
     preload: function(){
@@ -66,6 +68,7 @@ var playState = {
 
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
+        preloadWaypoint(game);
 
     },
     create: function(){
@@ -126,6 +129,7 @@ var playState = {
         hudGroup.add(staminaBar);
         //hudGroup.add(sanityBar);
         hudGroup.add(selected);
+        
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -142,6 +146,10 @@ var playState = {
 
         playerCreate();
         itemManager = createItemManager(game,player);
+        
+        waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);
+        hudGroup.add(waypoint.waypointGroup);
+        
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
         
@@ -154,6 +162,7 @@ var playState = {
     update: function(){
         //game.time.advancedTiming = true; 
         //console.debug(game.time.fps) ;
+        waypoint.update();
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -696,6 +705,7 @@ function playerDamaged( player, mob ){
         player.health -= player.health <= 0 ? 0: 1;
         healthBar.width -= player.health <= 1 ? 0: 1;
     }
+    waypoint.add(mob);
 }
 
 function loseStamina(){
