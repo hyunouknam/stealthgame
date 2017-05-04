@@ -15,7 +15,7 @@
         
         "spritesheet" : {
             "url" : "../assets/ghost.png",
-            "referencename" : "akushfkzlgjkdzhaukgskfjlzjxbkgdjahdkuhfkhdfksdg",
+            "referencename" : "ghost",
             "width" :  48,
             "height" : 72
         },
