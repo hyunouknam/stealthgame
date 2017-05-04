@@ -181,7 +181,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                         for(var j = 0;j < objectarray.length; j++){
                             var sign = level.game.add.sprite(objectarray[j].x,objectarray[j].y-32,'sign');
                             level.game.physics.enable(sign);
-                            //sign.body.gravity.y = 30;
+                            sign.text = objectarray[j].properties.text.split('');
                             level.signGroup.add(sign);
                         }
                         break;
