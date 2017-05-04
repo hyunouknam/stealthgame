@@ -20,6 +20,15 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
         base.anchor.setTo(0.5,0.5);
         waypointSprite.anchor.setTo(0.5,0.5);
         
+        //aethetic fields
+        base.name = 'waypoint';
+        //base.scale.setTo(1.5);
+        base.changeSpeed = 0.9;
+        base.minWidth = base.width/3;
+        base.minHeight = base.height/3;
+        base.originalHeight = base.height;
+        base.originalWidth = base.width;
+        
         group.destination = e;
         group.add(base);
         group.add(waypointSprite);
@@ -51,6 +60,23 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
         //update the position of waypoints
         waypointManager.waypointGroup.forEach(function(e){
             if(e.destination.alive){
+                
+                var base = e.getByName('waypoint');
+                
+                if(base.width >= base.originalWidth || base.height >= base.originalHeight || base.width < base.minWidth || base.height < base.minHeight){
+                    base.changeSpeed *= -1;
+                }
+                base.width+=base.changeSpeed;
+                base.height+=base.changeSpeed*4;
+                /*
+                if(base.height>=base.originalHeight){
+                    base.changeSpeed *= -1;
+                }
+                else if(base.height<0)
+                    base.changeSpeed *= -1;
+                base.height += base.changeSpeed;
+                */
+                
                 var waypointX = e.destination.x;
                 var waypointY = e.destination.y;
                 var dx = waypointX - waypointManager.restrictionSprite.x;
