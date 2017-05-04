@@ -10,7 +10,7 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
     waypointManager.restrictionSprite.anchor.setTo(0.5, 0.5);
     waypointManager.owner = ownersprite;
     
-    spritelist.forEach(function (e) {
+    spritelist.forEach(function (e) {   //INIT!!!!!!!!!!!!
         //var bitmap = game.add.bitmapData(e.width, e.height);
         //bitmap.
         //bitmap.draw(e);
@@ -47,6 +47,30 @@ var createWaypoint = function ( game, ownersprite, w, h, spritelist ){
         waypointManager.waypointGroup.forEach(function(e){
             e.alpha = 1;
         });
+    };
+    
+    waypointManager.add = function (sprite){    //ADD ON THE WAY!!!!
+        var group = game.add.group();
+        var base = game.add.sprite(0,0,'waypointarrow');
+        var waypointSprite = game.add.sprite(0,0,sprite.key);
+        base.anchor.setTo(0.5,0.5);
+        waypointSprite.anchor.setTo(0.5,0.5);
+        
+        //aethetic fields
+        base.name = 'waypoint';
+        //base.scale.setTo(1.5);
+        base.changeSpeed = 0.9;
+        base.minWidth = base.width/3;
+        base.minHeight = base.height/3;
+        base.originalHeight = base.height;
+        base.originalWidth = base.width;
+        
+        group.destination = sprite;
+        group.add(base);
+        group.add(waypointSprite);
+        //waypointSprite.destination = e;
+        //waypointManager.waypointGroup.add(waypointSprite);
+        waypointManager.waypointGroup.add(group);
     };
     
     waypointManager.update = function(){

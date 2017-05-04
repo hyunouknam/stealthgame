@@ -568,6 +568,7 @@ function playerDamaged( player, mob ){
         player.health -= player.health <= 0 ? 0: 1;
         healthBar.width -= player.health <= 1 ? 0: 1;
     }
+    waypoint.add(mob);
 }
 
 function loseStamina(){
