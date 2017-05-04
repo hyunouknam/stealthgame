@@ -347,6 +347,7 @@ var playState = {
         AI.pause();
         index = 0;
         row = 0;
+        charWidth = 150;
         counter = 0;
         sign.text.forEach(function(char){
             newChar = playState.createChar(char,index++,row);
@@ -364,7 +365,7 @@ var playState = {
         }
     },
     createChar: function(char,col){
-        var newChar = game.add.sprite(150+(col*40),150+(row *70),'chars');
+        var newChar = game.add.sprite(charWidth+(col*40),150+(row *70),'chars');
         newChar.scale.setTo(.2);
         newChar.fixedToCamera = true;
         switch(char.toLowerCase()){
@@ -448,18 +449,26 @@ var playState = {
                 break;
             case '.':
                 newChar.frame = 26;
+                charWidth -= 30;
                 break;
             case ',':
                 newChar.frame = 27;
+                charWidth -= 30;
                 break;
             case '!':
                 newChar.frame = 28;
+                charWidth -= 30;
+                break;
+            case "'":
+                newChar.frame = 29;
+                charWidth -= 20;
                 break;
             case '|':
                 row++;
                 index=0;
+                charWidth = 150;
             default:
-                newChar.frame = 29;
+                newChar.frame = 99;
             break;
         }
         return newChar;
