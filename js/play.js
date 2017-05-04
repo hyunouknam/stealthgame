@@ -19,8 +19,10 @@ var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb
 var lanternRadius = 300;
 var defaultLightRaidus = 100;
 
+var waypoint;
+
 var playState = {
-    collectionSound: null,walkingSound: null,runningSound: null,
+    collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -30,6 +32,9 @@ var playState = {
         game.load.image('controls_screen','../assets/menus/Controls_Screen.png');
         game.load.image('selected_tool','../assets/hud/Selected_Tool.png');
         game.load.image('next_level_menu','../assets/menus/Level_Complete_Menu.png');
+        game.load.image('enlarged_sign','../assets/menus/enlargedSign.png');
+        game.load.spritesheet('chars','../assets/chars.png', 155,330);
+        game.load.image('xButton','../assets/buttons/xButton.png');
 
         game.load.spritesheet('resume_button','../assets/buttons/Resume_Button.png',350,150);
         game.load.spritesheet('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png',350,150);
@@ -63,6 +68,7 @@ var playState = {
 
         spawner = loadSpawner( game, 'monster_profile_json');
         level = loadLevel( game, game.level_json, game.level_tilemap);
+        preloadWaypoint(game);
 
     },
     create: function(){
@@ -123,6 +129,7 @@ var playState = {
         hudGroup.add(staminaBar);
         //hudGroup.add(sanityBar);
         hudGroup.add(selected);
+        
 
         cursors = game.input.keyboard.createCursorKeys();
         shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -139,6 +146,10 @@ var playState = {
 
         playerCreate();
         itemManager = createItemManager(game,player);
+        
+        waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);
+        hudGroup.add(waypoint.waypointGroup);
+        
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
         
@@ -151,6 +162,7 @@ var playState = {
     update: function(){
         //game.time.advancedTiming = true; 
         //console.debug(game.time.fps) ;
+        waypoint.update();
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -180,6 +192,9 @@ var playState = {
             game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
+            if(eKey.isDown){
+                game.physics.arcade.overlap(player, level.signGroup, playState.openSign, null, this);
+            }
 
             if(player.collideDown){
                 game.physics.arcade.collide(player, level.platformGroup);
@@ -317,6 +332,146 @@ var playState = {
                 game.level3Locked = false;
             default:
         }
+    },
+    openSign: function(player,sign){
+        charGroup = game.add.group();
+        enlargedSign = game.add.sprite(100,100,'enlarged_sign');
+        enlargedSign.fixedToCamera = true;
+        xButton = game.add.button(110,110,'xButton',function(){
+            xButton.destroy();
+            playState.closeSign();
+        });
+        xButton.fixedToCamera = true;
+        charGroup.add(enlargedSign);
+        levelCompleted = true;
+        AI.pause();
+        index = 0;
+        row = 0;
+        charWidth = 150;
+        counter = 0;
+        sign.text.forEach(function(char){
+            newChar = playState.createChar(char,index++,row);
+            charGroup.add(newChar);
+            counter++;
+        });
+        console.log(counter);
+    },
+    closeSign: function(){
+        levelCompleted = false;
+        AI.start();
+        var length = charGroup.children.length;
+        for(var i = 0;i<length;i++){
+            charGroup.children[0].destroy();
+        }
+    },
+    createChar: function(char,col){
+        var newChar = game.add.sprite(charWidth+(col*40),150+(row *70),'chars');
+        newChar.scale.setTo(.2);
+        newChar.fixedToCamera = true;
+        switch(char.toLowerCase()){
+            case 'a':
+                newChar.frame = 0;
+                break;
+            case 'b':
+                newChar.frame = 1;
+                break;
+            case 'c':
+                newChar.frame = 2;
+                break;
+            case 'd':
+                newChar.frame = 3;
+                break;
+            case 'e':
+                newChar.frame = 4;
+                break;
+            case 'f':
+                newChar.frame = 5;
+                break;
+            case 'g':
+                newChar.frame = 6;
+                break;
+            case 'h':
+                newChar.frame = 7;
+                break;
+            case 'i':
+                newChar.frame = 8;
+                break;
+            case 'j':
+                newChar.frame = 9;
+                break;
+            case 'k':
+                newChar.frame = 10;
+                break;
+            case 'l':
+                newChar.frame = 11;
+                break;
+            case 'm':
+                newChar.frame = 12;
+                break;
+            case 'n':
+                newChar.frame = 13;
+                break;
+            case 'o':
+                newChar.frame = 14;
+                break;
+            case 'p':
+                newChar.frame = 15;
+                break;
+            case 'q':
+                newChar.frame = 16;
+                break;
+            case 'r':
+                newChar.frame = 17;
+                break;
+            case 's':
+                newChar.frame = 18;
+                break;
+            case 't':
+                newChar.frame = 19;
+                break;
+            case 'u':
+                newChar.frame = 20;
+                break;
+            case 'v':
+                newChar.frame = 21;
+                break;
+            case 'w':
+                newChar.frame = 22;
+                break;
+            case 'x':
+                newChar.frame = 23;
+                break;
+            case 'y':
+                newChar.frame = 24;
+                break;
+            case 'z':
+                newChar.frame = 25;
+                break;
+            case '.':
+                newChar.frame = 26;
+                charWidth -= 30;
+                break;
+            case ',':
+                newChar.frame = 27;
+                charWidth -= 30;
+                break;
+            case '!':
+                newChar.frame = 28;
+                charWidth -= 30;
+                break;
+            case "'":
+                newChar.frame = 29;
+                charWidth -= 20;
+                break;
+            case '|':
+                row++;
+                index=0;
+                charWidth = 150;
+            default:
+                newChar.frame = 99;
+            break;
+        }
+        return newChar;
     }
 }
 function playerCreate(){
@@ -560,6 +715,7 @@ function playerDamaged( player, mob ){
         player.health -= player.health <= 0 ? 0: 1;
         healthBar.width -= player.health <= 1 ? 0: 1;
     }
+    waypoint.add(mob);
 }
 
 function loseStamina(){
