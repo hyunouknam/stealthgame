@@ -734,7 +734,7 @@ function openDoor( player, keySprite){
     level.openDoor( keySprite );
     playState.collectionSound.play();
     keySprite.kill();
-    terrainDestructor.destroyTerrain(player.x-50, player.y+50, 100, 100, 'dirtparticle');//////////////////////////////////////////////////////////////
+    //terrainDestructor.destroyTerrain(player.x-50, player.y+50, 100, 100, 'dirtparticle');//////////////////////////////////////////////////////////////
 }
 
 function killDoorAndKeys(){
