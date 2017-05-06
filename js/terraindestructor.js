@@ -1,8 +1,21 @@
 /*
+
+Properties:
+
+objectgroups = [] //list of object groups to consider
+layers = [] //list of layers to consider
+
+
+
 Methods:
 
 destroyTerrain(x, y, width, height, particleImageString);
 destructor.collideParticles();  //if want collision, call this in every update to collide
+
+
+//
+nothing will be destoryed if the area provided doesn't intersect any tiles, even if it intersects objects
+if only tiles were intersected but objects weren't, tiles will still be destroyed
 
 */
 
