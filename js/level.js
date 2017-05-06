@@ -66,7 +66,9 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             if( layerlist[i].type === 'tilelayer' ){
                 var layer = tilemap.createLayer( layerlist[i].name );
                 layer.resizeWorld();
-                var newName = layerlist[i].name.replace(' ', '_');
+                var newName = layerlist[i].name.replace(new RegExp(' ', 'g'), '_');
+                
+                //console.log(newName);
                 level.layers[newName] = layer;
             }
         }
