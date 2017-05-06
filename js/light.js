@@ -113,5 +113,6 @@ var createLightingManager = function (game) {
     };
     
     manager.lightSprite.bringToTop();
+    manager.update();
     return manager;
 };

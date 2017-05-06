@@ -75,7 +75,7 @@ var playState = {
         lightManager = createLightingManager(game);
         level.create( spawner );
         AI.initTerrain( level.layers['solids'] );
-        terrainDestructor = createDestructor(game, level.solidGroup, level.layers.solids, level.tilemap);///////////////////////////////////////////////////////////////
+        terrainDestructor = createDestructor(game, [level.solidGroup, level.platformGroup], [level.layers['solids'], level.layers['Tile_Layer_4']], level.tilemap);///////////////////////////////////////////////////////////////
         
         //game.camera.height = 550;
         game.camera.height = 576;
