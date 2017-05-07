@@ -12,7 +12,9 @@ var createItemManager = function(game,player){
     player.currentItem = null;
     player.currentItemIndex = 0;
     player.amtOfItems = 0;
-
+    player.graphics = game.add.graphics(0,0);
+    player.beingPulled = false;
+    game.world.bringToTop(player.graphics);
     manager.collectItem = function(player,item){
         if(player.amtOfItems<5){
             player.amtOfItems++;
@@ -34,13 +36,47 @@ var createItemManager = function(game,player){
                     player.items[index] = game.add.sprite(860 + (index*55), 615, 'bomb')
                     player.items[index].fixedToCamera = true;
                     break;
+                case 'grappling':
+                    player.items[index] = game.add.sprite(860 + (index*55), 615, 'grappling')
+                    player.items[index].fixedToCamera = true;
             }
             
         }
     }
-
+    manager.pull = function(){
+        if(player.currentItem.key == 'grappling'){
+            player.body.gravity.y = 0;
+            player.currentItem.body.velocity.x = 0;
+            player.currentItem.body.velocity.y = 0;
+            if(player.position.x < player.currentItem.position.x-10){
+                player.body.velocity.x = 500;
+            }else if(player.position.x > player.currentItem.position.x+10){
+                player.body.velocity.x = -500;
+            }else{
+                player.body.velocity.x = 0;
+            }
+            if(player.position.y < player.currentItem.position.y-90){
+                player.body.velocity.y = 500;
+            }else if(player.position.y > player.currentItem.position.y+10){
+                player.body.velocity.y = -500;
+            }else{
+                player.body.velocity.y = 0;
+            }
+        }
+    }
+    manager.resetPull = function(){
+        player.body.touching.down = false;
+        if(player.beingPulled){
+            player.beingPulled = false;
+            player.body.velocity.y = 0;
+            player.currentItem.shot = false;
+            player.graphics.clear();
+        }
+    }
     manager.useItem = function(){
+        
         if(player.currentItem != null){
+            
             switch(player.currentItem.key){
                 case 'lantern':
                     lightManager.removeLight(player);
@@ -51,6 +87,32 @@ var createItemManager = function(game,player){
                         lightManager.removeLight(player);
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
+                    }
+                    break;
+                case 'grappling':
+                    if(!player.godMode.enabled){
+                        lightManager.removeLight(player);
+                        lightManager.requestLight(player,defaultLightRaidus);
+                        lightManager.lightDown();
+                    }
+                    if(sKey.isDown){
+                        if(!player.currentItem.shot){
+                            player.currentItem.body.velocity.x = Math.cos(player.currentItem.rotation)*500;
+                            player.currentItem.body.velocity.y = Math.sin(player.currentItem.rotation)*500;
+                            player.currentItem.shot = true;
+                            game.time.events.add(Phaser.Timer.SECOND*1.3,function(){
+                                player.currentItem.body.velocity.x = 0;
+                                player.currentItem.body.velocity.y = 0;
+                                if(!player.beingPulled){
+                                    player.currentItem.shot = false;
+                                    player.graphics.clear();
+                                }
+                            });
+                        }
+                    }else if(zKey.isDown){
+                        player.currentItem.rotation -= .1;
+                    }else if(cKey.isDown){
+                        player.currentItem.rotation += .1;
                     }
                     break;
             }
@@ -64,39 +126,10 @@ var createItemManager = function(game,player){
     }
 
     manager.holdItem = function(){
-        if(player.items[player.currentItemIndex] != null){
-            switch(player.items[player.currentItemIndex].key) {
-                case "lantern":
-                    if(player.currentItem != null && player.currentItem.key != 'lantern'){
-                        player.currentItem.kill();
-                        player.currentItem = null;
-                    }
-
-                break;
-                case "bomb":
-                    if(player.currentItem != null && player.currentItem.key != 'bomb'){
-                        player.currentItem.kill();
-                        player.currentItem = null;
-                    }
-                break;
-
-            }
-            if(player.currentItem == null){
-                if(player.isFacingLeft){
-                    player.currentItem = game.add.sprite(player.position.x + 1,player.position.y + 26,player.items[player.currentItemIndex].key);
-                    player.currentItem.scale.setTo(.75,.75);
-                }else{
-                    player.currentItem = game.add.sprite(player.position.x + 25, player.position.y + 26, player.items[player.currentItemIndex].key);
-                    player.currentItem.scale.setTo(.75, .75);
-                }
-            }else{
-                if(player.isFacingLeft){
-                    player.currentItem.position.x = player.position.x + 1;
-                    player.currentItem.position.y = player.position.y + 26;
-                }else{
-                    player.currentItem.position.x = player.position.x + 25;
-                    player.currentItem.position.y = player.position.y + 26;
-                }
+        if(player.items[player.currentItemIndex] != null && player.currentItem != null){
+            if(player.items[player.currentItemIndex].key != player.currentItem.key){
+                    player.currentItem.kill();
+                    player.currentItem = null;
             }
         }else{
             if(player.currentItem != null){
@@ -104,6 +137,51 @@ var createItemManager = function(game,player){
                 player.currentItem = null;
             }
         }
+        
+        if(player.items[player.currentItemIndex] != null && player.currentItem == null){
+            if(player.isFacingLeft){
+                player.currentItem = game.add.sprite(player.position.x + 45,player.position.y + 25,player.items[player.currentItemIndex].key);
+                player.currentItem.scale.setTo(.75,.75);
+            }else{
+                player.currentItem = game.add.sprite(player.position.x + 85, player.position.y + 25, player.items[player.currentItemIndex].key);
+                player.currentItem.scale.setTo(.75, .75);
+            }
+            player.currentItem.anchor.setTo(.5);
+            game.physics.arcade.enable(player.currentItem);
+            player.currentItem.shot = false;
+        }else if(player.currentItem != null && !player.currentItem.shot){
+            if(player.isFacingLeft){
+                player.currentItem.position.x = player.position.x + 8;
+                player.currentItem.position.y = player.position.y + 25;
+            }else{
+                player.currentItem.position.x = player.position.x + 35;
+                player.currentItem.position.y = player.position.y + 25;
+                
+            }
+            
+        }else if(player.currentItem != null){
+            if(player.isFacingLeft){
+                if(player.currentItem.key == 'grappling'){
+                    player.graphics.clear();
+                    player.graphics.lineStyle(10,0x800080,1);
+                    player.graphics.beginFill();
+                    player.graphics.moveTo(player.position.x + 8,player.position.y + 25);
+                    player.graphics.lineTo(player.currentItem.position.x,player.currentItem.position.y);
+                    player.graphics.endFill();
+                }
+            }else{
+                if(player.currentItem.key == 'grappling'){
+                    player.graphics.clear();
+                    player.graphics.lineStyle(10,0x800080,1);
+                    player.graphics.beginFill();
+                    player.graphics.moveTo(player.position.x + 35,player.position.y + 25);
+                    player.graphics.lineTo(player.currentItem.position.x,player.currentItem.position.y);
+                    player.graphics.endFill();
+                }
+            }
+        }
+        
+        
     }
 
     manager.switchItem = function(){

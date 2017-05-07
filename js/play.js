@@ -1,7 +1,7 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
     pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false;
 
-var escKey, shiftKey, aKey, sKey, dKey, ekey, kKey,oneKey,twoKey,threeKey;
+var escKey, shiftKey, aKey, sKey, dKey, ekey, kKey,zKey,cKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
 var music;
 var hudGroup;
@@ -18,7 +18,7 @@ var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb
 
 var lanternRadius = 300;
 var defaultLightRaidus = 100;
-
+var grapplingHook;
 var waypoint;
 
 var playState = {
@@ -49,6 +49,7 @@ var playState = {
         game.load.image('rock', '../assets/rock.png');
         game.load.image('bomb', '../assets/bomb.png');
         game.load.image('oil', '../assets/oil.png');
+        game.load.image('grappling','../assets/grappling.png');
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
@@ -119,6 +120,11 @@ var playState = {
         game.physics.arcade.enable(bomb);
         bomb.body.gravity.y = 700;
         
+        // spawn test grappling hook
+        grapplingHook = game.add.sprite(level.playerSpawnPoint.x + 200, level.playerSpawnPoint.y,'grappling');
+        game.physics.arcade.enable(grapplingHook);
+        grapplingHook.body.gravity.y = 700;
+
 
         hudGroup = game.add.group();
         //hudGroup.add(mask);
@@ -137,9 +143,11 @@ var playState = {
         aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
         eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
-        sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
+        sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
+        zKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+        cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
         oneKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         twoKey = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
         threeKey = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
@@ -170,9 +178,11 @@ var playState = {
 
         game.physics.arcade.collide(bomb, level.solidGroup);
         game.physics.arcade.collide(lantern, level.solidGroup);
+        game.physics.arcade.collide(grapplingHook, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
         game.physics.arcade.collide(level.signGroup,level.solidGroup);
+        game.physics.arcade.collide(player.currentItem,level.solidGroup,function(){player.beingPulled=true;},null,this);
         terrainDestructor.collideParticles();
         
         pause();
@@ -190,8 +200,12 @@ var playState = {
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
             game.physics.arcade.overlap(player, lantern, itemManager.collectItem, null, this);  // testing lantern
             game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
+            game.physics.arcade.overlap(player, grapplingHook, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
+            if(player.beingPulled){
+                game.physics.arcade.overlap(player, player.currentItem, itemManager.resetPull, null,this);
+            }
             if(eKey.isDown){
                 game.physics.arcade.overlap(player, level.signGroup, playState.openSign, null, this);
             }
@@ -252,7 +266,7 @@ var playState = {
             itemManager.switchItem();
             itemManager.holdItem();
             itemManager.useItem();
-
+            
             player.body.gravity.y = 700;
             if(resumeVelocity){
                 player.body.velocity.x = player.currentVelocityX;
@@ -518,127 +532,131 @@ function playerCreate(){
 }
 
 function playerMove(){
-    player.body.velocity.x = 0;
-    if (cursors.up.isDown && player.body.touching.down && cursors.right.isDown) {
-        player.body.velocity.y = -380
-        player.animations.play("jump right hold item");
-    }
-    else if (cursors.up.isDown && player.body.touching.down && cursors.left.isDown) {
-        player.body.velocity.y = -380
-        player.animations.play("jump left hold item");
-    }else if (cursors.up.isDown && player.body.touching.down){
-        player.body.velocity.y = -380
-        if(player.isFacingLeft){
-            player.animations.play('default left');
-        }else{
-            player.animations.play('default right');
+    if(!player.beingPulled){
+        player.body.velocity.x = 0;
+        if (cursors.up.isDown && player.body.touching.down && cursors.right.isDown) {
+            player.body.velocity.y = -380
+            player.animations.play("jump right hold item");
         }
-    }else if(shiftKey.isDown && player.stamina>0){
-        if(!player.body.touching.down){
-            if (cursors.left.isDown){
-                loseStamina();
-                player.body.velocity.x = -300;
-            }else if (cursors.right.isDown){
-                loseStamina();
-                player.body.velocity.x = 300;
+        else if (cursors.up.isDown && player.body.touching.down && cursors.left.isDown) {
+            player.body.velocity.y = -380
+            player.animations.play("jump left hold item");
+        }else if (cursors.up.isDown && player.body.touching.down){
+            player.body.velocity.y = -380
+            if(player.isFacingLeft){
+                player.animations.play('default left');
             }else{
-                if(player.isFacingLeft){
-                    player.animations.play('default left');
+                player.animations.play('default right');
+            }
+        }else if(shiftKey.isDown && player.stamina>0){
+            if(!player.body.touching.down){
+                if (cursors.left.isDown){
+                    loseStamina();
+                    player.body.velocity.x = -300;
+                }else if (cursors.right.isDown){
+                    loseStamina();
+                    player.body.velocity.x = 300;
                 }else{
-                    player.animations.play('default right');
+                    if(player.isFacingLeft){
+                        player.animations.play('default left');
+                    }else{
+                        player.animations.play('default right');
+                    }
+                }
+            }else{
+                if (cursors.left.isDown){
+                    loseStamina();
+                    player.body.velocity.x = -300;
+                    player.animations.play('run left hold item');
+                    player.isFacingLeft = true;
+                    if(!playState.runningSound.isPlaying){
+                        if(playState.runningSound.paused){
+                            playState.runningSound.resume(null,true);
+                        }else{
+                            playState.runningSound.play(null,true);
+                        }
+                    }
+                }else if (cursors.right.isDown){
+                    loseStamina();
+                    player.body.velocity.x = 300;
+                    player.animations.play('run right hold item');
+                    player.isFacingLeft = false;
+                    if(!playState.runningSound.isPlaying){
+                        if(playState.runningSound.paused){
+                            playState.runningSound.resume(null,true);
+                        }else{
+                            playState.runningSound.play(null,true);
+                        }
+                    }
+                }else{
+                    playState.runningSound.pause();
+                    if(player.isFacingLeft){
+                        player.animations.play('default left');
+                    }else{
+                        player.animations.play('default right');
+                    }
                 }
             }
         }else{
-            if (cursors.left.isDown){
-                loseStamina();
-                player.body.velocity.x = -300;
-                player.animations.play('run left hold item');
-                player.isFacingLeft = true;
-                if(!playState.runningSound.isPlaying){
-                    if(playState.runningSound.paused){
-                        playState.runningSound.resume(null,true);
+            if(player.rested)
+                generateStamina();
+            if(!player.body.touching.down){
+                if (cursors.left.isDown){
+                    player.body.velocity.x = -150;
+                }else if (cursors.right.isDown)
+                {
+                    player.body.velocity.x = 150;
+                }else{
+                    if(player.isFacingLeft){
+                        player.animations.play('default left');
                     }else{
-                        playState.runningSound.play(null,true);
-                    }
-                }
-            }else if (cursors.right.isDown){
-                loseStamina();
-                player.body.velocity.x = 300;
-                player.animations.play('run right hold item');
-                player.isFacingLeft = false;
-                if(!playState.runningSound.isPlaying){
-                    if(playState.runningSound.paused){
-                        playState.runningSound.resume(null,true);
-                    }else{
-                        playState.runningSound.play(null,true);
+                        player.animations.play('default right');
                     }
                 }
             }else{
-                playState.runningSound.pause();
-                if(player.isFacingLeft){
-                    player.animations.play('default left');
+                if (cursors.left.isDown){
+                    if(!playState.walkingSound.isPlaying){
+                        if(playState.walkingSound.paused){
+                            playState.walkingSound.resume(null,true);
+                        }else{
+                            playState.walkingSound.play(null,true);
+                        }
+                    }
+                    player.body.velocity.x = -150;
+                    player.animations.play('walk left hold item');
+                    player.isFacingLeft = true;
+                }else if (cursors.right.isDown)
+                {   
+                    player.body.velocity.x = 150;
+                    player.animations.play('walk right hold item');
+                    player.isFacingLeft = false;
+                    if(!playState.walkingSound.isPlaying){
+                        if(playState.walkingSound.paused){
+                            playState.walkingSound.resume(null,true);
+                        }else{
+                            playState.walkingSound.play(null,true);
+                        }
+                    }
                 }else{
-                    player.animations.play('default right');
+                    playState.walkingSound.pause();
+                    if(player.isFacingLeft){
+                        player.animations.play('default left');
+                    }else{
+                        player.animations.play('default right');
+                    }
                 }
             }
+        }
+        if(cursors.down.isDown && player.collideDown){
+            player.collideDown = false;
+            game.time.events.add(Phaser.Timer.SECOND*.3,function(){player.collideDown = true;});
+        }
+        
+        if(cursors.left.isUp && cursors.right.isUp){
+            player.rested = true;
         }
     }else{
-        if(player.rested)
-            generateStamina();
-        if(!player.body.touching.down){
-            if (cursors.left.isDown){
-                player.body.velocity.x = -150;
-            }else if (cursors.right.isDown)
-            {
-                player.body.velocity.x = 150;
-            }else{
-                if(player.isFacingLeft){
-                    player.animations.play('default left');
-                }else{
-                    player.animations.play('default right');
-                }
-            }
-        }else{
-            if (cursors.left.isDown){
-                if(!playState.walkingSound.isPlaying){
-                    if(playState.walkingSound.paused){
-                        playState.walkingSound.resume(null,true);
-                    }else{
-                        playState.walkingSound.play(null,true);
-                    }
-                }
-                player.body.velocity.x = -150;
-                player.animations.play('walk left hold item');
-                player.isFacingLeft = true;
-            }else if (cursors.right.isDown)
-            {   
-                player.body.velocity.x = 150;
-                player.animations.play('walk right hold item');
-                player.isFacingLeft = false;
-                if(!playState.walkingSound.isPlaying){
-                    if(playState.walkingSound.paused){
-                        playState.walkingSound.resume(null,true);
-                    }else{
-                        playState.walkingSound.play(null,true);
-                    }
-                }
-            }else{
-                playState.walkingSound.pause();
-                if(player.isFacingLeft){
-                    player.animations.play('default left');
-                }else{
-                    player.animations.play('default right');
-                }
-            }
-        }
-    }
-    if(cursors.down.isDown && player.collideDown){
-        player.collideDown = false;
-        game.time.events.add(Phaser.Timer.SECOND*.3,function(){player.collideDown = true;});
-    }
-    
-    if(cursors.left.isUp && cursors.right.isUp){
-        player.rested = true;
+        itemManager.pull();
     }
 }
 
