@@ -27,6 +27,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.doorGroup = game.add.group();
     level.nextLevelGroup = game.add.group();
     level.signGroup = game.add.group();
+    level.trapGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -185,6 +186,14 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             level.game.physics.enable(sign);
                             sign.text = objectarray[j].properties.text.split('');
                             level.signGroup.add(sign);
+                        }
+                        break;
+                    case 'traps':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var spikes = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'spikes');
+                            level.game.physics.enable(spikes);
+                            spikes.body.immovable =  true;
+                            level.trapGroup.add(spikes);
                         }
                         break;
                     default : break;

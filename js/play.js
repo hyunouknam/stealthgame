@@ -55,6 +55,8 @@ var playState = {
         game.load.image('key', '../assets/key.png');
         game.load.image('sign','../assets/sign.png');
         game.load.image('door', '../assets/door.png');
+        game.load.image('spikes', '../assets/spikes.png');
+        game.load.image('potion', '../assets/potion.png');
         
         
         game.load.image('rockparticle', '../assets/rockparticle.png');
@@ -203,6 +205,7 @@ var playState = {
             game.physics.arcade.overlap(player, grapplingHook, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
+            game.physics.arcade.collide(player, level.trapGroup, playerDamaged, null, this);
             if(player.beingPulled){
                 game.physics.arcade.overlap(player, player.currentItem, itemManager.resetPull, null,this);
             }
