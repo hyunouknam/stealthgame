@@ -145,6 +145,9 @@ var AI = {
         newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
         newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
 
+        if(newAI.sprite.key == "eye monster"){
+            newAI.states.eyes = AI.BehaviorFactory.createEyes( newAI );
+        }
         
         
         //create more behaviors in the BehaviorFactory, then add them here
@@ -353,6 +356,38 @@ var AI = {
                 owner.sprite.animations.getAnimation('alerted').onComplete.add(function () {
                     owner.update = behavior.update2; 
                 }, behavior );
+            };
+
+            return behavior;
+        },
+
+        //idle behavior
+        createEyes : function ( ownerAIObject ) {
+            var behavior = {};
+
+            behavior.ownerAIObject = ownerAIObject;
+            
+            var iris = game.add.sprite(behavior.ownerAIObject.x, behavior.ownerAIObject.y, 'eye_iris');
+            iris.anchor.setTo(.5);
+
+            behavior.update = function (){
+                var owner = behavior.ownerAIObject;
+                var target = owner.raycast.sight.target;
+                var targetX = target.x;
+                var targetY = target.y;
+                var dx = targetX-owner.x;
+                var dy = targetY-owner.y;
+
+                if(dx*dx+dy*dy <= eye_scale*eye_scale*225){             // 225 is area using 15 below
+                    iris.x = targetX;
+                    iris.y = targetY;
+                }else{
+                    if(dx*dx+dy*dy>25){ 
+                        var angle=Math.atan2(dy,dx);    //Get the angle
+                        iris.x = owner.x + 65 * Math.cos(angle);
+                        iris.y = owner.y + 65 * Math.sin(angle);
+                    }
+                }
             };
 
             return behavior;
