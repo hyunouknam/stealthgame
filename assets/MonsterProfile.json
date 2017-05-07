@@ -334,8 +334,8 @@
     "face monster" : {
         "name" : "face monster",
         "passthrough" : true,
-        "spritescale" : 1,
-        "bodyscale" : 0.4,
+        "spritescale" : 0.6,
+        "bodyscale" : 1,
         "gravity" : 0,
         "health" : 1,
         "walkspeed" : 100,
@@ -380,6 +380,61 @@
             { 	
                 "name" : "calmed",
                 "frames" : [0],
+                "framerate" : 20,
+                "loop" : false
+            }
+        ]
+    },
+
+    "eye monster" : {
+        "name" : "eye monster",
+        "passthrough" : true,
+        "spritescale" : 0.75,
+        "bodyscale" : 0.4,
+        "gravity" : 0,
+        "health" : 1,
+        "walkspeed" : 100,
+        "runspeed" : 150,
+        "damage" : 10,
+        "facingLeft" : true,
+        "attack_range" : 0,
+        "aggro_range" : 300,
+        
+        "spritesheet" : {
+            "url" : "../assets/eye monster.png",
+            "referencename" : "eye monster",
+            "width" :  180,
+            "height" : 180
+        },
+        
+        "animations": [
+            { 	
+                "name" : "idle",
+                "frames" : [5],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "walk",
+                "frames" : [5],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "run",
+                "frames" : [0, 1, 2],
+                "framerate" : 20,
+                "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
                 "framerate" : 20,
                 "loop" : false
             }

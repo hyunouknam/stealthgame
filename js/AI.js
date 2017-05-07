@@ -144,6 +144,8 @@ var AI = {
         newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
         newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
         newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
+
+        
         
         //create more behaviors in the BehaviorFactory, then add them here
         
