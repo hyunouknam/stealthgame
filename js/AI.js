@@ -367,7 +367,7 @@ var AI = {
 
             behavior.ownerAIObject = ownerAIObject;
             
-            var iris = game.add.sprite(behavior.ownerAIObject.x, behavior.ownerAIObject.y, 'eye_iris');
+            var iris = game.add.sprite(behavior.ownerAIObject.sprite.x, behavior.ownerAIObject.sprite.y, 'eye_iris');
             iris.anchor.setTo(.5);
 
             behavior.update = function (){
@@ -378,11 +378,11 @@ var AI = {
                 var dx = targetX-owner.x;
                 var dy = targetY-owner.y;
 
-                if(dx*dx+dy*dy <= eye_scale*eye_scale*225){             // 225 is area using 15 below
+                if(dx*dx+dy*dy <= 0.75 * 0.75 * 8100){             // 225 is area using 15 below
                     iris.x = targetX;
                     iris.y = targetY;
                 }else{
-                    if(dx*dx+dy*dy>25){ 
+                    if(dx*dx+dy*dy>180){ 
                         var angle=Math.atan2(dy,dx);    //Get the angle
                         iris.x = owner.x + 65 * Math.cos(angle);
                         iris.y = owner.y + 65 * Math.sin(angle);
