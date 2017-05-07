@@ -435,9 +435,7 @@ var AI = {
 
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
-<<<<<<< HEAD
                 var target = this.raycast.sight.target;
-=======
                 owner.sprite.animations.play('calmed');
                 owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
                     owner.update = behavior.update2; 
@@ -458,8 +456,6 @@ var AI = {
             behavior.update2 = function  () {
                 var owner = behavior.ownerAIObject;
                 var target = owner.raycast.sight.target;
-                
->>>>>>> c1f326e61d5b8fc69d8005ac9189a32bdf95298b
                 var targetX = target.x;
                 var targetY = target.y;
                 var dx = targetX-owner.sprite.x;
