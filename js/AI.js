@@ -140,13 +140,20 @@ var AI = {
         sprite.ai = newAI;
         
         //add behaviors
-        newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , Math.random()*400+100, newAI );
-        newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
-        newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
-        newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
-
         if(newAI.sprite.key == "eye monster"){
-            newAI.states.eyes = AI.BehaviorFactory.createEyes( newAI );
+            newAI.states.pursue = AI.BehaviorFactory.createEyePursue( newAI );
+            newAI.states.meander = AI.BehaviorFactory.createEyeMeander( newAI.sprite.x , Math.random()*400+100, newAI );
+            newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
+            
+            newAI.iris = game.add.sprite(sprite.x, sprite.y, 'eye_iris');
+            newAI.iris.anchor.setTo(.5);
+        }
+        else{
+            newAI.states.meander = AI.BehaviorFactory.createMeander( newAI.sprite.x , Math.random()*400+100, newAI );
+            newAI.states.pursue = AI.BehaviorFactory.createPursue( newAI );
+            newAI.states.idle = AI.BehaviorFactory.createIdle( newAI );
+            newAI.states.pause = AI.BehaviorFactory.createPause( newAI );
+
         }
         
         
@@ -360,34 +367,156 @@ var AI = {
 
             return behavior;
         },
-
-        //idle behavior
-        createEyes : function ( ownerAIObject ) {
+        
+        
+        //eye behavior beblow////////////////////////////////////////////////////////////
+        //meander eye meander
+        createEyeMeander : function (x, radius, ownerAIObject) {
             var behavior = {};
 
+            behavior.x = x;
+            behavior.radius = radius;
             behavior.ownerAIObject = ownerAIObject;
             
-            var iris = game.add.sprite(behavior.ownerAIObject.sprite.x, behavior.ownerAIObject.sprite.y, 'eye_iris');
-            iris.anchor.setTo(.5);
-
-            behavior.update = function (){
+            behavior.update2 = function (){
                 var owner = behavior.ownerAIObject;
                 var target = owner.raycast.sight.target;
                 var targetX = target.x;
                 var targetY = target.y;
-                var dx = targetX-owner.x;
-                var dy = targetY-owner.y;
+                var dx = targetX-owner.sprite.x;
+                var dy = targetY-owner.sprite.y;
 
-                if(dx*dx+dy*dy <= 0.75 * 0.75 * 8100){             // 225 is area using 15 below
-                    iris.x = targetX;
-                    iris.y = targetY;
+                if(dx*dx+dy*dy <=owner.sprite.width * owner.sprite.width*0.75*0.75){             // 225 is area using 15 below
+                    owner.iris.x = targetX;
+                    owner.iris.y = targetY;
                 }else{
-                    if(dx*dx+dy*dy>180){ 
+                    if(dx*dx+dy*dy>owner.sprite.width*0.75){ 
                         var angle=Math.atan2(dy,dx);    //Get the angle
-                        iris.x = owner.x + 65 * Math.cos(angle);
-                        iris.y = owner.y + 65 * Math.sin(angle);
+                        owner.iris.x = owner.sprite.x + owner.sprite.width*0.75 * Math.cos(angle);
+                        owner.iris.y = owner.sprite.y + owner.sprite.width*0.75 * Math.sin(angle);
                     }
                 }
+                
+                if(!AI.terrain.obstructed(owner.raycast.sight) && owner.raycast.sight.length < owner.sprite.entitydata.aggro_range ){
+                    owner.setState('pursue');
+                }
+                
+                var leftGrounded = AI.terrain.obstructed(owner.raycast.leftFoot);
+                var rightGrounded = AI.terrain.obstructed(owner.raycast.rightFoot);
+                
+                if( owner.sprite.entitydata.facingLeft ){
+                    if( owner.sprite.body.x < behavior.x - behavior.radius 
+                        || (owner.sprite.body.wasTouching.left && !owner.sprite.entitydata.passthrough) 
+                        || (!leftGrounded && rightGrounded  && !owner.sprite.entitydata.passthrough)
+                      ) {
+                        owner.sprite.scale.x *= -1;
+                        owner.sprite.entitydata.facingLeft = false;
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.walkspeed;
+                    }
+                    else {
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.walkspeed;
+                    }
+                }
+                else{
+                    if( owner.sprite.body.x > behavior.x + behavior.radius 
+                        || (owner.sprite.body.wasTouching.right && !owner.sprite.entitydata.passthrough)
+                       ||(leftGrounded && !rightGrounded && !owner.sprite.entitydata.passthrough)
+                      ) {
+                        owner.sprite.scale.x *= -1;
+                        owner.sprite.entitydata.facingLeft = true;
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.walkspeed;
+                    }
+                    else {
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.walkspeed;
+                    }
+                }
+                owner.sprite.animations.play('walk');
+            }
+
+            behavior.update = function (){
+                var owner = behavior.ownerAIObject;
+                owner.sprite.animations.play('calmed');
+                owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
+                    owner.update = behavior.update2; 
+                }, behavior );
+            };
+
+            return behavior;
+        },
+
+        //pursue behavior
+        createEyePursue : function ( ownerAIObject ) {
+            var behavior = {};
+
+            //behavior.target = undefined;
+            behavior.ownerAIObject = ownerAIObject;
+            behavior.tolerance = 40;
+
+            behavior.update2 = function  () {
+                var owner = behavior.ownerAIObject;
+                var target = owner.raycast.sight.target;
+                
+                var targetX = target.x;
+                var targetY = target.y;
+                var dx = targetX-owner.sprite.x;
+                var dy = targetY-owner.sprite.y;
+
+                if(dx*dx+dy*dy <= owner.sprite.width * owner.sprite.width * 0.75*0.75){             // 225 is area using 15 below
+                    owner.iris.x = targetX;
+                    owner.iris.y = targetY;
+                }else{
+                    if(dx*dx+dy*dy>owner.sprite.width*0.75){ 
+                        var angle=Math.atan2(dy,dx);    //Get the angle
+                        owner.iris.x = owner.sprite.x + owner.sprite.width*0.75 * Math.cos(angle);
+                        owner.iris.y = owner.sprite.y + owner.sprite.width*0.75 * Math.sin(angle);
+                    }
+                }
+        
+                
+                var inAggroRange = owner.raycast.sight.length < owner.sprite.entitydata.aggro_range && owner.sprite.entitydata.passthrough?  true : !AI.terrain.obstructed(owner.raycast.sight);
+                
+                if( target && inAggroRange) {
+                    var ownerCenterX = owner.sprite.body.x + Math.abs(owner.sprite.body.width)/2;
+                    
+                    if( ownerCenterX < target.body.x + target.body.width/2 - behavior.tolerance ){
+                        if( owner.sprite.entitydata.facingLeft )
+                        owner.sprite.scale.x *= -1;
+                        owner.sprite.entitydata.facingLeft = false;
+                        owner.sprite.body.velocity.x = owner.sprite.entitydata.runspeed;
+                    }
+                    else if ( ownerCenterX > target.body.x + target.body.width/2 + behavior.tolerance){
+                        if( !owner.sprite.entitydata.facingLeft )
+                        owner.sprite.scale.x *= -1;
+                        owner.sprite.entitydata.facingLeft = true;
+                        owner.sprite.body.velocity.x = -owner.sprite.entitydata.runspeed;
+                    }
+                    
+                    //for floating monsters
+                    if(owner.sprite.entitydata.passthrough) {
+                        var ownerCenterY = owner.sprite.body.y + Math.abs(owner.sprite.body.height)/2 ;
+                        if( ownerCenterY < target.body.y + target.body.height - behavior.tolerance ){
+                            owner.sprite.body.velocity.y = owner.sprite.entitydata.runspeed;
+                        }
+                        else if( ownerCenterY > target.body.y + target.body.width/2 + behavior.tolerance ){
+                            owner.sprite.body.velocity.y = -owner.sprite.entitydata.runspeed;
+                        }
+                    }
+                    
+                    owner.sprite.animations.play('run');
+                }
+                else{
+                    //invalid target, return to idle
+                    owner.sprite.body.velocity.y = 0;
+                    owner.setState('meander');
+                }
+            };
+            
+            behavior.update = function (){
+                var owner = behavior.ownerAIObject;
+                owner.sprite.animations.play('alerted');
+                owner.sprite.animations.getAnimation('alerted').onComplete.add(function () {
+                    owner.update = behavior.update2; 
+                }, behavior );
             };
 
             return behavior;
