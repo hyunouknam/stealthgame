@@ -182,7 +182,7 @@ var playState = {
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
         game.physics.arcade.collide(level.signGroup,level.solidGroup);
-        game.physics.arcade.collide(player.currentItem,level.solidGroup,function(){player.beingPulled=true;},null,this);
+        game.physics.arcade.collide(player.currentItem,level.solidGroup,function(){player.beingPulled=true;game.time.events.add(Phaser.Timer.SECOND*2,function(){itemManager.resetPull()});},null,this);
         terrainDestructor.collideParticles();
         
         pause();

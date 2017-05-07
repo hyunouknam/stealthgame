@@ -65,7 +65,6 @@ var createItemManager = function(game,player){
         }
     }
     manager.resetPull = function(){
-        player.body.touching.down = false;
         if(player.beingPulled){
             player.beingPulled = false;
             player.body.velocity.y = 0;
