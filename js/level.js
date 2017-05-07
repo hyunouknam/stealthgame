@@ -28,6 +28,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.nextLevelGroup = game.add.group();
     level.signGroup = game.add.group();
     level.trapGroup = game.add.group();
+    level.potionGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -176,7 +177,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                         for(var j = 0;j < objectarray.length; j++){
                             var nextLevel = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'key');
                             level.game.physics.enable(nextLevel);
-                            nextLevel.body.gravity.y = 30;
+                            nextLevel.body.gravity.y = 300;
                             level.nextLevelGroup.add(nextLevel);
                         }
                         break;
@@ -194,6 +195,15 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             level.game.physics.enable(spikes);
                             spikes.body.immovable =  true;
                             level.trapGroup.add(spikes);
+                        }
+                        break;
+
+                    case 'potions':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var potion = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'potion');
+                            level.game.physics.enable(potion);
+                            potion.body.gravity.y = 300;
+                            level.potionGroup.add(potion);
                         }
                         break;
                     default : break;
@@ -235,6 +245,8 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         level.game.world.bringToTop( level.keyGroup );
         level.game.world.bringToTop( level.nextLevelGroup);
         level.game.world.bringToTop(level.signGroup);
+
+        //level.game.world.bringToTop( player );
         
         //level.mask.bringToTop();
         

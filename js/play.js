@@ -183,6 +183,7 @@ var playState = {
         game.physics.arcade.collide(grapplingHook, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
+        game.physics.arcade.collide(level.potionGroup, level.solidGroup);
         game.physics.arcade.collide(level.signGroup,level.solidGroup);
         game.physics.arcade.collide(player.currentItem,level.solidGroup,function(){player.beingPulled=true;game.time.events.add(Phaser.Timer.SECOND*2,function(){itemManager.resetPull()});},null,this);
         terrainDestructor.collideParticles();
@@ -198,14 +199,17 @@ var playState = {
             game.physics.arcade.collide(player, level.doorGroup);
             game.physics.arcade.overlap(player, level.keyGroup, openDoor, null, this);
             game.physics.arcade.overlap(player, level.nextLevelGroup,playState.levelTransition,null,this);
-            
+
             game.physics.arcade.collide(level.doorGroup, level.collidableSpawnGroup);
             game.physics.arcade.overlap(player, lantern, itemManager.collectItem, null, this);  // testing lantern
             game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
             game.physics.arcade.overlap(player, grapplingHook, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
-            game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);
-            game.physics.arcade.collide(player, level.trapGroup, playerDamaged, null, this);
+            game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);     
+
+            game.physics.arcade.collide(player, level.trapGroup, playerDamaged, null, this);  
+            game.physics.arcade.overlap(player, level.potionGroup, playerHealed, null, this);
+
             if(player.beingPulled){
                 game.physics.arcade.overlap(player, player.currentItem, itemManager.resetPull, null,this);
             }
@@ -740,6 +744,22 @@ function playerDamaged( player, mob ){
         healthBar.width -= player.health <= 1 ? 0: 1;
     }
     //waypoint.add(mob);                                                    //******************** waypoint */     
+}
+
+function playerHealed( player, potion){
+    if(player.health < 194){
+        if((player.health + 40) < player.maxHealth){
+            player.health += 40;
+            healthBar.width += 40;
+            potion.kill();
+        }else{
+            player.health = player.maxHealth;
+            healthBar.width = player.maxHealth;
+            potion.kill();
+        }
+    }else{
+
+    }
 }
 
 function loseStamina(){
