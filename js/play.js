@@ -147,8 +147,8 @@ var playState = {
         playerCreate();
         itemManager = createItemManager(game,player);
         
-        waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);
-        hudGroup.add(waypoint.waypointGroup);
+        //waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);            //******************** waypoint */
+        //hudGroup.add(waypoint.waypointGroup);                                         //******************** waypoint */
         
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
@@ -162,7 +162,7 @@ var playState = {
     update: function(){
         //game.time.advancedTiming = true; 
         //console.debug(game.time.fps) ;
-        waypoint.update();
+        //waypoint.update();                                                            //********************* waypoint */
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -715,7 +715,7 @@ function playerDamaged( player, mob ){
         player.health -= player.health <= 0 ? 0: 1;
         healthBar.width -= player.health <= 1 ? 0: 1;
     }
-    waypoint.add(mob);
+    //waypoint.add(mob);                                                    //******************** waypoint */     
 }
 
 function loseStamina(){
