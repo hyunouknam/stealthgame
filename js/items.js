@@ -95,10 +95,11 @@ var createItemManager = function(game,player){
                         lightManager.lightDown();
                     }
                     if(sKey.isDown){
-                        if(!player.currentItem.shot){
+                        if(!player.currentItem.shot && !player.currentItem.onCooldown){
                             player.currentItem.body.velocity.x = Math.cos(player.currentItem.rotation)*500;
                             player.currentItem.body.velocity.y = Math.sin(player.currentItem.rotation)*500;
                             player.currentItem.shot = true;
+                            player.currentItem.onCooldown = true;
                             game.time.events.add(Phaser.Timer.SECOND*1.3,function(){
                                 player.currentItem.body.velocity.x = 0;
                                 player.currentItem.body.velocity.y = 0;
@@ -106,6 +107,9 @@ var createItemManager = function(game,player){
                                     player.currentItem.shot = false;
                                     player.graphics.clear();
                                 }
+                            });
+                            game.time.events.add(Phaser.Timer.SECOND*3,function(){
+                                player.currentItem.onCooldown = false;
                             });
                         }
                     }else if(zKey.isDown){
@@ -148,6 +152,7 @@ var createItemManager = function(game,player){
             player.currentItem.anchor.setTo(.5);
             game.physics.arcade.enable(player.currentItem);
             player.currentItem.shot = false;
+            player.currentItem.onCooldown = false;
         }else if(player.currentItem != null && !player.currentItem.shot){
             if(player.isFacingLeft){
                 player.currentItem.position.x = player.position.x + 8;
