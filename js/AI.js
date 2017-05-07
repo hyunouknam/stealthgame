@@ -372,7 +372,7 @@ var AI = {
 
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
-                var target = owner.raycast.sight.target;
+                var target = this.raycast.sight.target;
                 var targetX = target.x;
                 var targetY = target.y;
                 var dx = targetX-owner.x;
