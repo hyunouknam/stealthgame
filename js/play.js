@@ -273,6 +273,9 @@ var playState = {
                 music.stop();
                 game.level_json='forest_level_json';
                 game.level_tilemap = 'forest_level_tilemap';
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 resumeVelocity = false;
                 game.state.start('play');
@@ -280,6 +283,9 @@ var playState = {
                 music.stop();
                 game.level_json='dungeon_level_json';
                 game.level_tilemap = 'dungeon_level_tilemap';
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 resumeVelocity = false;
                 game.state.start('play');
@@ -287,6 +293,9 @@ var playState = {
                 music.stop();
                 game.level_json='final_level_json';
                 game.level_tilemap = 'final_level_tilemap';
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 resumeVelocity = false;
                 game.state.start('play');
@@ -341,6 +350,9 @@ var playState = {
         nextLevelMenu.fixedToCamera = true;
         if(game.level_json != 'final_level_json'){
             nextLevelButton = game.add.button(425,130,'next_level_button',function(){
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 music.stop();
                 levelCompleted = false;
@@ -348,6 +360,9 @@ var playState = {
             },this,0,0,1,0);
             nextLevelButton.fixedToCamera = true;
             mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
@@ -359,6 +374,9 @@ var playState = {
             mainMenuButtonIngame.fixedToCamera = true;
         }else{
             mainMenuButtonIngame = game.add.button(425, 130,'main_menu_button',function(){
+            AI.free();
+            level.free();
+            game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
             game.world.removeAll();
             isPaused = false;
             locked = false;
@@ -752,6 +770,9 @@ function pause(){
             },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
             mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+                AI.free();
+                level.free();
+                game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
                 game.world.removeAll();
                 isPaused = false;
                 locked = false;
