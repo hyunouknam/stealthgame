@@ -29,6 +29,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.signGroup = game.add.group();
     level.trapGroup = game.add.group();
     level.potionGroup = game.add.group();
+    level.lightGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -206,6 +207,12 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             level.potionGroup.add(potion);
                         }
                         break;
+                    case 'light':
+                    for(var j = 0;j < objectarray.length; j++){
+                        var light = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
+                        level.lightGroup.add(light);
+                    }
+                    break;
                     default : break;
                 }
             }

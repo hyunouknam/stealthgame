@@ -24,11 +24,32 @@ var createLightingManager = function (game) {
     
     manager.stop = false;
     
-    manager.requestLight = function (sprite, radius){
+    manager.requestLight = function (sprite, radius){    
+        for(var i = 0; i < manager.litSprites.children.length; i++){
+            var e = manager.litSprites.children[i];
+            if(e === sprite){
+                e.light.radius = radius;
+                return;
+            }
+        }
+        console.log("LIGHT ADDED");
         var light = {};
         light.radius = radius;
+        //light.innerColor = 'rgba(255,255, 15, 1)';
+        //light.outerColor = 'rgba(255,255, 15,0)';
+        light.innerColor = 'rgba(15,255, 255, 1)';
+        light.outerColor = 'rgba(15,255, 255, 0)';
+        light.randomnessX = 0;
+        light.randomnessY = 0;
+        
         sprite.light = light;
         manager.litSprites.add(sprite);
+    };
+    
+    manager.setColor = function(sprite, inner, outer){
+        var light = sprite.light;
+        light.innerColor = inner;
+        light.outerColor = outer;
     };
     
     manager.removeLight = function ( sprite ) {
@@ -72,8 +93,8 @@ var createLightingManager = function (game) {
             
             if(manager.onScreen(sprite)){
                 
-                var finalX = sprite.x-manager.cameraRect.x;
-                var finalY = sprite.y-manager.cameraRect.y;
+                var finalX = sprite.x-manager.cameraRect.x + manager.game.rnd.integerInRange(-sprite.light.randomnessX,sprite.light.randomnessX);;
+                var finalY = sprite.y-manager.cameraRect.y + manager.game.rnd.integerInRange(-sprite.light.randomnessY,sprite.light.randomnessY);;
             
 
                 var g= manager.wholeMask.context.createRadialGradient( 
@@ -87,13 +108,17 @@ var createLightingManager = function (game) {
                 //g.addColorStop(0.5, 'rgba(255,215, 0, 1)');
                 //g.addColorStop(0.5, 'rgba(0,180, 180, 1)');
                 //g.addColorStop(0.5, 'rgba(255,0,0, 1)');
-                g.addColorStop(0, 'rgba(255,255, 15, 1)');
-                g.addColorStop(1, 'rgba(255,255, 15,0)');
+                g.addColorStop(0.5, sprite.light.innerColor);
+                g.addColorStop(1, sprite.light.outerColor);
 
                 manager.wholeMask.context.beginPath(); 
                 manager.wholeMask.context.fillStyle = g;
                 manager.wholeMask.context.arc(finalX, finalY,randomRadius,0,Math.PI*2);
                 manager.wholeMask.context.fill();
+                
+                //reset
+                sprite.light.randomnessX = 0;
+                sprite.light.randomnessY = 0;
             }
         }
         

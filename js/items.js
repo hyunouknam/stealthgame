@@ -78,19 +78,16 @@ var createItemManager = function(game,player){
             
             switch(player.currentItem.key){
                 case 'lantern':
-                    lightManager.removeLight(player);
                     lightManager.requestLight(player, lanternRadius);
                     break;
                 case 'bomb':
                     if(!player.godMode.enabled){
-                        lightManager.removeLight(player);
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
                     }
                     break;
                 case 'grappling':
                     if(!player.godMode.enabled){
-                        lightManager.removeLight(player);
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
                     }
@@ -121,7 +118,6 @@ var createItemManager = function(game,player){
             }
         }else{
             if(!player.godMode.enabled){
-                lightManager.removeLight(player);
                 lightManager.requestLight(player,defaultLightRaidus);
                 lightManager.lightDown();
             }

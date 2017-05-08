@@ -57,6 +57,7 @@ var playState = {
         game.load.image('door', '../assets/door.png');
         game.load.image('spikes', '../assets/spikes.png');
         game.load.image('potion', '../assets/potion.png');
+        game.load.image('torch', '../assets/torch.png');
         
         
         game.load.image('rockparticle', '../assets/rockparticle.png');
@@ -164,6 +165,34 @@ var playState = {
         AI.setTarget( player );
         
         lightManager.requestLight(player, defaultLightRaidus);
+        
+        
+        var alertSignal = new Phaser.Signal();
+        alertSignal.add(function(){
+            if(player.light){
+                //console.log('alert '+player.light.randomnessX);
+                player.light.randomnessX = 10;
+                player.light.randomnessY = 10;
+            }
+        });
+        /*
+        var calmSignal = new Phaser.Signal();
+        calmSignal.add(function(){
+            if(player.light){
+                console.log('calm '+player.light.randomnessX);
+                player.light.randomnessX = 0;
+                player.light.randomnessY = 0;
+            }
+        }, game);
+        */
+        AI.addSignal(AI.PROXIMITY, alertSignal);
+        //AI.addSignal(AI.NOT_IN_RANGE, calmSignal);
+        
+        level.lightGroup.forEach(function(e){
+            e.loadTexture('torch');
+            e.anchor.setTo(0.5, 0.5);
+            lightManager.requestLight(e, 100);
+        });
     },
     render: function(){
         //level.debugRender();
