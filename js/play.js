@@ -68,9 +68,9 @@ var playState = {
         game.load.audio('walking_sound','../assets/sounds/walking_sound.mp3');
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
-        game.load.audio('slow heartbeat', '../assets/sounds/slow heartbeat.wav');
-        game.load.audio('medium heartbeat', '../assets/sounds/slow heartbeat.wav');
-        game.load.audio('fast heartbeat', '../assets/sounds/slow heartbeat.wav');
+        game.load.audio('slow_heartbeat', '../assets/sounds/slow_heartbeat.mp3');
+        game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.wav');
+        game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.wav');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
@@ -89,16 +89,19 @@ var playState = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
 
-        playState.slowHeartbeat = game.add.audio('slow heartbeat');
-        playState.medHeartbeat = game.add.audio('medium heartbeat');
-        playState.fastHeartbeat = game.add.audio('fast heartbeat');
+        playState.slowHeartbeat = game.add.audio('slow_heartbeat');
+        playState.medHeartbeat = game.add.audio('medium_heartbeat');
+        playState.fastHeartbeat = game.add.audio('fast_heartbeat'); 
+        playState.slowHeartbeat.volume = .75
+        playState.medHeartbeat.volume = .75
+        playState.fastHeartbeat.volume = .75
 
         playState.collectionSound = game.add.audio('collection_sound');
         playState.walkingSound = game.add.audio('walking_sound');
         playState.walkingSound.volume = .75
         playState.runningSound = game.add.audio('running_sound');
         music = game.add.audio('music');
-        music.play(null,0,.15,true);
+        //music.play(null,0,.15,true);
 
 
 
@@ -183,8 +186,8 @@ var playState = {
         
         lightManager.requestLight(player, defaultLightRaidus);
         
-        
         var alertSignal = new Phaser.Signal();
+
         alertSignal.add(function(){
             if(player.light){
                 //console.log('alert '+player.light.randomnessX);
@@ -192,7 +195,43 @@ var playState = {
                 player.light.randomnessY = 20;
                 //player.light.innerColor = 'rgba(255, 0, 0, 1)';
                 player.light.outerColor = 'rgba(255, 0, 0, 0.5)';
+                if(player.health >= 136){
+                    if(!playState.slowHeartbeat.isPlaying){
+                        if(playState.slowHeartbeat.paused){
+                            playState.slowHeartbeat.resume(null,true);
+                        }else{
+                            playState.slowHeartbeat.play(null,true);
+                        }
+                        playState.medHeartbeat.pause();
+                        playState.fastHeartbeat.pause();
+                    }
+                }else if(player.health < 136 && player.health >= 76){
+                    if(!playState.medHeartbeat.isPlaying){
+                        if(playState.medHeartbeat.paused){
+                            playState.medHeartbeat.resume(null,true);
+                        }else{
+                            playState.medHeartbeat.play(null,true);
+                        }
+                        playState.slowHeartbeat.pause();    
+                        playState.fastHeartbeat.pause();
+                    }
+                }else if(player.health < 76){
+                    if(!playState.fastHeartbeat.isPlaying){
+                        if(playState.fastHeartbeat.paused){
+                            playState.fastHeartbeat.resume(null,true);
+                        }else{
+                            playState.fastHeartbeat.play(null,true);
+                        }
+                        playState.slowHeartbeat.pause();
+                        playState.medHeartbeat.pause();
+                    }
+                }
+
                 
+            }else{
+                playState.slowHeartbeat.pause();
+                playState.medHeartbeat.pause();
+                playState.fastHeartbeat.pause();
             }
         });
         /*
