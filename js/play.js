@@ -18,7 +18,7 @@ var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb
 
 var lanternRadius = 300;
 var defaultLightRaidus = 100;
-var grapplingHook;
+var grapplingHook, keyMap;
 var waypoint;
 
 var playState = {
@@ -50,6 +50,7 @@ var playState = {
         game.load.image('bomb', '../assets/bomb.png');
         game.load.image('oil', '../assets/oil.png');
         game.load.image('grappling','../assets/grappling.png');
+        game.load.image('key map', '../assets/key map.png');
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
@@ -59,7 +60,6 @@ var playState = {
         game.load.image('potion', '../assets/potion.png');
         game.load.image('torch', '../assets/torch.png');
         
-        
         game.load.image('rockparticle', '../assets/rockparticle.png');
         game.load.image('dirtparticle', '../assets/dirtparticle.png');
 
@@ -68,6 +68,9 @@ var playState = {
         game.load.audio('walking_sound','../assets/sounds/walking_sound.mp3');
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
+        game.load.audio('slow heartbeat', '../assets/sounds/slow heartbeat.wav');
+        game.load.audio('medium heartbeat', '../assets/sounds/slow heartbeat.wav');
+        game.load.audio('fast heartbeat', '../assets/sounds/slow heartbeat.wav');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
@@ -128,6 +131,11 @@ var playState = {
         game.physics.arcade.enable(grapplingHook);
         grapplingHook.body.gravity.y = 700;
 
+        // spawn test key map
+        keyMap = game.add.sprite(level.playerSpawnPoint.x + 700, level.playerSpawnPoint.y,'key map');
+        game.physics.arcade.enable(keyMap);
+        keyMap.body.gravity.y = 700;
+
 
         hudGroup = game.add.group();
         //hudGroup.add(mask);
@@ -158,8 +166,8 @@ var playState = {
         playerCreate();
         itemManager = createItemManager(game,player);
         
-        //waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);            //******************** waypoint */
-        //hudGroup.add(waypoint.waypointGroup);                                         //******************** waypoint */
+        waypoint = createWaypoint(game, player, 250, 250, level.keyGroup);            //******************** waypoint */
+        hudGroup.add(waypoint.waypointGroup);                                         //******************** waypoint */
         
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
@@ -167,7 +175,7 @@ var playState = {
         lightManager.requestLight(player, defaultLightRaidus);
         
         
-        var alertSignal = new Phaser.Signal();
+        var Signal = new Phaser.Signal();
         alertSignal.add(function(){
             if(player.light){
                 //console.log('alert '+player.light.randomnessX);
@@ -203,7 +211,7 @@ var playState = {
     update: function(){
         //game.time.advancedTiming = true; 
         //console.debug(game.time.fps) ;
-        //waypoint.update();                                                            //********************* waypoint */
+        
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -212,6 +220,7 @@ var playState = {
         game.physics.arcade.collide(bomb, level.solidGroup);
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(grapplingHook, level.solidGroup);
+        game.physics.arcade.collide(keyMap, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
         game.physics.arcade.collide(level.potionGroup, level.solidGroup);
@@ -235,6 +244,7 @@ var playState = {
             game.physics.arcade.overlap(player, lantern, itemManager.collectItem, null, this);  // testing lantern
             game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
             game.physics.arcade.overlap(player, grapplingHook, itemManager.collectItem, null, this);
+            game.physics.arcade.overlap(player, keyMap, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);     
 

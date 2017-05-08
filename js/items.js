@@ -39,6 +39,11 @@ var createItemManager = function(game,player){
                 case 'grappling':
                     player.items[index] = game.add.sprite(860 + (index*55), 615, 'grappling')
                     player.items[index].fixedToCamera = true;
+                    break;
+                case 'key map':
+                    player.items[index] = game.add.sprite(860 + (index*55), 615, 'key map')
+                    player.items[index].fixedToCamera = true;
+                    break;
             }
             
         }
@@ -79,17 +84,20 @@ var createItemManager = function(game,player){
             switch(player.currentItem.key){
                 case 'lantern':
                     lightManager.requestLight(player, lanternRadius);
+                    waypoint.hide();
                     break;
                 case 'bomb':
                     if(!player.godMode.enabled){
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
+                        waypoint.hide();
                     }
                     break;
                 case 'grappling':
                     if(!player.godMode.enabled){
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
+                        waypoint.hide();
                     }
                     if(sKey.isDown){
                         if(!player.currentItem.shot && !player.currentItem.onCooldown){
@@ -115,11 +123,20 @@ var createItemManager = function(game,player){
                         player.currentItem.rotation += .1;
                     }
                     break;
+                 case 'key map':
+                    if(!player.godMode.enabled){
+                        lightManager.requestLight(player,defaultLightRaidus);
+                        lightManager.lightDown();
+                    }
+                    waypoint.show();
+                    waypoint.update();                                                            //********************* waypoint */
+                    break;   
             }
         }else{
             if(!player.godMode.enabled){
                 lightManager.requestLight(player,defaultLightRaidus);
                 lightManager.lightDown();
+                waypoint.hide();
             }
         }
     }

@@ -103,6 +103,8 @@ var createLightingManager = function (game) {
                 
                 var finalX = sprite.x-manager.cameraRect.x + manager.game.rnd.integerInRange(-sprite.light.randomnessX,sprite.light.randomnessX);
                 var finalY = sprite.y-manager.cameraRect.y + manager.game.rnd.integerInRange(-sprite.light.randomnessY,sprite.light.randomnessY);
+
+                
                 //var finalX = sprite.x-manager.cameraRect.x;
                 //var finalY = sprite.y-manager.cameraRect.y;
             
