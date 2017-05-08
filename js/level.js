@@ -53,6 +53,28 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         }
     }
     
+    level.free = function () {
+        level.tilesetList = [];
+        level.layers = {};
+
+        //map
+        level.solidGroup.removeAll();
+        level.platformGroup.removeAll();
+        level.keyGroup.removeAll();
+        level.doorGroup.removeAll();
+        level.nextLevelGroup.removeAll();
+        level.signGroup.removeAll();
+        level.trapGroup.removeAll();
+        level.potionGroup.removeAll();
+        level.lightGroup.removeAll();
+
+        //spawns
+        //level.spawnGroup = game.add.group(); deprecateddeprecated
+        level.passthroughSpawnGroup.forEachAlive(function(e){e.kill();});
+        level.collidableSpawnGroup.forEachAlive(function(e){e.kill();});
+        level.passthroughSpawnGroup.removeAll();
+        level.collidableSpawnGroup.removeAll();
+    };
     //create level function
     level.create = function ( spawner ) {
         level.game.stage.backgroundColor = '#ffffff';
