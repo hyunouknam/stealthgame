@@ -22,7 +22,7 @@ var grapplingHook, keyMap;
 var waypoint;
 
 var playState = {
-    collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,
+    collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,slowHeartbeat: null, medHeartbeat: null, fastHeartbeat: null,
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -88,12 +88,21 @@ var playState = {
         game.camera.height = 576;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
+
+        playState.slowHeartbeat = game.add.audio('slow heartbeat');
+        playState.medHeartbeat = game.add.audio('medium heartbeat');
+        playState.fastHeartbeat = game.add.audio('fast heartbeat');
+
         playState.collectionSound = game.add.audio('collection_sound');
         playState.walkingSound = game.add.audio('walking_sound');
         playState.walkingSound.volume = .75
         playState.runningSound = game.add.audio('running_sound');
         music = game.add.audio('music');
         music.play(null,0,.15,true);
+
+
+
+
         var hud = game.add.sprite(0,550,'hud');
         healthBar = game.add.sprite(87,612,'health_bar');
         staminaBar = game.add.sprite(331,612,'stamina_bar');
@@ -175,7 +184,7 @@ var playState = {
         lightManager.requestLight(player, defaultLightRaidus);
         
         
-        var Signal = new Phaser.Signal();
+        var alertSignal = new Phaser.Signal();
         alertSignal.add(function(){
             if(player.light){
                 //console.log('alert '+player.light.randomnessX);
@@ -183,6 +192,7 @@ var playState = {
                 player.light.randomnessY = 20;
                 //player.light.innerColor = 'rgba(255, 0, 0, 1)';
                 player.light.outerColor = 'rgba(255, 0, 0, 0.5)';
+                
             }
         });
         /*
