@@ -22,6 +22,9 @@ var createLightingManager = function (game) {
     manager.cameraRect = new Phaser.Rectangle(game.camera.x, game.camera.y, game.camera.width, game.camera.height);
     manager.lightCircle = new Phaser.Circle(0,0,0);
     
+    manager.defaultInnerColor = 'rgba(15,255, 255, 1)';
+    manager.defaultOuterColor = 'rgba(15,255, 255, 0)';
+    
     manager.stop = false;
     
     manager.requestLight = function (sprite, radius){    
@@ -93,9 +96,12 @@ var createLightingManager = function (game) {
             
             if(manager.onScreen(sprite)){
                 
-                var finalX = sprite.x-manager.cameraRect.x + manager.game.rnd.integerInRange(-sprite.light.randomnessX,sprite.light.randomnessX);;
-                var finalY = sprite.y-manager.cameraRect.y + manager.game.rnd.integerInRange(-sprite.light.randomnessY,sprite.light.randomnessY);;
+                var finalX = sprite.x-manager.cameraRect.x + manager.game.rnd.integerInRange(-sprite.light.randomnessX,sprite.light.randomnessX);
+                var finalY = sprite.y-manager.cameraRect.y + manager.game.rnd.integerInRange(-sprite.light.randomnessY,sprite.light.randomnessY);
+                //var finalX = sprite.x-manager.cameraRect.x;
+                //var finalY = sprite.y-manager.cameraRect.y;
             
+                //var randomRadius = randomRadius + manager.game.rnd.integerInRange(-sprite.light.randomnessX,sprite.light.randomnessX);
 
                 var g= manager.wholeMask.context.createRadialGradient( 
                     finalX,  
@@ -119,6 +125,8 @@ var createLightingManager = function (game) {
                 //reset
                 sprite.light.randomnessX = 0;
                 sprite.light.randomnessY = 0;
+                sprite.light.innerColor = manager.defaultInnerColor;
+                sprite.light.outerColor = manager.defaultOuterColor;
             }
         }
         

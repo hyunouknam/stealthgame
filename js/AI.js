@@ -86,6 +86,19 @@ var AI = {
     addSignal : function (name, signalObject){
         AI.signals[name] = signalObject;
     },
+    signalDispatch : function ( ownerAI ){
+        //shaking effect
+        if(ownerAI.raycast.sight.length < 250){
+            var signal = AI.signals[AI.PROXIMITY];
+            if(signal)
+                signal.dispatch();
+        }
+        else{
+            var signal = AI.signals[AI.NOT_IN_RANGE];
+            //if(signal)
+                //signal.dispatch();
+        }
+    },
     PROXIMITY : 'PROXIMITY',
     NOT_IN_RANGE : 'NOT_IN_RANGE',
     newTerrainInfo : function ( collidableLayer ){ 
@@ -264,23 +277,11 @@ var AI = {
             
             behavior.update2 = function (){
                 var owner = behavior.ownerAIObject;
+                AI.signalDispatch(owner);
                 
                 var targetInSight = !AI.terrain.obstructed(owner.raycast.sight);
                 if(targetInSight && owner.raycast.sight.length < owner.sprite.entitydata.aggro_range ){
                     owner.setState('pursue');
-                }
-                
-        
-                //shaking effect
-                if(owner.raycast.sight.length < 300){
-                    var signal = AI.signals[AI.PROXIMITY];
-                    if(signal)
-                        signal.dispatch();
-                }
-                else{
-                    var signal = AI.signals[AI.NOT_IN_RANGE];
-                    //if(signal)
-                        //signal.dispatch();
                 }
                     
                     
@@ -318,6 +319,7 @@ var AI = {
 
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
+                AI.signalDispatch(owner);
                 owner.sprite.animations.play('calmed');
                 owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
                     owner.update = behavior.update2; 
@@ -340,18 +342,7 @@ var AI = {
                 var target = owner.raycast.sight.target;
                 var inAggroRange = owner.raycast.sight.length < owner.sprite.entitydata.aggro_range && owner.sprite.entitydata.passthrough?  true : !AI.terrain.obstructed(owner.raycast.sight);
                 
-                
-                //shaking effect
-                if(owner.raycast.sight.length < 300){
-                    var signal = AI.signals[AI.PROXIMITY];
-                    if(signal)
-                        signal.dispatch();
-                }
-                else{
-                    var signal = AI.signals[AI.NOT_IN_RANGE];
-                    //if(signal)
-                        //signal.dispatch();
-                }
+                AI.signalDispatch(owner);
                     
                 
                 if( target && inAggroRange) {
@@ -392,6 +383,7 @@ var AI = {
             
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
+                AI.signalDispatch(owner);
                 owner.sprite.animations.play('alerted');
                 owner.sprite.animations.getAnimation('alerted').onComplete.add(function () {
                     owner.update = behavior.update2; 

@@ -171,8 +171,10 @@ var playState = {
         alertSignal.add(function(){
             if(player.light){
                 //console.log('alert '+player.light.randomnessX);
-                player.light.randomnessX = 10;
-                player.light.randomnessY = 10;
+                player.light.randomnessX = 20;
+                player.light.randomnessY = 20;
+                //player.light.innerColor = 'rgba(255, 0, 0, 1)';
+                player.light.outerColor = 'rgba(255, 0, 0, 0.5)';
             }
         });
         /*
