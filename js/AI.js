@@ -277,7 +277,7 @@ var AI = {
             
             behavior.update2 = function (){
                 var owner = behavior.ownerAIObject;
-                AI.signalDispatch(owner);
+                //AI.signalDispatch(owner);
                 
                 var targetInSight = !AI.terrain.obstructed(owner.raycast.sight);
                 if(targetInSight && owner.raycast.sight.length < owner.sprite.entitydata.aggro_range ){
@@ -319,7 +319,7 @@ var AI = {
 
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
-                AI.signalDispatch(owner);
+                //AI.signalDispatch(owner);
                 owner.sprite.animations.play('calmed');
                 owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
                     owner.update = behavior.update2; 
@@ -342,12 +342,12 @@ var AI = {
                 var target = owner.raycast.sight.target;
                 var inAggroRange = owner.raycast.sight.length < owner.sprite.entitydata.aggro_range && owner.sprite.entitydata.passthrough?  true : !AI.terrain.obstructed(owner.raycast.sight);
                 
-                AI.signalDispatch(owner);
+                //AI.signalDispatch(owner);
                     
                 
                 if( target && inAggroRange) {
                     var ownerCenterX = owner.sprite.body.x + Math.abs(owner.sprite.body.width)/2;
-                    
+                    AI.signalDispatch(owner);
                     if( ownerCenterX < target.body.x + target.body.width/2 - behavior.tolerance ){
                         if( owner.sprite.entitydata.facingLeft )
                         owner.sprite.scale.x *= -1;
@@ -411,14 +411,14 @@ var AI = {
                 var dx = targetX-owner.sprite.x;
                 var dy = targetY-owner.sprite.y;
 
-                if(dx*dx+dy*dy <=owner.sprite.width * owner.sprite.width*0.75*0.75){             // 225 is area using 15 below
+                if(dx*dx+dy*dy <=owner.sprite.width * owner.sprite.width* 0.20* 0.20){             // 225 is area using 15 below
                     owner.iris.x = targetX;
                     owner.iris.y = targetY;
                 }else{
-                    if(dx*dx+dy*dy>owner.sprite.width*0.75){ 
+                    if(dx*dx+dy*dy>owner.sprite.width* 0.20){ 
                         var angle=Math.atan2(dy,dx);    //Get the angle
-                        owner.iris.x = owner.sprite.x + owner.sprite.width*0.75 * Math.cos(angle);
-                        owner.iris.y = owner.sprite.y + owner.sprite.width*0.75 * Math.sin(angle);
+                        owner.iris.x = owner.sprite.x + Math.abs(owner.sprite.width* 0.20) * Math.cos(angle);
+                        owner.iris.y = owner.sprite.y + Math.abs(owner.sprite.width* 0.20) * Math.sin(angle);
                     }
                 }
                 
@@ -461,6 +461,8 @@ var AI = {
             behavior.update = function (){
                 var owner = behavior.ownerAIObject;
                 var target = this.raycast.sight.target;
+                
+                game.world.sendToBack(owner.iris);
                 owner.sprite.animations.play('calmed');
                 owner.sprite.animations.getAnimation('calmed').onComplete.add(function () {
                     owner.update = behavior.update2; 
@@ -486,14 +488,14 @@ var AI = {
                 var dx = targetX-owner.sprite.x;
                 var dy = targetY-owner.sprite.y;
 
-                if(dx*dx+dy*dy <= owner.sprite.width * owner.sprite.width * 0.75*0.75){             // 225 is area using 15 below
+                if(dx*dx+dy*dy <=owner.sprite.width * owner.sprite.width * 0.20* 0.20){             // 225 is area using 15 below
                     owner.iris.x = targetX;
                     owner.iris.y = targetY;
                 }else{
-                    if(dx*dx+dy*dy>owner.sprite.width*0.75){ 
+                    if(dx*dx+dy*dy>owner.sprite.width* 0.20){ 
                         var angle=Math.atan2(dy,dx);    //Get the angle
-                        owner.iris.x = owner.sprite.x + owner.sprite.width*0.75 * Math.cos(angle);
-                        owner.iris.y = owner.sprite.y + owner.sprite.width*0.75 * Math.sin(angle);
+                        owner.iris.x = owner.sprite.x + Math.abs(owner.sprite.width* 0.20) * Math.cos(angle);
+                        owner.iris.y = owner.sprite.y + Math.abs(owner.sprite.width* 0.20) * Math.sin(angle);
                     }
                 }
         
@@ -540,6 +542,7 @@ var AI = {
                 var owner = behavior.ownerAIObject;
                 owner.sprite.animations.play('alerted');
                 owner.sprite.animations.getAnimation('alerted').onComplete.add(function () {
+                    game.world.bringToTop(owner.iris);
                     owner.update = behavior.update2; 
                 }, behavior );
             };

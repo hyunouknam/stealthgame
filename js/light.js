@@ -22,8 +22,10 @@ var createLightingManager = function (game) {
     manager.cameraRect = new Phaser.Rectangle(game.camera.x, game.camera.y, game.camera.width, game.camera.height);
     manager.lightCircle = new Phaser.Circle(0,0,0);
     
-    manager.defaultInnerColor = 'rgba(15,255, 255, 1)';
-    manager.defaultOuterColor = 'rgba(15,255, 255, 0)';
+    //manager.defaultInnerColor = 'rgba(15,255, 255, 1)';
+    //manager.defaultOuterColor = 'rgba(15,255, 255, 0)';
+    manager.defaultInnerColor = 'rgba(22, 233, 248, 1)';
+    manager.defaultOuterColor = 'rgba(22, 233, 248, 0)';
     
     manager.stop = false;
     
@@ -40,8 +42,8 @@ var createLightingManager = function (game) {
         light.radius = radius;
         //light.innerColor = 'rgba(255,255, 15, 1)';
         //light.outerColor = 'rgba(255,255, 15,0)';
-        light.innerColor = 'rgba(15,255, 255, 1)';
-        light.outerColor = 'rgba(15,255, 255, 0)';
+        light.innerColor =  manager.defaultInnerColor;
+        light.outerColor = manager.defaultOuterColor;
         light.randomnessX = 0;
         light.randomnessY = 0;
         
@@ -84,9 +86,12 @@ var createLightingManager = function (game) {
         manager.cameraRect.height = manager.game.camera.height;
         
         //set up mask
-        manager.wholeMask.context.fillStyle = 'rgb(0,0,0)';
+        manager.wholeMask.context.fillStyle = 'rgb(16,0,0)';
         manager.wholeMask.context.fillRect(0, 0, manager.cameraRect.width, manager.cameraRect.height);
-        var randOffset =  manager.game.rnd.integerInRange(-10,10);
+        
+        //default flickering
+        //var randOffset =  manager.game.rnd.integerInRange(-10,10);
+        var randOffset =  manager.game.rnd.integerInRange(0,0);
         
         for(var i = 0; i < manager.litSprites.children.length; i++){
             var sprite = manager.litSprites.children[i];
