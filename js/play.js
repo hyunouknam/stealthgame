@@ -527,6 +527,7 @@ var playState = {
 }
 function playerCreate(){
     player = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'player');
+    player.anchor.setTo(0.5, 0.5);
     game.physics.arcade.enable(player);
 
     // player physics

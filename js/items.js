@@ -139,10 +139,10 @@ var createItemManager = function(game,player){
         
         if(player.items[player.currentItemIndex] != null && player.currentItem == null){
             if(player.isFacingLeft){
-                player.currentItem = game.add.sprite(player.position.x + 45,player.position.y + 25,player.items[player.currentItemIndex].key);
+                player.currentItem = game.add.sprite(player.position.x + 0,player.position.y + 0,player.items[player.currentItemIndex].key);  //player.position.x + 45,player.position.y + 25
                 player.currentItem.scale.setTo(.75,.75);
             }else{
-                player.currentItem = game.add.sprite(player.position.x + 85, player.position.y + 25, player.items[player.currentItemIndex].key);
+                player.currentItem = game.add.sprite(player.position.x + 0, player.position.y + 0, player.items[player.currentItemIndex].key);    //player.position.x + 45,player.position.y + 25
                 player.currentItem.scale.setTo(.75, .75);
             }
             player.currentItem.anchor.setTo(.5);
@@ -151,11 +151,11 @@ var createItemManager = function(game,player){
             player.currentItem.onCooldown = false;
         }else if(player.currentItem != null && !player.currentItem.shot){
             if(player.isFacingLeft){
-                player.currentItem.position.x = player.position.x + 8;
-                player.currentItem.position.y = player.position.y + 25;
+                player.currentItem.position.x = player.position.x - 10;      // player.position.x + 8 
+                player.currentItem.position.y = player.position.y + 0;     // player.position.y + 25
             }else{
-                player.currentItem.position.x = player.position.x + 35;
-                player.currentItem.position.y = player.position.y + 25;
+                player.currentItem.position.x = player.position.x + 10;     // player.position.x + 35
+                player.currentItem.position.y = player.position.y + 0;     // player.position.y + 25
                 
             }
             
