@@ -17,6 +17,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.tilesetList = [];
     level.layers = {};
     level.mapJSON = game.cache.getJSON(jsonFileKey);
+    level.tilemap;
     
     //map
     level.background = game.add.group();
@@ -24,6 +25,12 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.platformGroup = game.add.group();
     level.keyGroup = game.add.group();
     level.doorGroup = game.add.group();
+    level.nextLevelGroup = game.add.group();
+    level.signGroup = game.add.group();
+    level.trapGroup = game.add.group();
+    level.potionGroup = game.add.group();
+    level.lightGroup = game.add.group();
+    level.itemGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -47,12 +54,37 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         }
     }
     
+    level.free = function () {
+        level.tilesetList = [];
+        level.layers = {};
+
+        //map
+        level.solidGroup.removeAll();
+        level.platformGroup.removeAll();
+        level.keyGroup.removeAll();
+        level.doorGroup.removeAll();
+        level.nextLevelGroup.removeAll();
+        level.signGroup.removeAll();
+        level.trapGroup.removeAll();
+        level.potionGroup.removeAll();
+        level.lightGroup.removeAll();
+        level.itemGroup.removeAll();
+
+        //spawns
+        //level.spawnGroup = game.add.group(); deprecateddeprecated
+        level.itemGroup.forEachAlive(function(e){e.kill();});
+        level.passthroughSpawnGroup.forEachAlive(function(e){e.kill();});
+        level.collidableSpawnGroup.forEachAlive(function(e){e.kill();});
+        level.passthroughSpawnGroup.removeAll();
+        level.collidableSpawnGroup.removeAll();
+    };
     //create level function
     level.create = function ( spawner ) {
         level.game.stage.backgroundColor = '#ffffff';
 
         //create map images
-        var tilemap = game.add.tilemap( level.tiledmapKey );
+        level.tilemap = game.add.tilemap( level.tiledmapKey );
+        var tilemap = level.tilemap;
         for(var i = 0; i < level.tilesetList.length; i++)
             tilemap.addTilesetImage( level.tilesetList[i] );
         
@@ -60,9 +92,12 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         var layerlist = level.mapJSON.layers;
         for(var i = 0; i < layerlist.length; i++){
             if( layerlist[i].type === 'tilelayer' ){
-                var layer = tilemap.createLayer( layerlist[i].name )
+                var layer = tilemap.createLayer( layerlist[i].name );
                 layer.resizeWorld();
-                level.layers[layerlist[i].name] = layer;
+                var newName = layerlist[i].name.replace(new RegExp(' ', 'g'), '_');
+                
+                //console.log(newName);
+                level.layers[newName] = layer;
             }
         }
 
@@ -87,8 +122,10 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                     case 'solid object' : 
                         for(var j = 0; j < objectarray.length; j++){
                             var collisionObject = level.game.add.sprite(objectarray[j].x, objectarray[j].y, null);
+                            collisionObject.width = objectarray[j].width;
+                            collisionObject.height = objectarray[j].height;
                             level.game.physics.enable(collisionObject);
-                            collisionObject.body.setSize(objectarray[j].width, objectarray[j].height );
+                            //collisionObject.body.setSize(objectarray[j].width, objectarray[j].height );
                             collisionObject.body.immovable =  true;
                             level.solidGroup.add(collisionObject);
                         }
@@ -162,6 +199,54 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                             
                         }
                         break;
+                    case 'level key':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var nextLevel = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'golden key');
+                            level.game.physics.enable(nextLevel);
+                            nextLevel.body.gravity.y = 300;
+                            level.nextLevelGroup.add(nextLevel);
+                        }
+                        break;
+                    case 'signs':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var sign = level.game.add.sprite(objectarray[j].x,objectarray[j].y-32,'sign');
+                            level.game.physics.enable(sign);
+                            sign.text = objectarray[j].properties.text.split('');
+                            level.signGroup.add(sign);
+                        }
+                        break;
+                    case 'traps':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var spikes = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'spikes');
+                            level.game.physics.enable(spikes);
+                            spikes.body.immovable =  true;
+                            level.trapGroup.add(spikes);
+                        }
+                        break;
+
+                    case 'potions':
+                        for(var j = 0;j < objectarray.length; j++){
+                            var potion = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'potion');
+                            level.game.physics.enable(potion);
+                            potion.body.gravity.y = 300;
+                            level.potionGroup.add(potion);
+                        }
+                        break;
+                    case 'light':
+                    for(var j = 0;j < objectarray.length; j++){
+                        var light = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
+                        level.lightGroup.add(light);
+                    }
+                    break;
+                    case 'item spawn':
+                    for(var j = 0;j < objectarray.length; j++){
+                        if(objectarray[j].properties && objectarray[j].properties.id){
+                            var item = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
+                            item.itemID = objectarray[j].properties.id;
+                            level.itemGroup.add(item);
+                        }
+                    }
+                    break;
                     default : break;
                 }
             }
@@ -178,7 +263,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         
         //test
         var bitmap = level.game.add.bitmapData( level.game.width, level.game.height );
-        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        bitmap.context.fillStyle = 'rgba(0, 0, 0, 0)';/////////////////////////////////////////////////
         bitmap.context.fillRect( 0, 0, level.game.width, level.game.height );
         var mask =level.game.add.sprite( 0, 0, bitmap );
         mask.fixedToCamera = true;
@@ -186,17 +271,28 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     };
     
     level.renderSort = function( midgroup, topgroup ){
+        //hacked solution of background decoration blocking player
+        level.game.world.sendToBack(level.layers.background_decoration);
+        level.game.world.sendToBack(level.background);
+        
+        //reorder
         level.game.world.bringToTop(level.collidableSpawnGroup);
         level.game.world.bringToTop(level.passthroughSpawnGroup);
-        if( midgroup !== null)
+
+        if( midgroup !== null){
             level.game.world.bringToTop( midgroup );
-            level.game.world.bringToTop( level.doorGroup );
-            level.game.world.bringToTop( level.keyGroup );
+        }
+        level.game.world.bringToTop( level.doorGroup );
+        level.game.world.bringToTop( level.keyGroup );
+        level.game.world.bringToTop( level.nextLevelGroup);
+        level.game.world.bringToTop(level.signGroup);
+
+        //level.game.world.bringToTop( player );
         
         //level.mask.bringToTop();
         
         for( var i in level.layers) {
-            if(i === 'foreground decoration' || i === 'specials'){
+            if(i === 'foreground_decoration' || i === 'specials'){
                 level.game.world.bringToTop(level.layers[i]);
             }
             
@@ -207,10 +303,9 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             
             
         }
-        level.mask.bringToTop();
+        //level.mask.bringToTop();
         if( topgroup !== null)
             level.game.world.bringToTop( topgroup );
-        
     };
     
     level.openDoor = function ( keySprite ){
@@ -220,7 +315,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
             }
         }
         return undefined;
-    }
+    };
     /*
     level.getDoor = function ( keySprite ){
         for( var i = 0; i < level.doorGroup.children.length; i++){
@@ -233,18 +328,18 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     */
     
     level.debugRender = function (){
-        //level.solidGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        level.solidGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.platformGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.keyGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
         //level.doorGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
     
-        level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
-        level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
-    }
+        //level.passthroughSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+        //level.collidableSpawnGroup.forEachAlive( function (e) { level.game.debug.body ( e ); });
+    };
     
     level.testSort = function ( spriteGroup, maskGroup, hudGroup ){ //TODO
         //backImg -> backdecor -> sprite -> special -> foreground -> mask -> hud
-    }
+    };
     
     
     return level;

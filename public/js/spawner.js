@@ -45,7 +45,7 @@ var loadSpawner = function ( game, profilejsonkey ) {
                     animInfo.name, 
                     animInfo.frames,  
                     animInfo.framerate? animInfo.framerate : 10,
-                    animInfo.loop? animInfo.loop : true
+                    animInfo.loop
                 );
             }
             

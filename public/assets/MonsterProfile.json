@@ -6,7 +6,7 @@
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "walkspeed" : 100,
+        "walkspeed" : 0,
         "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
@@ -15,7 +15,7 @@
         
         "spritesheet" : {
             "url" : "../assets/ghost.png",
-            "referencename" : "akushfkzlgjkdzhaukgskfjlzjxbkgdjahdkuhfkhdfksdg",
+            "referencename" : "ghost",
             "width" :  48,
             "height" : 72
         },
@@ -29,7 +29,7 @@
             },
             { 	
                 "name" : "walk",
-                "frames" : [0, 1, 2, 3, 4],
+                "frames" : [5],
                 "framerate" : 10,
                 "loop" : true
             },
@@ -38,6 +38,18 @@
                 "frames" : [0, 1, 2, 3, 4],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 5,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
+                "framerate" : 5,
+                "loop" : false
             }
         ]
     },
@@ -49,7 +61,7 @@
         "bodyscale" : 1,
         "gravity" : 300,
         "health" : 1,
-        "walkspeed" : 100,
+        "walkspeed" : 0,
         "runspeed" : 200,
         "damage" : 10,
         "facingLeft" : true,
@@ -72,7 +84,7 @@
             },
             { 	
                 "name" : "walk",
-                "frames" : [0, 1, 2, 3, 4],
+                "frames" : [5],
                 "framerate" : 10,
                 "loop" : true
             },
@@ -81,6 +93,18 @@
                 "frames" : [0, 1, 2, 3, 4],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 5,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
+                "framerate" : 5,
+                "loop" : false
             }
         ]
     },
@@ -124,6 +148,18 @@
                 "frames" : [0, 1, 2, 3],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -167,6 +203,18 @@
                 "frames" : [20, 21, 22, 23],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [20, 21, 22, 23],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [20, 21, 22, 23],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -212,6 +260,18 @@
                 "frames" : [8, 9, 10, 11],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [8, 9, 10, 11],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [8, 9, 10, 11],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -255,6 +315,18 @@
                 "frames" : [0, 1, 2, 3],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0, 1, 2, 3],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     },
@@ -262,8 +334,8 @@
     "face monster" : {
         "name" : "face monster",
         "passthrough" : true,
-        "spritescale" : 1,
-        "bodyscale" : 0.4,
+        "spritescale" : 0.6,
+        "bodyscale" : 1,
         "gravity" : 0,
         "health" : 1,
         "walkspeed" : 100,
@@ -298,6 +370,73 @@
                 "frames" : [0],
                 "framerate" : 20,
                 "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [0],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [0],
+                "framerate" : 20,
+                "loop" : false
+            }
+        ]
+    },
+
+    "eye monster" : {
+        "name" : "eye monster",
+        "passthrough" : true,
+        "spritescale" : 0.75,
+        "bodyscale" : 0.4,
+        "gravity" : 0,
+        "health" : 1,
+        "walkspeed" : 100,
+        "runspeed" : 150,
+        "damage" : 10,
+        "facingLeft" : true,
+        "attack_range" : 0,
+        "aggro_range" : 300,
+        
+        "spritesheet" : {
+            "url" : "../assets/eye monster.png",
+            "referencename" : "eye monster",
+            "width" :  180,
+            "height" : 180
+        },
+        
+        "animations": [
+            { 	
+                "name" : "idle",
+                "frames" : [5],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "walk",
+                "frames" : [5],
+                "framerate" : 10,
+                "loop" : true
+            },
+            { 	
+                "name" : "run",
+                "frames" : [0, 1, 2],
+                "framerate" : 20,
+                "loop" : true
+            },
+            { 	
+                "name" : "alerted",
+                "frames" : [5, 6, 7, 8, 9],
+                "framerate" : 20,
+                "loop" : false
+            },
+            { 	
+                "name" : "calmed",
+                "frames" : [9, 8, 7, 6, 5],
+                "framerate" : 20,
+                "loop" : false
             }
         ]
     }
