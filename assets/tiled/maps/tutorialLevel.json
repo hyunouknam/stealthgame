@@ -494,6 +494,17 @@
                  "width":32,
                  "x":1567,
                  "y":864
+                }, 
+                {
+                 "height":0,
+                 "id":54,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2560,
+                 "y":1280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -647,8 +658,31 @@
          "width":100,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":40,
+         "name":"level key",
+         "objects":[
+                {
+                 "height":32,
+                 "id":55,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":3072,
+                 "y":992
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":100,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":54,
+ "nextobjectid":56,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

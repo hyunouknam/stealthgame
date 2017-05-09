@@ -1,5 +1,5 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
-    pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false, signLocked = false, signOpened = false;;
+    pausedMenu, locked, resumeButton, nextLevelMenu, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false, signLocked = false, signOpened = false;;
 
 var escKey, shiftKey, aKey, sKey, dKey, ekey, kKey,zKey,cKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
@@ -94,6 +94,7 @@ var playState = {
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
+        game.load.image('golden key', '../assets/golden key.png');
         game.load.image('sign','../assets/sign.png');
         game.load.image('door', '../assets/door.png');
         game.load.image('spikes', '../assets/spikes.png');
@@ -504,6 +505,12 @@ var playState = {
         if(pausedMenu != null){
             game.world.bringToTop(pausedMenu);
             game.world.bringToTop(resumeButton);
+            game.world.bringToTop(mainMenuButtonIngame);
+        }
+
+        if(nextLevelMenu != null){
+            game.world.bringToTop(nextLevelMenu);
+            game.world.bringToTop(nextLevelButton);
             game.world.bringToTop(mainMenuButtonIngame);
         }
         
