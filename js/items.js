@@ -129,7 +129,6 @@ var createItemManager = function(game,player){
                         lightManager.lightDown();
                     }
                     waypoint.show();
-                    waypoint.update();                                                            //********************* waypoint */
                     break;   
             }
         }else{

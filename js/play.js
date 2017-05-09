@@ -261,6 +261,7 @@ var playState = {
         //game.time.advancedTiming = true; 
         //console.debug(game.time.fps) ;
         
+        waypoint.update();                                                            //********************* waypoint */
 
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
@@ -664,6 +665,7 @@ function playerMove(){
                 player.animations.play('default right');
             }
         }else if(shiftKey.isDown && player.stamina>0){
+            player.rested = false;
             if(!player.body.touching.down){
                 if (cursors.left.isDown){
                     loseStamina();
