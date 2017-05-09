@@ -2823,7 +2823,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":96,
+                 "x":64,
                  "y":992
                 }, 
                 {
@@ -3388,6 +3388,25 @@
                  "width":32,
                  "x":2816,
                  "y":1568
+                }, 
+                {
+                 "height":32,
+                 "id":423,
+                 "name":"",
+                 "properties":
+                    {
+                     "id":"lantern"
+                    },
+                 "propertytypes":
+                    {
+                     "id":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":704,
+                 "y":1696
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3855,7 +3874,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":423,
+ "nextobjectid":424,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
