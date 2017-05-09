@@ -91,7 +91,7 @@ var AI = {
     },
     signalDispatch : function ( ownerAI ){
         //shaking effect
-        if(ownerAI.raycast.sight.length < 250){
+        if(ownerAI.raycast.sight.length < 300){
             var signal = AI.signals[AI.PROXIMITY];
             if(signal){
                 signal.dispatch();

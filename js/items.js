@@ -77,6 +77,7 @@ var createItemManager = function(game,player){
             player.graphics.clear();
         }
     }
+    manager.usageLocked = false;
     manager.useItem = function(){
         
         if(player.currentItem != null){
@@ -100,6 +101,7 @@ var createItemManager = function(game,player){
                         waypoint.hide();
                     }
                     if(sKey.isDown){
+                        manager.usageLocked = true;
                         if(!player.currentItem.shot && !player.currentItem.onCooldown){
                             player.currentItem.body.velocity.x = Math.cos(player.currentItem.rotation)*500;
                             player.currentItem.body.velocity.y = Math.sin(player.currentItem.rotation)*500;
@@ -115,6 +117,7 @@ var createItemManager = function(game,player){
                             });
                             game.time.events.add(Phaser.Timer.SECOND*3,function(){
                                 player.currentItem.onCooldown = false;
+                                manager.usageLocked = false;
                             });
                         }
                     }else if(zKey.isDown){
@@ -141,19 +144,21 @@ var createItemManager = function(game,player){
     }
 
     manager.holdItem = function(){
-        if(player.items[player.currentItemIndex] != null && player.currentItem != null){
-            if(player.items[player.currentItemIndex].key != player.currentItem.key){
+        if(!manager.usageLocked){
+            if(player.items[player.currentItemIndex] != null && player.currentItem != null){
+                if(player.items[player.currentItemIndex].key != player.currentItem.key){
+                        player.currentItem.kill();
+                        player.currentItem = null;
+                }
+            }else{
+                if(player.currentItem != null){
                     player.currentItem.kill();
                     player.currentItem = null;
-            }
-        }else{
-            if(player.currentItem != null){
-                player.currentItem.kill();
-                player.currentItem = null;
+                }
             }
         }
         
-        if(player.items[player.currentItemIndex] != null && player.currentItem == null){
+        if(!manager.usageLocked && player.items[player.currentItemIndex] != null && player.currentItem == null){
             if(player.isFacingLeft){
                 player.currentItem = game.add.sprite(player.position.x + 0,player.position.y + 0,player.items[player.currentItemIndex].key);  //player.position.x + 45,player.position.y + 25
                 player.currentItem.scale.setTo(.75,.75);
@@ -201,6 +206,8 @@ var createItemManager = function(game,player){
     }
 
     manager.switchItem = function(){
+        if(manager.usageLocked)
+            return;
         if(dKey.isDown && !selected.locked){
             if(player.currentItemIndex==4){
                 player.currentItemIndex=0;
