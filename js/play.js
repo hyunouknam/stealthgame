@@ -1,5 +1,5 @@
 var healthBar,staminaBar,sanityBar,selected, isPaused=false,
-    pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false;
+    pausedMenu, locked, resumeButton, nextLevelButton, mainMenuButtonIngame,controlsMenu, resumeVelocity = false, levelCompleted = false, signLocked = false, signOpened = false;;
 
 var escKey, shiftKey, aKey, sKey, dKey, ekey, kKey,zKey,cKey,oneKey,twoKey,threeKey;
 var player, cursors, mask, largeMask;
@@ -383,6 +383,19 @@ var playState = {
             if(player.beingPulled){
                 game.physics.arcade.overlap(player, player.currentItem, itemManager.resetPull, null,this);
             }
+            /*if(eKey.isDown){
+                if(!signLocked && !signOpened){
+                    signOpened = true;
+                    game.physics.arcade.overlap(player, level.signGroup, playState.openSign, null, this);
+                    game.time.events.add(Phaser.Timer.SECOND,function(){signLocked = true;});
+                }
+                if(signLocked && signOpened){
+                    playState.closeSign();
+                    signOpened = false;
+                    game.time.events.add(Phaser.Timer.SECOND,function(){signLocked = false;});
+                }
+            }*/
+
             if(eKey.isDown){
                 game.physics.arcade.overlap(player, level.signGroup, playState.openSign, null, this);
             }
@@ -545,6 +558,7 @@ var playState = {
         charGroup = game.add.group();
         enlargedSign = game.add.sprite(100,100,'enlarged_sign');
         enlargedSign.fixedToCamera = true;
+
         xButton = game.add.button(110,110,'xButton',function(){
             xButton.destroy();
             playState.closeSign();
@@ -848,9 +862,13 @@ function playerMove(){
             game.time.events.add(Phaser.Timer.SECOND*.3,function(){player.collideDown = true;});
         }
         
-        if(cursors.left.isUp && cursors.right.isUp){
+        /*if(cursors.left.isUp && cursors.right.isUp){
+            player.rested = true;
+        }*/
+        if(shiftKey.isUp){
             player.rested = true;
         }
+
     }else{
         itemManager.pull();
     }
@@ -964,7 +982,7 @@ function loseStamina(){
 }
 
 function generateStamina(){
-    player.stamina = player.stamina+1 >= player.maxStamina ? player.maxStamina: player.stamina+1;
+    player.stamina = player.stamina+.5 >= player.maxStamina ? player.maxStamina: player.stamina+.5;
     staminaBar.width = player.stamina
 }
 
