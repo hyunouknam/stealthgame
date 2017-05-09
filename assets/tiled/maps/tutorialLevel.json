@@ -42,6 +42,10 @@
                  "height":192,
                  "id":6,
                  "name":"",
+                 "properties":
+                    {
+
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -53,6 +57,10 @@
                  "height":224,
                  "id":7,
                  "name":"",
+                 "properties":
+                    {
+
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -81,10 +89,6 @@
                     {
                      "text":"Well it seems we have|found a new victim."
                     },
-                 "propertytypes":
-                    {
-                     "text":"string"
-                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -100,10 +104,6 @@
                  "properties":
                     {
                      "text":"Your objective is to|survive."
-                    },
-                 "propertytypes":
-                    {
-                     "text":"string"
                     },
                  "rotation":0,
                  "type":"",
@@ -121,15 +121,27 @@
                     {
                      "text":"In order to complete a|level you must find all|the keys in the map to|escape. Good luck, you'll|need it."
                     },
-                 "propertytypes":
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1120,
+                 "y":1088
+                }, 
+                {
+                 "gid":46,
+                 "height":32,
+                 "id":10,
+                 "name":"",
+                 "properties":
                     {
-                     "text":"string"
+                     "text":"Maps will tell you w|here the keys are. S|o find them before h|and!"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":800,
+                 "x":768,
                  "y":1088
                 }],
          "opacity":1,
@@ -149,6 +161,10 @@
                  "height":32,
                  "id":1,
                  "name":"",
+                 "properties":
+                    {
+
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -163,8 +179,12 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":10,
+ "nextobjectid":11,
  "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[
@@ -176,6 +196,10 @@
          "imagewidth":160,
          "margin":0,
          "name":"oneblock",
+         "properties":
+            {
+
+            },
          "spacing":0,
          "tilecount":45,
          "tileheight":32,
@@ -189,6 +213,10 @@
          "imagewidth":32,
          "margin":0,
          "name":"sign",
+         "properties":
+            {
+
+            },
          "spacing":0,
          "tilecount":1,
          "tileheight":32,

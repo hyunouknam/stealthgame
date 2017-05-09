@@ -240,7 +240,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                     break;
                     case 'item spawn':
                     for(var j = 0;j < objectarray.length; j++){
-                        if(objectarray[j].properties.id){
+                        if(objectarray[j].properties && objectarray[j].properties.id){
                             var item = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
                             item.itemID = objectarray[j].properties.id;
                             level.itemGroup.add(item);
