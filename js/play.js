@@ -69,8 +69,8 @@ var playState = {
         game.load.audio('running_sound','../assets/sounds/run_sound.mp3');
         game.load.audio('music','../assets/sounds/music.wav');
         game.load.audio('slow_heartbeat', '../assets/sounds/slow_heartbeat.mp3');
-        game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.wav');
-        game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.wav');
+        game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.mp3');
+        game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.mp3');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
