@@ -235,13 +235,17 @@ var AI = {
     
     pause : function () {
          for ( var i = 0; i < AI.list.length; i++ ){
+            AI.list[i].prevUpdate = AI.list[i].update;
             AI.list[i].setState('pause');
         }
     },
     
     start : function () {
         for ( var i = 0; i < AI.list.length; i++ ){
-            AI.list[i].setState('meander');
+            if(AI.list[i].prevUpdate)
+                AI.list[i].update = AI.list[i].prevUpdate;
+            else
+                AI.list[i].setState('meander');
         }
     },
     
