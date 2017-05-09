@@ -521,6 +521,10 @@ var playState = {
             game.world.bringToTop(nextLevelButton);
             game.world.bringToTop(mainMenuButtonIngame);
         }
+        if(playState.enlargedSign != null){
+            game.world.bringToTop(playState.enlargedSign);
+            game.world.bringToTop(playState.charGroup);
+        }
         
     },
     levelTransition: function(){
@@ -589,16 +593,16 @@ var playState = {
         }
     },
     openSign: function(player,sign){
-        charGroup = game.add.group();
-        enlargedSign = game.add.sprite(100,100,'enlarged_sign');
-        enlargedSign.fixedToCamera = true;
+        playState.charGroup = game.add.group();
+        playState.enlargedSign = game.add.sprite(100,100,'enlarged_sign');
+        playState.enlargedSign.fixedToCamera = true;
 
         xButton = game.add.button(110,110,'xButton',function(){
             xButton.destroy();
             playState.closeSign();
         });
         xButton.fixedToCamera = true;
-        charGroup.add(enlargedSign);
+        playState.charGroup.add(playState.enlargedSign);
         levelCompleted = true;
         AI.pause();
         index = 0;
@@ -607,7 +611,7 @@ var playState = {
         counter = 0;
         sign.text.forEach(function(char){
             newChar = playState.createChar(char,index++,row);
-            charGroup.add(newChar);
+            playState.charGroup.add(newChar);
             counter++;
         });
         console.log(counter);
@@ -615,9 +619,9 @@ var playState = {
     closeSign: function(){
         levelCompleted = false;
         AI.start();
-        var length = charGroup.children.length;
+        var length = playState.charGroup.children.length;
         for(var i = 0;i<length;i++){
-            charGroup.children[0].destroy();
+            playState.charGroup.children[0].destroy();
         }
     },
     createChar: function(char,col){
