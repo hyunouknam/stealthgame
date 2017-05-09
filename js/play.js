@@ -177,9 +177,9 @@ var playState = {
         game.physics.arcade.enable(lantern);
         lantern.body.gravity.y = 700;
 
-        bomb = game.add.sprite(level.playerSpawnPoint.x + 500, level.playerSpawnPoint.y, 'bomb');
-        game.physics.arcade.enable(bomb);
-        bomb.body.gravity.y = 700;
+        //bomb = game.add.sprite(level.playerSpawnPoint.x + 500, level.playerSpawnPoint.y, 'bomb');
+        //game.physics.arcade.enable(bomb);
+        //bomb.body.gravity.y = 700;
 
         grapplingHook = game.add.sprite(level.playerSpawnPoint.x + 200, level.playerSpawnPoint.y,'grappling');
         game.physics.arcade.enable(grapplingHook);
