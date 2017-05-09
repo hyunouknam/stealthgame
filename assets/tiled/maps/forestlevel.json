@@ -5274,21 +5274,6 @@
          "objects":[
                 {
                  "height":32,
-                 "id":395,
-                 "name":"",
-                 "properties":
-                    {
-                     "id":"lantern"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":64,
-                 "y":96
-                }, 
-                {
-                 "height":32,
                  "id":58,
                  "name":"",
                  "properties":
@@ -5303,17 +5288,17 @@
                  "y":1760
                 }, 
                 {
-                 "height":0,
+                 "height":32,
                  "id":59,
                  "name":"",
                  "properties":
                     {
-
+                     "id":"lantern"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
+                 "width":32,
                  "x":1440,
                  "y":1408
                 }, 
