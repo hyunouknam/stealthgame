@@ -12,7 +12,7 @@ var spawner;
 var lightManager;
 var itemManager;
 var terrainDestructor;
-
+var deathScreen,restartButton;
 var staticLantern, staticBomb;
 var lantern, bomb, flashbang; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
@@ -72,6 +72,8 @@ var playState = {
         game.load.image('enlarged_sign','../assets/menus/enlargedSign.png');
         game.load.spritesheet('chars','../assets/chars.png', 155,330);
         game.load.image('xButton','../assets/buttons/xButton.png');
+        game.load.image('death_screen','../assets/menus/death_screen.png');
+        game.load.spritesheet('restart_button','../assets/buttons/Restart_Button.png',350,150);
 
         game.load.spritesheet('resume_button','../assets/buttons/Resume_Button.png',350,150);
         game.load.spritesheet('main_menu_button','../assets/buttons/Main_Menu_Button_Ingame.png',350,150);
@@ -506,6 +508,10 @@ var playState = {
             game.world.bringToTop(resumeButton);
             game.world.bringToTop(mainMenuButtonIngame);
         }
+        if(deathScreen!=null){
+            game.world.bringToTop(deathScreen);
+            game.world.bringToTop(restartButton);
+        }
         
         
     },
@@ -557,6 +563,10 @@ var playState = {
         
         
         switch(game.level_json){
+            case 'tutorial_level_json':
+                game.level_json = 'forest_level_json';
+                game.level_tilemap = 'forest_level_tilemap';
+                break;
             case 'forest_level_json':
                 game.level_json = 'dungeon_level_json';
                 game.level_tilemap = 'dungeon_level_tilemap';
@@ -906,7 +916,23 @@ function playerDeath(){
         if(player.currentItem != null){
             player.currentItem.kill();
         }
-
+        levelCompleted = true;
+        player.godMode.enabled = true;
+        deathScreen = game.add.sprite(0,0,'death_screen');
+        deathScreen.fixedToCamera = true;
+        game.world.bringToTop(deathScreen);
+        restartButton = game.add.button(425,130,'restart_button',function(){
+            AI.free();
+            level.free();
+            game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
+            game.world.removeAll();
+            resumeVelocity = false;
+            levelCompleted = false;
+            music.stop();
+            game.state.start('play');
+        },this,0,0,1,0);
+        restartButton.fixedToCamera = true;
+        game.world.bringToTop(restartButton);
     }
 }
 
