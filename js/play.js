@@ -14,7 +14,7 @@ var itemManager;
 var terrainDestructor;
 
 var staticLantern, staticBomb;
-var lantern, bomb; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
+var lantern, bomb, flashbang; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var lanternRadius = 300;
 var defaultLightRaidus = 100;
@@ -23,7 +23,7 @@ var waypoint;
 
 //tint
 var tinter = {};
-tinter.maxTime = 100;
+tinter.maxTime = 50;
 tinter.time = 0;
 tinter.secondaryMaxTime = tinter.maxTime / 20;
 tinter.secondaryTime = 0;
@@ -86,6 +86,9 @@ var playState = {
         game.load.image('oil', '../assets/oil.png');
         game.load.image('grappling','../assets/grappling.png');
         game.load.image('key map', '../assets/key map.png');
+        game.load.image('flashbang', '../assets/flashbang.png');
+        game.load.image('flashbang light', '../assets/flashbang light.png');
+
         
         game.load.spritesheet('enemy1', '../assets/enemy.png', 48, 72);
         game.load.image('key', '../assets/key.png');
@@ -136,7 +139,7 @@ var playState = {
         playState.walkingSound.volume = .75
         playState.runningSound = game.add.audio('running_sound');
         music = game.add.audio('music');
-        //music.play(null,0,.15,true);
+        music.play(null,0,.15,true);
 
 
 
@@ -160,6 +163,9 @@ var playState = {
         //largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
         //largeMask.anchor.setTo(.5);
 
+        flashbangLight = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
+        flashbangLight.anchor.setTo(.5);
+
 
         // spawn test lantern
 
@@ -178,6 +184,11 @@ var playState = {
         game.physics.arcade.enable(grapplingHook);
         grapplingHook.body.gravity.y = 700;
 
+        // spawn test grappling hook
+        flashbang = game.add.sprite(level.playerSpawnPoint.x + 300, level.playerSpawnPoint.y,'flashbang');
+        game.physics.arcade.enable(flashbang);
+        flashbang.body.gravity.y = 700;
+
         // spawn test key map
         keyMap = game.add.sprite(level.playerSpawnPoint.x + 700, level.playerSpawnPoint.y,'key map');
         game.physics.arcade.enable(keyMap);
@@ -187,6 +198,7 @@ var playState = {
         hudGroup = game.add.group();
         //hudGroup.add(mask);
         //hudGroup.add(largeMask);
+        hudGroup.add(flashbangLight);
         hudGroup.add(lightManager.lightSprite);
         hudGroup.add(hud);
         hudGroup.add(healthBar);

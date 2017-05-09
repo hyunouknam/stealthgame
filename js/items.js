@@ -44,6 +44,10 @@ var createItemManager = function(game,player){
                     player.items[index] = game.add.sprite(860 + (index*55), 615, 'key map')
                     player.items[index].fixedToCamera = true;
                     break;
+                case 'flashbang':
+                    player.items[index] = game.add.sprite(860 + (index*55), 615, 'flashbang')
+                    player.items[index].fixedToCamera = true;
+                    break;    
             }
             
         }
@@ -133,6 +137,13 @@ var createItemManager = function(game,player){
                     }
                     waypoint.show();
                     break;   
+                case 'flashbang':
+                    if(!player.godMode.enabled){
+                        lightManager.requestLight(player,defaultLightRaidus);
+                        lightManager.lightDown();
+                    }
+                    waypoint.show();
+                    break;  
             }
         }else{
             if(!player.godMode.enabled){
