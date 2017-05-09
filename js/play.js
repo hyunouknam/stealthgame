@@ -511,6 +511,7 @@ var playState = {
             game.world.bringToTop(pausedMenu);
             game.world.bringToTop(resumeButton);
             game.world.bringToTop(mainMenuButtonIngame);
+            game.world.bringToTop(controlsMenu);
         }
         if(deathScreen!=null){
             game.world.bringToTop(deathScreen);

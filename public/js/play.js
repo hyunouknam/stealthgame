@@ -59,7 +59,7 @@ tinter.update = function () {
 
 
 var playState = {
-    collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,slowHeartbeat: null, medHeartbeat: null, fastHeartbeat: null,
+    collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,slowHeartbeat: null, medHeartbeat: null, fastHeartbeat: null,xButton: null,
     preload: function(){
         game.load.image('hud','../assets/hud/HUD.png');
         game.load.image('health_bar','../assets/hud/Health_Bar.png');
@@ -115,6 +115,7 @@ var playState = {
         game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.mp3');
         game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.mp3');
         game.load.audio('ouch', '../assets/sounds/ouch.wav');
+        game.load.audio('die', '../assets/sounds/die.wav');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
@@ -148,6 +149,7 @@ var playState = {
         music.play(null,0,.15,true);
 
         playState.ouchSound = game.add.audio('ouch');
+        playState.dieSound = game.add.audio('die');
 
 
         var hud = game.add.sprite(0,550,'hud');
@@ -524,6 +526,7 @@ var playState = {
         if(playState.enlargedSign != null){
             game.world.bringToTop(playState.enlargedSign);
             game.world.bringToTop(playState.charGroup);
+            game.world.bringToTop(playState.xButton);
         }
         
     },
@@ -597,11 +600,11 @@ var playState = {
         playState.enlargedSign = game.add.sprite(100,100,'enlarged_sign');
         playState.enlargedSign.fixedToCamera = true;
 
-        xButton = game.add.button(110,110,'xButton',function(){
-            xButton.destroy();
+        playState.xButton = game.add.button(110,110,'xButton',function(){
+            playState.xButton.destroy();
             playState.closeSign();
         });
-        xButton.fixedToCamera = true;
+        playState.xButton.fixedToCamera = true;
         playState.charGroup.add(playState.enlargedSign);
         levelCompleted = true;
         AI.pause();
@@ -923,6 +926,7 @@ function flashFollowPlayer(){
 function playerDeath(){
     if(player.health <= 0 || player.sanity <= 0){
         player.animations.play('death');
+        playState.dieSound.play();
         player.dead = true;
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
