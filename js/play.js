@@ -21,6 +21,41 @@ var defaultLightRaidus = 100;
 var grapplingHook, keyMap;
 var waypoint;
 
+//tint
+var tinter = {};
+tinter.maxTime = 100;
+tinter.time = 0;
+tinter.secondaryMaxTime = tinter.maxTime / 20;
+tinter.secondaryTime = 0;
+tinter.playerRef = undefined;
+tinter.noColor = 0xffffff;
+tinter.paint = 0xff0000;
+tinter.updateRequired = false;
+tinter.start = function(sprite){
+    if(tinter.time <= 0){
+        tinter.time = tinter.maxTime;
+        tinter.secondaryTime = 0;
+        tinter.updateRequired = true;
+    }
+};
+tinter.update = function () {
+    if(!tinter.updateRequired)
+        return;
+    
+    tinter.time--;
+    tinter.secondaryTime--;
+    if(tinter.secondaryTime <= 0){
+        tinter.secondaryTime = tinter.secondaryMaxTime;
+        tinter.playerRef.tint = tinter.playerRef.tint == tinter.noColor? tinter.paint : tinter.noColor;
+    }
+    if(tinter.time <= 0){
+        tinter.secondaryTime = tinter.secondaryMaxTime;
+        tinter.playerRef.tint = tinter.noColor;
+        tinter.updateRequired = false;
+    }
+};
+
+
 var playState = {
     collectionSound: null,walkingSound: null,runningSound: null,enlargedSign: null,charGroup: null,slowHeartbeat: null, medHeartbeat: null, fastHeartbeat: null,
     preload: function(){
@@ -252,6 +287,8 @@ var playState = {
             e.anchor.setTo(0.5, 0.5);
             lightManager.requestLight(e, 100);
         });
+        
+        tinter.playerRef = player;
     },
     render: function(){
         //level.debugRender();
@@ -262,7 +299,7 @@ var playState = {
         //console.debug(game.time.fps) ;
         
         waypoint.update();                                                            //********************* waypoint */
-
+        tinter.update();
         game.physics.arcade.collide(player, level.solidGroup);
         game.physics.arcade.collide(level.platformGroup, level.collidableSpawnGroup);
         game.physics.arcade.collide(level.solidGroup, level.collidableSpawnGroup);
@@ -856,6 +893,7 @@ function playerDamaged( player, mob ){
     if(!player.godMode.enabled){
         player.health -= player.health <= 0 ? 0: 1;
         healthBar.width -= player.health <= 1 ? 0: 1;
+        tinter.start();
     }
     //waypoint.add(mob);                                                    //******************** waypoint */     
 }

@@ -86,7 +86,7 @@ var createLightingManager = function (game) {
         manager.cameraRect.height = manager.game.camera.height;
         
         //set up mask
-        manager.wholeMask.context.fillStyle = 'rgb(16,0,0)';
+        manager.wholeMask.context.fillStyle = 'rgb(0,0,0)';
         manager.wholeMask.context.fillRect(0, 0, manager.cameraRect.width, manager.cameraRect.height);
         
         //default flickering
