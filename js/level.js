@@ -201,7 +201,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                         break;
                     case 'level key':
                         for(var j = 0;j < objectarray.length; j++){
-                            var nextLevel = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'key');
+                            var nextLevel = level.game.add.sprite(objectarray[j].x,objectarray[j].y,'golden key');
                             level.game.physics.enable(nextLevel);
                             nextLevel.body.gravity.y = 300;
                             level.nextLevelGroup.add(nextLevel);
