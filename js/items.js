@@ -15,6 +15,13 @@ var createItemManager = function(game,player){
     player.graphics = game.add.graphics(0,0);
     player.beingPulled = false;
     game.world.bringToTop(player.graphics);
+    manager.renderSort = function () {
+        for(var i = 0 ; i< player.items.length; i++){
+            if(player.items[i]){
+                game.world.bringToTop(player.items[i]);
+            }
+        }
+    };
     manager.collectItem = function(player,item){
         if(player.amtOfItems<5){
             player.amtOfItems++;
