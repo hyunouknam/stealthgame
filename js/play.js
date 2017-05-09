@@ -498,6 +498,12 @@ var playState = {
         game.world.bringToTop(lightManager.lightSprite);
         game.world.bringToTop(hudGroup);
         itemManager.renderSort();
+        if(pausedMenu != null){
+            game.world.bringToTop(pausedMenu);
+            game.world.bringToTop(resumeButton);
+            game.world.bringToTop(mainMenuButtonIngame);
+        }
+        
         
     },
     levelTransition: function(){
@@ -928,11 +934,13 @@ function pause(){
             resumeVelocity = true;
             pausedMenu = game.add.sprite(0,0,'paused_image');
             pausedMenu.fixedToCamera = true;
+            game.world.bringToTop(pausedMenu);
             resumeButton = game.add.button(425,130,'resume_button',function(){
                 resumeButton.isPressed=true;
                 resume();
             },this,0,0,1,0);
             resumeButton.fixedToCamera = true;
+            game.world.bringToTop(resumeButton);
             mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
                 AI.free();
                 level.free();
@@ -945,6 +953,7 @@ function pause(){
                 music.stop();
             },this,0,0,1,0);
             mainMenuButtonIngame.fixedToCamera = true;
+            game.world.bringToTop(mainMenuButtonIngame);
             controlsMenu = game.add.sprite(100,100,'controls_screen');
             controlsMenu.fixedToCamera = true;
             game.time.events.add(Phaser.Timer.SECOND,function(){
