@@ -2974,6 +2974,66 @@
                  "width":32,
                  "x":1664,
                  "y":1152
+                }, 
+                {
+                 "gid":62,
+                 "height":32,
+                 "id":303,
+                 "name":"",
+                 "properties":
+                    {
+                     "text":"Remember the tutorial|There is a certain item|that you might need..."
+                    },
+                 "propertytypes":
+                    {
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":3008,
+                 "y":2688
+                }, 
+                {
+                 "gid":62,
+                 "height":32,
+                 "id":305,
+                 "name":"",
+                 "properties":
+                    {
+                     "text":"Don't fall. Seriously.|You'll regret it."
+                    },
+                 "propertytypes":
+                    {
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2592,
+                 "y":768
+                }, 
+                {
+                 "gid":62,
+                 "height":32,
+                 "id":306,
+                 "name":"",
+                 "properties":
+                    {
+                     "text":"I warned you before."
+                    },
+                 "propertytypes":
+                    {
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":3008,
+                 "y":2848
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3285,7 +3345,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":302,
+ "nextobjectid":307,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
