@@ -167,11 +167,11 @@ var playState = {
         //largeMask.anchor.setTo(.5);
 
 
-        flashbangLight = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'flashbang light');
+        flashbangLight = game.add.sprite(level.playerSpawnPoint.x, level.playerSpawnPoint.y, 'flashbang light');
         flashbangLight.anchor.setTo(.5);
         flashbangLight.alpha = 0;
 
-
+        
         // spawn test lantern
         lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
         game.physics.arcade.enable(lantern);
@@ -194,6 +194,8 @@ var playState = {
         keyMap = game.add.sprite(level.playerSpawnPoint.x + 700, level.playerSpawnPoint.y,'key map');
         game.physics.arcade.enable(keyMap);
         keyMap.body.gravity.y = 700;
+        
+        
         
         for(var i = 0 ; i < level.itemGroup.children.length ; i++){
             var x = level.itemGroup.children[i].x;
@@ -331,7 +333,7 @@ var playState = {
         
         tinter.playerRef = player;
 
-        level.game.world.bringToTop(flashbangLight);
+        //level.game.world.bringToTop(flashbangLight);
     },
     render: function(){
         //level.debugRender();
@@ -498,6 +500,7 @@ var playState = {
         game.world.bringToTop(lightManager.lightSprite);
         game.world.bringToTop(hudGroup);
         itemManager.renderSort();
+        //game.world.bringToTop(flashbangLight);
         if(pausedMenu != null){
             game.world.bringToTop(pausedMenu);
             game.world.bringToTop(resumeButton);
