@@ -141,8 +141,12 @@ var createItemManager = function(game,player){
                     if(!player.godMode.enabled){
                         lightManager.requestLight(player,defaultLightRaidus);
                         lightManager.lightDown();
+                        waypoint.hide();
                     }
-                    waypoint.show();
+                    
+                    if(sKey.isDown()){
+
+                    }
                     break;  
             }
         }else{
