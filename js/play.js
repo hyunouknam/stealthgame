@@ -495,6 +495,9 @@ var playState = {
 
         }
         
+        game.world.bringToTop(lightManager.lightSprite);
+        game.world.bringToTop(hudGroup);
+        itemManager.renderSort();
         
     },
     levelTransition: function(){
