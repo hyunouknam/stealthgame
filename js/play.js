@@ -503,6 +503,7 @@ var playState = {
         game.world.bringToTop(lightManager.lightSprite);
         game.world.bringToTop(hudGroup);
         itemManager.renderSort();
+    
         //game.world.bringToTop(flashbangLight);
         if(pausedMenu != null){
             game.world.bringToTop(pausedMenu);
@@ -512,14 +513,14 @@ var playState = {
         if(deathScreen!=null){
             game.world.bringToTop(deathScreen);
             game.world.bringToTop(restartButton);
-
+            game.world.bringToTop(mainMenuButtonIngame);
+        }
 
         if(nextLevelMenu != null){
             game.world.bringToTop(nextLevelMenu);
             game.world.bringToTop(nextLevelButton);
             game.world.bringToTop(mainMenuButtonIngame);
         }
-        
         
     },
     levelTransition: function(){
@@ -934,12 +935,25 @@ function playerDeath(){
             level.free();
             game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
             game.world.removeAll();
+            deathScreen = null;
             resumeVelocity = false;
             levelCompleted = false;
             music.stop();
             game.state.start('play');
         },this,0,0,1,0);
+        mainMenuButtonIngame = game.add.button(425, 300,'main_menu_button',function(){
+            AI.free();
+            level.free();
+            game.world.forEachAlive(function(e){if(e.hasOwnProperty('kill'))e.kill();});
+            game.world.removeAll();
+            deathScreen = null;
+            resumeVelocity = false;
+            levelCompleted = false;
+            music.stop();
+            game.state.start('menu');
+        },this,0,0,1,0);
         restartButton.fixedToCamera = true;
+        mainMenuButtonIngame.fixedToCamera = true;
         game.world.bringToTop(restartButton);
     }
 }
@@ -986,8 +1000,8 @@ function pause(){
                 isPaused = false;
                 locked = false;
                 resumeVelocity = false;
-                game.state.start('menu');
                 music.stop();
+                game.state.start('menu');
             },this,0,0,1,0);
             mainMenuButtonIngame.fixedToCamera = true;
             game.world.bringToTop(mainMenuButtonIngame);
