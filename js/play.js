@@ -17,7 +17,7 @@ var staticLantern, staticBomb;
 var lantern, bomb, flashbang; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var lanternRadius = 300;
-var defaultLightRadius = 100;
+var defaultLightRadius = 150;
 var flashUsed = false;
 var grapplingHook, keyMap;
 var waypoint;
@@ -186,7 +186,6 @@ var playState = {
         grapplingHook.body.gravity.y = 700;
 
 
-        // spawn test grappling hook
         flashbang = game.add.sprite(level.playerSpawnPoint.x + 300, level.playerSpawnPoint.y,'flashbang');
         game.physics.arcade.enable(flashbang);
         flashbang.body.gravity.y = 700;
@@ -216,6 +215,10 @@ var playState = {
                 case 'key maps':
                 // spawn test key map
                 keyMap.reset(x, y);
+                break;
+                case 'flashbang':
+                // spawn test flashbang
+                flashbang.reset(x, y);
                 break;
                 default:break;
             }

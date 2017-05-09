@@ -138,6 +138,7 @@ var createItemManager = function(game,player){
                         itemDefaults();
                     }
                     if(sKey.isDown && !flashUsed){
+                        game.world.bringToTop(flashbangLight);
                         flashbangLight.alpha = 1;
                         flashUsed = true;
                         player.currentItem.kill();
