@@ -93,16 +93,12 @@ var createItemManager = function(game,player){
                     break;
                 case 'bomb':
                     if(!player.godMode.enabled){
-                        lightManager.requestLight(player,defaultLightRaidus);
-                        lightManager.lightDown();
-                        waypoint.hide();
+                        itemDefaults();
                     }
                     break;
                 case 'grappling':
                     if(!player.godMode.enabled){
-                        lightManager.requestLight(player,defaultLightRaidus);
-                        lightManager.lightDown();
-                        waypoint.hide();
+                        itemDefaults();
                     }
                     if(sKey.isDown){
                         manager.usageLocked = true;
@@ -132,28 +128,38 @@ var createItemManager = function(game,player){
                     break;
                  case 'key map':
                     if(!player.godMode.enabled){
-                        lightManager.requestLight(player,defaultLightRaidus);
+                        lightManager.requestLight(player,defaultLightRadius);
                         lightManager.lightDown();
                     }
                     waypoint.show();
                     break;   
                 case 'flashbang':
                     if(!player.godMode.enabled){
-                        lightManager.requestLight(player,defaultLightRaidus);
-                        lightManager.lightDown();
-                        waypoint.hide();
+                        itemDefaults();
                     }
-                    
-                    if(sKey.isDown()){
+                    if(sKey.isDown && !flashUsed){
+                        flashbangLight.alpha = 1;
+                        flashUsed = true;
+                        player.currentItem.kill();
+                        player.items[player.currentItemIndex].kill();
+                        player.items[player.currentItemIndex] = null;
 
+                        // stop the AI from moving
+                        AI.pause();
+
+                        game.time.events.add(Phaser.Timer.SECOND,function(){
+                            flashbangLight.alpha = 0;
+                            flashUsed = false;
+
+                            //restart AI
+                            AI.start();
+                        });
                     }
                     break;  
             }
         }else{
             if(!player.godMode.enabled){
-                lightManager.requestLight(player,defaultLightRaidus);
-                lightManager.lightDown();
-                waypoint.hide();
+                itemDefaults();
             }
         }
     }
@@ -251,4 +257,13 @@ var createItemManager = function(game,player){
     }
 
     return manager;
+}
+
+function itemDefaults(){
+    lightManager.requestLight(player,defaultLightRadius);
+    lightManager.lightDown();
+    waypoint.hide();
+    if(!flashUsed){
+        flashbangLight.alpha = 0;
+    }
 }

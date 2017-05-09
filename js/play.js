@@ -17,7 +17,8 @@ var staticLantern, staticBomb;
 var lantern, bomb, flashbang; //= "lantern", flashlight = "flashlight", rock = "rock", bomb = "bomb", oil = "oil";
 
 var lanternRadius = 300;
-var defaultLightRaidus = 100;
+var defaultLightRadius = 100;
+var flashUsed = false;
 var grapplingHook, keyMap;
 var waypoint;
 
@@ -166,8 +167,9 @@ var playState = {
         //largeMask.anchor.setTo(.5);
 
 
-        flashbangLight = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
+        flashbangLight = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'flashbang light');
         flashbangLight.anchor.setTo(.5);
+        flashbangLight.alpha = 0;
 
 
         // spawn test lantern
@@ -255,7 +257,7 @@ var playState = {
         level.renderSort ( player , hudGroup);
         AI.setTarget( player );
         
-        lightManager.requestLight(player, defaultLightRaidus);
+        lightManager.requestLight(player, defaultLightRadius);
         
         var alertSignal = new Phaser.Signal();
 
@@ -325,6 +327,8 @@ var playState = {
         });
         
         tinter.playerRef = player;
+
+        level.game.world.bringToTop(flashbangLight);
     },
     render: function(){
         //level.debugRender();
@@ -344,6 +348,7 @@ var playState = {
         game.physics.arcade.collide(lantern, level.solidGroup);
         game.physics.arcade.collide(grapplingHook, level.solidGroup);
         game.physics.arcade.collide(keyMap, level.solidGroup);
+        game.physics.arcade.collide(flashbang, level.solidGroup);
         game.physics.arcade.collide(level.keyGroup, level.solidGroup);
         game.physics.arcade.collide(level.nextLevelGroup,level.solidGroup);
         game.physics.arcade.collide(level.potionGroup, level.solidGroup);
@@ -368,6 +373,7 @@ var playState = {
             game.physics.arcade.overlap(player, bomb, itemManager.collectItem, null, this);  // testing bomb
             game.physics.arcade.overlap(player, grapplingHook, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, keyMap, itemManager.collectItem, null, this);
+            game.physics.arcade.overlap(player, flashbang, itemManager.collectItem, null, this);
             game.physics.arcade.overlap(player, level.collidableSpawnGroup, playerDamaged, null, this);
             game.physics.arcade.overlap(player, level.passthroughSpawnGroup, playerDamaged, null, this);     
 
@@ -441,7 +447,7 @@ var playState = {
                 playerMove();
             }
             game.camera.follow( player );
-            //maskFollowPlayer();
+            flashFollowPlayer();
             itemManager.switchItem();
             itemManager.holdItem();
             itemManager.useItem();
@@ -850,11 +856,11 @@ function playerMove(){
     }
 }
 
-function maskFollowPlayer(){
-    mask.position.x = player.position.x + 24;
-    mask.position.y = player.position.y + 36;
-    largeMask.position.x = player.position.x + 24;
-    largeMask.position.y = player.position.y + 36;
+function flashFollowPlayer(){
+    flashbangLight.position.x = player.position.x;
+    flashbangLight.position.y = player.position.y;
+    flashbangLight.position.x = player.position.x;
+    flashbangLight.position.y = player.position.y;
 }
 
 
