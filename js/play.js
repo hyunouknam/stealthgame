@@ -161,30 +161,47 @@ var playState = {
 
         //largeMask = game.add.sprite(level.playerSpawnPoint.x + 24, level.playerSpawnPoint.y + 36, 'mask large');
         //largeMask.anchor.setTo(.5);
-
-
-        // spawn test lantern
-
+        
         lantern = game.add.sprite(level.playerSpawnPoint.x + 100, level.playerSpawnPoint.y, 'lantern');
         game.physics.arcade.enable(lantern);
         lantern.body.gravity.y = 700;
 
-        // spawn test bomb
-
         bomb = game.add.sprite(level.playerSpawnPoint.x + 500, level.playerSpawnPoint.y, 'bomb');
         game.physics.arcade.enable(bomb);
         bomb.body.gravity.y = 700;
-        
-        // spawn test grappling hook
+
         grapplingHook = game.add.sprite(level.playerSpawnPoint.x + 200, level.playerSpawnPoint.y,'grappling');
         game.physics.arcade.enable(grapplingHook);
         grapplingHook.body.gravity.y = 700;
 
-        // spawn test key map
         keyMap = game.add.sprite(level.playerSpawnPoint.x + 700, level.playerSpawnPoint.y,'key map');
         game.physics.arcade.enable(keyMap);
         keyMap.body.gravity.y = 700;
-
+        
+        for(var i = 0 ; i < level.itemGroup.children.length ; i++){
+            var x = level.itemGroup.children[i].x;
+            var y = level.itemGroup.children[i].y;
+            var id = level.itemGroup.children[i].itemID;
+            // spawn test lantern
+            switch(id){
+                case 'lantern':
+                lantern.reset(x, y);
+                break;
+                case 'bomb':
+                // spawn test bomb
+                bomb.reset(x, y);
+                break;
+                case 'grappling hook':
+                // spawn test grappling hook
+                grapplingHook.reset(x, y);
+                break;
+                case 'key maps':
+                // spawn test key map
+                keyMap.reset(x, y);
+                break;
+                default:break;
+            }
+        }
 
         hudGroup = game.add.group();
         //hudGroup.add(mask);

@@ -5259,78 +5259,48 @@
          "objects":[
                 {
                  "height":32,
-                 "id":57,
+                 "id":395,
                  "name":"",
                  "properties":
                     {
-
+                     "id":"lantern"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":64,
-                 "y":96
+                 "x":1440,
+                 "y":1408
                 }, 
                 {
                  "height":32,
-                 "id":58,
+                 "id":396,
                  "name":"",
                  "properties":
                     {
-
+                     "id":"key map"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":544,
-                 "y":1760
-                }, 
-                {
-                 "height":0,
-                 "id":59,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":864,
-                 "y":2016
+                 "x":2016,
+                 "y":1344
                 }, 
                 {
                  "height":32,
-                 "id":64,
+                 "id":397,
                  "name":"",
                  "properties":
                     {
-
+                     "id":"grappling hook"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":3072,
-                 "y":3104
-                }, 
-                {
-                 "height":32,
-                 "id":65,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":2976,
-                 "y":1984
+                 "x":1152,
+                 "y":1792
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5537,7 +5507,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":395,
+ "nextobjectid":399,
  "orientation":"orthogonal",
  "properties":
     {
