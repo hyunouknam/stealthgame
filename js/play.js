@@ -33,6 +33,7 @@ tinter.paint = 0xff0000;
 tinter.updateRequired = false;
 tinter.start = function(sprite){
     if(tinter.time <= 0){
+        playState.ouchSound.play();
         tinter.time = tinter.maxTime;
         tinter.secondaryTime = 0;
         tinter.updateRequired = true;
@@ -106,6 +107,7 @@ var playState = {
         game.load.audio('slow_heartbeat', '../assets/sounds/slow_heartbeat.mp3');
         game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.mp3');
         game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.mp3');
+        game.load.audio('ouch', '../assets/sounds/ouch.wav');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
@@ -138,7 +140,7 @@ var playState = {
         music = game.add.audio('music');
         //music.play(null,0,.15,true);
 
-
+        playState.ouchSound = game.add.audio('ouch');
 
 
         var hud = game.add.sprite(0,550,'hud');
