@@ -115,6 +115,7 @@ var playState = {
         game.load.audio('medium_heartbeat', '../assets/sounds/medium_heartbeat.mp3');
         game.load.audio('fast_heartbeat', '../assets/sounds/fast_heartbeat.mp3');
         game.load.audio('ouch', '../assets/sounds/ouch.wav');
+        game.load.audio('die', '../assets/sounds/die.wav');
         
 
         spawner = loadSpawner( game, 'monster_profile_json');
@@ -148,6 +149,7 @@ var playState = {
         music.play(null,0,.15,true);
 
         playState.ouchSound = game.add.audio('ouch');
+        playState.dieSound = game.add.audio('die');
 
 
         var hud = game.add.sprite(0,550,'hud');
@@ -923,6 +925,7 @@ function flashFollowPlayer(){
 function playerDeath(){
     if(player.health <= 0 || player.sanity <= 0){
         player.animations.play('death');
+        playState.dieSound.play();
         player.dead = true;
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
