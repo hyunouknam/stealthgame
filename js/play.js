@@ -215,7 +215,7 @@ var playState = {
                 // spawn test grappling hook
                 grapplingHook.reset(x, y);
                 break;
-                case 'key maps':
+                case 'key map':
                 // spawn test key map
                 keyMap.reset(x, y);
                 break;
