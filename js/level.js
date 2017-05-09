@@ -30,6 +30,7 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
     level.trapGroup = game.add.group();
     level.potionGroup = game.add.group();
     level.lightGroup = game.add.group();
+    level.itemGroup = game.add.group();
     
     //spawns
     //level.spawnGroup = game.add.group(); deprecated
@@ -67,9 +68,11 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
         level.trapGroup.removeAll();
         level.potionGroup.removeAll();
         level.lightGroup.removeAll();
+        level.itemGroup.removeAll();
 
         //spawns
         //level.spawnGroup = game.add.group(); deprecateddeprecated
+        level.itemGroup.forEachAlive(function(e){e.kill();});
         level.passthroughSpawnGroup.forEachAlive(function(e){e.kill();});
         level.collidableSpawnGroup.forEachAlive(function(e){e.kill();});
         level.passthroughSpawnGroup.removeAll();
@@ -233,6 +236,15 @@ var loadLevel = function( game, jsonFileKey, tiledmapKey ){
                     for(var j = 0;j < objectarray.length; j++){
                         var light = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
                         level.lightGroup.add(light);
+                    }
+                    break;
+                    case 'item spawn':
+                    for(var j = 0;j < objectarray.length; j++){
+                        if(objectarray[j].properties.id){
+                            var item = level.game.add.sprite(objectarray[j].x,objectarray[j].y,null);
+                            item.itemID = objectarray[j].properties.id;
+                            level.itemGroup.add(item);
+                        }
                     }
                     break;
                     default : break;
